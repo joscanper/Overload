@@ -19,6 +19,7 @@
 #include "OvRendering/Settings/EGraphicsBackend.h"
 #include "OvRendering/Data/PipelineState.h"
 #include "OvRendering/Resources/Texture.h"
+#include <OvRendering/HAL/Common/TTextureHandle.h>
 
 namespace OvRendering::HAL
 {
@@ -70,7 +71,7 @@ namespace OvRendering::HAL
 		/**
 		* Returns the ID of the OpenGL render texture
 		*/
-		Resources::TextureHandle GetTexture() const;
+		TTextureHandle<Backend> GetTexture() const;
 
 		/**
 		* Returns the ID of the OpenGL render buffer

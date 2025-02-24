@@ -4,8 +4,6 @@
 * @licence: MIT
 */
 
-#include <GL/glew.h>
-
 #include "OvEditor/Panels/AView.h"
 #include "OvEditor/Core/EditorActions.h"
 #include "OvEditor/Settings/EditorSettings.h"

@@ -9,7 +9,7 @@
 #define GFX_USE_OPENGL
 
 #if defined(GFX_USE_OPENGL)
-#include <OvRendering/HAL/OpenGL/GLTexture.h>
+#include <OvRendering/HAL/OpenGL/GLTextureHandle.h>
 #endif // defined(GFX_USE_OPENGL)
 
 namespace OvRendering
@@ -17,7 +17,7 @@ namespace OvRendering
 	namespace HAL
 	{
 #if defined(GFX_USE_OPENGL)
-		using Texture = HAL::GLTexture;
+		using TextureHandle = HAL::GLTextureHandle;
 #endif // defined(GFX_USE_OPENGL)
 	}
 }

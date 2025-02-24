@@ -11,6 +11,7 @@
 
 #include <OvDebug/Assertion.h>
 #include <OvRendering/HAL/OpenGL/GLFramebuffer.h>
+#include <OvRendering/HAL/OpenGL/GLTextureHandle.h>
 
 template<>
 OvRendering::HAL::GLFramebuffer::TFramebuffer(uint16_t p_width, uint16_t p_height, bool p_depthOnly) :
@@ -135,9 +136,9 @@ uint32_t OvRendering::HAL::GLFramebuffer::GetTextureID() const
 }
 
 template<>
-OvRendering::Resources::TextureHandle OvRendering::HAL::GLFramebuffer::GetTexture() const
+OvRendering::HAL::GLTextureHandle OvRendering::HAL::GLFramebuffer::GetTexture() const
 {
-	return Resources::TextureHandle(m_context.renderTexture);
+	return HAL::GLTextureHandle{ m_context.renderTexture };
 }
 
 template<>

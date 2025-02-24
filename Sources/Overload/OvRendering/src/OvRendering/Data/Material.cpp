@@ -6,8 +6,8 @@
 
 #include "OvRendering/Data/Material.h"
 #include "OvRendering/HAL/UniformBuffer.h"
+#include "OvRendering/HAL/TextureHandle.h"
 #include "OvRendering/Resources/Texture.h"
-
 
 //TODO: Add constructor with a shader reference
 
@@ -70,9 +70,9 @@ void OvRendering::Data::Material::Bind(OvRendering::Resources::Texture* p_emptyT
 				case OvRendering::Resources::UniformType::UNIFORM_FLOAT_MAT4:	if (value.type() == typeid(FMatrix4))	m_shader->SetUniformMat4(name, std::any_cast<FMatrix4>(value));		break;
 				case OvRendering::Resources::UniformType::UNIFORM_SAMPLER_2D:
 				{
-					if (value.type() == typeid(TextureHandle))
+					if (value.type() == typeid(HAL::TextureHandle))
 					{
-						auto tex = std::any_cast<TextureHandle>(value);
+						auto tex = std::any_cast<HAL::TextureHandle>(value);
 						tex.Bind(textureSlot);
 						m_shader->SetUniformInt(uniformData->name, textureSlot++);
 					}
