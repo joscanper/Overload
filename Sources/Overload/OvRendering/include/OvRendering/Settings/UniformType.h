@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
-namespace OvRendering::Resources
+namespace OvRendering::Settings
 {
 	/**
 	* Defines the types that a uniform can take

@@ -15,6 +15,7 @@
 namespace OvRendering::Resources
 {
 	namespace Loaders { class TextureLoader; }
+
 	/**
 	* Texture saved on the disk
 	*/

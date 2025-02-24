@@ -306,6 +306,7 @@ std::string UniformFormat(const std::string& p_string)
 
 void OvEditor::Panels::MaterialEditor::GenerateShaderSettingsContent()
 {
+	using namespace OvRendering::Settings;
 	using namespace OvRendering::Resources;
 
 	m_shaderSettingsColumns->RemoveAllWidgets(); // Ensure that the m_shaderSettingsColumns is empty

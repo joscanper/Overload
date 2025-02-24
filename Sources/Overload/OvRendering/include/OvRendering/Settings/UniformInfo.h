@@ -9,9 +9,9 @@
 #include <string>
 #include <any>
 
-#include "OvRendering/Resources/UniformType.h"
+#include "OvRendering/Settings/UniformType.h"
 
-namespace OvRendering::Resources
+namespace OvRendering::Settings
 {
 	/**
 	* Data structure containing information about a uniform
