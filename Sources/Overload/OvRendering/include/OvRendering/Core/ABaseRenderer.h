@@ -14,6 +14,7 @@
 #include "OvRendering/Resources/Texture.h"
 #include "OvRendering/Entities/Drawable.h"
 #include "OvRendering/Settings/EBlitFlags.h"
+#include "OvRendering/Context/Driver.h"
 
 namespace OvRendering::Core
 {
@@ -116,8 +117,8 @@ namespace OvRendering::Core
 		*/
 		virtual void Blit(
 			OvRendering::Data::PipelineState p_pso,
-			OvRendering::Buffers::Framebuffer& p_src,
-			OvRendering::Buffers::Framebuffer& p_dst,
+			OvRendering::HAL::Framebuffer& p_src,
+			OvRendering::HAL::Framebuffer& p_dst,
 			OvRendering::Data::Material& p_material,
 			OvRendering::Settings::EBlitFlags p_flags = OvRendering::Settings::EBlitFlags::DEFAULT
 		);

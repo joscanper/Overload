@@ -6,26 +6,29 @@
 
 #pragma once
 
-#include "OvRendering/Buffers/VertexBuffer.h"
 #include "OvRendering/Settings/EDataType.h"
+#include <OvRendering/Settings/EGraphicsBackend.h>
 
-namespace OvRendering::Buffers
+#include "OvRendering/HAL/VertexBuffer.h"
+
+namespace OvRendering::HAL
 {
 	/**
 	* Wraps OpenGL VAO
 	*/
-	class VertexArray
+	template<Settings::EGraphicsBackend Backend, class Context>
+	class TVertexArray
 	{
 	public:
 		/**
 		* Create the vertex array
 		*/
-		VertexArray();
+		TVertexArray();
 
 		/**
 		* Destroy the vertex array
 		*/
-		~VertexArray();
+		~TVertexArray();
 
 		/**
 		* Register a VBO into the VAO
@@ -36,10 +39,9 @@ namespace OvRendering::Buffers
 		* @param p_stride
 		* @param p_offset
 		*/
-		template <class T>
 		void BindAttribute(
 			uint32_t p_attribute,
-			VertexBuffer<T>& p_vertexBuffer,
+			HAL::VertexBuffer& p_vertexBuffer,
 			Settings::EDataType p_type,
 			uint64_t p_count,
 			uint64_t p_stride,
@@ -59,11 +61,9 @@ namespace OvRendering::Buffers
 		/**
 		* Return the VAO OpenGL ID
 		*/
-		GLint GetID() const;
+		uint32_t GetID() const;
 
 	private:
-		GLuint m_bufferID;
+		Context m_context;
 	};
 }
-
-#include "OvRendering/Buffers/VertexArray.inl"

@@ -8,34 +8,41 @@
 
 #include <vector>
 
-#include "OvRendering/Context/Driver.h"
+#include <OvRendering/Settings/EGraphicsBackend.h>
 
-namespace OvRendering::Buffers
+namespace OvRendering::HAL
 {
 	/**
 	* Wraps OpenGL VBO
 	*/
-	template <class T>
-	class VertexBuffer
+	template<Settings::EGraphicsBackend Backend, class Context>
+	class TVertexBuffer
 	{
 	public:
+		/**
+		* Constructor
+		*/
+		TVertexBuffer();
+
+		/**
+		* Destructor
+		*/
+		~TVertexBuffer();
+
 		/**
 		* Create the VBO using a pointer to the first element and a size (number of elements)
 		* @param p_data
 		* @parma p_elements
 		*/
-		VertexBuffer(T* p_data, size_t p_elements);
+		template <class T>
+		void UploadData(T* p_data, size_t p_elements);
 
 		/**
 		* Create the EBO using a vector
 		* @param p_data
 		*/
-		VertexBuffer(std::vector<T>& p_data);
-
-		/**
-		* Destructor
-		*/
-		~VertexBuffer();
+		template <class T>
+		void UploadData(std::vector<T>& p_data);
 
 		/**
 		* Bind the buffer
@@ -53,8 +60,6 @@ namespace OvRendering::Buffers
 		uint32_t GetID();
 
 	private:
-		uint32_t m_bufferID;
+		Context m_context;
 	};
 }
-
-#include "OvRendering/Buffers/VertexBuffer.inl"

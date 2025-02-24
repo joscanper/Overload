@@ -23,7 +23,7 @@ void OvRendering::Entities::Light::UpdateShadowData(const OvRendering::Entities:
 	{
 		if (!shadowBuffer)
 		{
-			shadowBuffer = std::make_unique<OvRendering::Buffers::Framebuffer>(shadowMapResolution, shadowMapResolution, true);
+			shadowBuffer = std::make_unique<OvRendering::HAL::Framebuffer>(shadowMapResolution, shadowMapResolution, true);
 		}
 		else
 		{
@@ -56,7 +56,7 @@ const OvMaths::FMatrix4& OvRendering::Entities::Light::GetLightSpaceMatrix() con
 	return lightSpaceMatrix;
 }
 
-const OvRendering::Buffers::Framebuffer& OvRendering::Entities::Light::GetShadowBuffer() const
+const OvRendering::HAL::Framebuffer& OvRendering::Entities::Light::GetShadowBuffer() const
 {
 	OVASSERT(shadowBuffer != nullptr, "Cannot retrieve the shadow map because this light has no framebuffer!");
 	return *shadowBuffer;

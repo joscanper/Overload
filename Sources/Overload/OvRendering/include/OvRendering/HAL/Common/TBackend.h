@@ -21,8 +21,8 @@
 
 namespace OvRendering::HAL
 {
-	template<Settings::EGraphicsBackend Backend>
-	class GraphicsAPI final
+	template<Settings::EGraphicsBackend Backend, class Context>
+	class TBackend final
 	{
 	public:
 		std::optional<OvRendering::Data::PipelineState> Init(bool debug);
@@ -67,8 +67,8 @@ namespace OvRendering::HAL
 		std::string GetHardware();
 		std::string GetVersion();
 		std::string GetShadingLanguageVersion();
-	};
 
-	using None = OvRendering::HAL::GraphicsAPI<OvRendering::Settings::EGraphicsBackend::NONE>;
-	using OpenGL = OvRendering::HAL::GraphicsAPI<OvRendering::Settings::EGraphicsBackend::OPENGL>;
+	protected:
+		Context m_context;
+	};
 }

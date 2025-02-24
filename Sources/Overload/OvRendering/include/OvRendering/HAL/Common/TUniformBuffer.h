@@ -6,20 +6,20 @@
 
 #pragma once
 
-#include <vector>
 #include <string>
 
-#include "OvRendering/Context/Driver.h"
 #include "OvRendering/Settings/EAccessSpecifier.h"
+#include <OvRendering/Settings/EGraphicsBackend.h>
 
 namespace OvRendering::Resources { class Shader; }
 
-namespace OvRendering::Buffers
+namespace OvRendering::HAL
 {
 	/**
-	* Wraps OpenGL UBO
+	* TODO
 	*/
-	class UniformBuffer
+	template<Settings::EGraphicsBackend Backend, class Context>
+	class TUniformBuffer
 	{
 	public:
 		/**
@@ -29,7 +29,7 @@ namespace OvRendering::Buffers
 		* @parma p_offset (The offset of the UBO, sizeof previouses UBO if the binding point is != 0)
 		* @param p_accessSpecifier
 		*/
-		UniformBuffer(
+		TUniformBuffer(
 			size_t p_size,
 			uint32_t p_bindingPoint = 0,
 			uint32_t p_offset = 0,
@@ -38,7 +38,7 @@ namespace OvRendering::Buffers
 		/**
 		* Destructor of the UniformBuffer
 		*/
-		~UniformBuffer();
+		~TUniformBuffer();
 
 		/**
 		* Bind the UBO
@@ -96,9 +96,6 @@ namespace OvRendering::Buffers
 		static uint32_t GetBlockLocation(OvRendering::Resources::Shader& p_shader, const std::string& p_name);
 
 	private:
-		uint32_t m_bufferID;
-		uint32_t m_bindingPoint = 0;
+		Context m_context;
 	};
 }
-
-#include "OvRendering/Buffers/UniformBuffer.inl"

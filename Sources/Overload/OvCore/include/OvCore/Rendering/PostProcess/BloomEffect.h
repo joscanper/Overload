@@ -53,13 +53,13 @@ namespace OvCore::Rendering::PostProcess
 		*/
 		virtual void Draw(
 			OvRendering::Data::PipelineState p_pso,
-			OvRendering::Buffers::Framebuffer& p_src,
-			OvRendering::Buffers::Framebuffer& p_dst,
+			OvRendering::HAL::Framebuffer& p_src,
+			OvRendering::HAL::Framebuffer& p_dst,
 			const EffectSettings& p_settings
 		) override;
 
 	private:
-		std::array<OvRendering::Buffers::Framebuffer, 2> m_bloomPingPong;
+		std::array<OvRendering::HAL::Framebuffer, 2> m_bloomPingPong;
 		OvRendering::Data::Material m_brightnessMaterial;
 		OvRendering::Data::Material m_blurMaterial;
 		OvRendering::Data::Material m_bloomMaterial;

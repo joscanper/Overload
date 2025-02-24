@@ -6,17 +6,24 @@
 
 #pragma once
 
-#include <vector>
-
-#include "OvRendering/Context/Driver.h"
+#include "OvRendering/Settings/DriverSettings.h"
+#include "OvRendering/Settings/ERenderingCapability.h"
+#include "OvRendering/Settings/EPrimitiveMode.h"
+#include "OvRendering/Settings/ERasterizationMode.h"
+#include "OvRendering/Settings/EComparaisonAlgorithm.h"
+#include "OvRendering/Settings/EOperation.h"
+#include "OvRendering/Settings/ECullFace.h"
+#include "OvRendering/Settings/ECullingOptions.h"
+#include "OvRendering/Settings/EPixelDataFormat.h"
+#include "OvRendering/Settings/EPixelDataType.h"
+#include "OvRendering/Settings/EGraphicsBackend.h"
+#include "OvRendering/Data/PipelineState.h"
 #include "OvRendering/Resources/Texture.h"
 
-namespace OvRendering::Buffers
+namespace OvRendering::HAL
 {
-	/**
-	* Wraps OpenGL EBO
-	*/
-	class Framebuffer
+	template<Settings::EGraphicsBackend Backend, class Context>
+	class TFramebuffer
 	{
 	public:
 		/**
@@ -25,12 +32,12 @@ namespace OvRendering::Buffers
 		* @param p_height
 		* @param p_depthOnly
 		*/
-		Framebuffer(uint16_t p_width = 0, uint16_t p_height = 0, bool p_depthOnly = false);
+		TFramebuffer(uint16_t p_width = 0, uint16_t p_height = 0, bool p_depthOnly = false);
 
 		/**
 		* Destructor
 		*/
-		~Framebuffer();
+		~TFramebuffer();
 
 		/**
 		* Bind the framebuffer
@@ -92,13 +99,7 @@ namespace OvRendering::Buffers
 		*/
 		void BlitToBackBuffer(uint16_t p_backBufferWidth, uint16_t p_backBufferHeight) const;
 
-	private:
-		uint16_t m_width = 0;
-		uint16_t m_height = 0;
-		bool m_depthOnly = false;
-
-		uint32_t m_bufferID = 0;
-		uint32_t m_renderTexture = 0;
-		uint32_t m_depthStencilBuffer = 0;
+	protected:
+		Context m_context;
 	};
 }

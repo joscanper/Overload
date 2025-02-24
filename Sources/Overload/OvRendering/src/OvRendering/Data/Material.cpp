@@ -5,7 +5,7 @@
 */
 
 #include "OvRendering/Data/Material.h"
-#include "OvRendering/Buffers/UniformBuffer.h"
+#include "OvRendering/HAL/UniformBuffer.h"
 #include "OvRendering/Resources/Texture.h"
 
 
@@ -23,7 +23,7 @@ void OvRendering::Data::Material::SetShader(OvRendering::Resources::Shader* p_sh
 	if (m_shader)
 	{
 		// TODO: Move that line to Engine Material
-		// OvRendering::Buffers::UniformBuffer::BindBlockToShader(*m_shader, "EngineUBO");
+		// OvRendering::HAL::UniformBuffer::BindBlockToShader(*m_shader, "EngineUBO");
 		FillUniform();
 	}
 	else

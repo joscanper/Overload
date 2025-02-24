@@ -6,13 +6,12 @@
 
 #pragma once
 
-#include "OvRendering/HAL/GraphicsAPI.h"
-
 #include <GL/glew.h>
 
 #include <OvDebug/Logger.h>
 #include <OvDebug/Assertion.h>
-#include "OvRendering/Utils/Conversions.h"
+#include <OvRendering/HAL/OpenGL/GLBackend.h>
+#include <OvRendering/Utils/Conversions.h>
 
 constexpr GLenum ToGLEnum(OvRendering::Settings::ERasterizationMode value)
 {
@@ -286,7 +285,8 @@ OvRendering::Data::PipelineState RetrieveOpenGLPipelineState()
 
 namespace OvRendering::HAL
 {
-	std::optional<Data::PipelineState> OpenGL::Init(bool debug)
+	template<>
+	std::optional<Data::PipelineState> GLBackend::Init(bool debug)
 	{
 		const GLenum error = glewInit();
 
@@ -311,7 +311,8 @@ namespace OvRendering::HAL
 		return RetrieveOpenGLPipelineState();
 	}
 
-	void OpenGL::Clear(bool p_colorBuffer, bool p_depthBuffer, bool p_stencilBuffer)
+	template<>
+	void GLBackend::Clear(bool p_colorBuffer, bool p_depthBuffer, bool p_stencilBuffer)
 	{
 		GLbitfield clearMask = 0;
 
@@ -325,7 +326,8 @@ namespace OvRendering::HAL
 		}
 	}
 
-	void OpenGL::ReadPixels(
+	template<>
+	void GLBackend::ReadPixels(
 		uint32_t p_x,
 		uint32_t p_y,
 		uint32_t p_width,
@@ -338,107 +340,128 @@ namespace OvRendering::HAL
 		glReadPixels(p_x, p_y, p_width, p_height, static_cast<GLenum>(p_format), static_cast<GLenum>(p_type), p_data);
 	}
 
-	void OpenGL::DrawElements(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_indexCount)
+	template<>
+	void GLBackend::DrawElements(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_indexCount)
 	{
 		glDrawElements(ToGLEnum(p_primitiveMode), p_indexCount, GL_UNSIGNED_INT, nullptr);
 	}
 
-	void OpenGL::DrawElementsInstanced(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_indexCount, uint32_t p_instances)
+	template<>
+	void GLBackend::DrawElementsInstanced(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_indexCount, uint32_t p_instances)
 	{
 		glDrawElementsInstanced(ToGLEnum(p_primitiveMode), p_indexCount, GL_UNSIGNED_INT, nullptr, p_instances);
 	}
 
-	void OpenGL::DrawArrays(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_vertexCount)
+	template<>
+	void GLBackend::DrawArrays(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_vertexCount)
 	{
 		glDrawArrays(ToGLEnum(p_primitiveMode), 0, p_vertexCount);
 	}
 
-	void OpenGL::DrawArraysInstanced(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_vertexCount, uint32_t p_instances)
+	template<>
+	void GLBackend::DrawArraysInstanced(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_vertexCount, uint32_t p_instances)
 	{
 		glDrawArraysInstanced(ToGLEnum(p_primitiveMode), 0, p_vertexCount, p_instances);
 	}
 
-	void OpenGL::SetClearColor(float p_red, float p_green, float p_blue, float p_alpha)
+	template<>
+	void GLBackend::SetClearColor(float p_red, float p_green, float p_blue, float p_alpha)
 	{
 		glClearColor(p_red, p_green, p_blue, p_alpha);
 	}
 
-	void OpenGL::SetRasterizationLinesWidth(float p_width)
+	template<>
+	void GLBackend::SetRasterizationLinesWidth(float p_width)
 	{
 		glLineWidth(p_width);
 	}
 
-	void OpenGL::SetRasterizationMode(Settings::ERasterizationMode p_rasterizationMode)
+	template<>
+	void GLBackend::SetRasterizationMode(Settings::ERasterizationMode p_rasterizationMode)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, ToGLEnum(p_rasterizationMode));
 	}
 
-	void OpenGL::SetCapability(Settings::ERenderingCapability p_capability, bool p_value)
+	template<>
+	void GLBackend::SetCapability(Settings::ERenderingCapability p_capability, bool p_value)
 	{
 		(p_value ? glEnable : glDisable)(ToGLEnum(p_capability));
 	}
 
-	bool OpenGL::GetCapability(Settings::ERenderingCapability p_capability)
+	template<>
+	bool GLBackend::GetCapability(Settings::ERenderingCapability p_capability)
 	{
 		return glIsEnabled(ToGLEnum(p_capability));
 	}
 
-	void OpenGL::SetStencilAlgorithm(Settings::EComparaisonAlgorithm p_algorithm, int32_t p_reference, uint32_t p_mask)
+	template<>
+	void GLBackend::SetStencilAlgorithm(Settings::EComparaisonAlgorithm p_algorithm, int32_t p_reference, uint32_t p_mask)
 	{
 		glStencilFunc(ToGLEnum(p_algorithm), p_reference, p_mask);
 	}
 
-	void OpenGL::SetDepthAlgorithm(Settings::EComparaisonAlgorithm p_algorithm)
+	template<>
+	void GLBackend::SetDepthAlgorithm(Settings::EComparaisonAlgorithm p_algorithm)
 	{
 		glDepthFunc(ToGLEnum(p_algorithm));
 	}
 
-	void OpenGL::SetStencilMask(uint32_t p_mask)
+	template<>
+	void GLBackend::SetStencilMask(uint32_t p_mask)
 	{
 		glStencilMask(p_mask);
 	}
 
-	void OpenGL::SetStencilOperations(Settings::EOperation p_stencilFail, Settings::EOperation p_depthFail, Settings::EOperation p_bothPass)
+	template<>
+	void GLBackend::SetStencilOperations(Settings::EOperation p_stencilFail, Settings::EOperation p_depthFail, Settings::EOperation p_bothPass)
 	{
 		glStencilOp(ToGLEnum(p_stencilFail), ToGLEnum(p_depthFail), ToGLEnum(p_bothPass));
 	}
 
-	void OpenGL::SetCullFace(Settings::ECullFace p_cullFace)
+	template<>
+	void GLBackend::SetCullFace(Settings::ECullFace p_cullFace)
 	{
 		glCullFace(ToGLEnum(p_cullFace));
 	}
 
-	void OpenGL::SetDepthWriting(bool p_enable)
+	template<>
+	void GLBackend::SetDepthWriting(bool p_enable)
 	{
 		glDepthMask(p_enable);
 	}
 
-	void OpenGL::SetColorWriting(bool p_enableRed, bool p_enableGreen, bool p_enableBlue, bool p_enableAlpha)
+	template<>
+	void GLBackend::SetColorWriting(bool p_enableRed, bool p_enableGreen, bool p_enableBlue, bool p_enableAlpha)
 	{
 		glColorMask(p_enableRed, p_enableGreen, p_enableBlue, p_enableAlpha);
 	}
 
-	void OpenGL::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+	template<>
+	void GLBackend::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 	{
 		glViewport(x, y, width, height);
 	}
 
-	std::string OpenGL::GetVendor()
+	template<>
+	std::string GLBackend::GetVendor()
 	{
 		return GetString(GL_VENDOR);
 	}
 
-	std::string OpenGL::GetHardware()
+	template<>
+	std::string GLBackend::GetHardware()
 	{
 		return GetString(GL_RENDERER);
 	}
 
-	std::string OpenGL::GetVersion()
+	template<>
+	std::string GLBackend::GetVersion()
 	{
 		return GetString(GL_VERSION);
 	}
 
-	std::string OpenGL::GetShadingLanguageVersion()
+	template<>
+	std::string GLBackend::GetShadingLanguageVersion()
 	{
 		return GetString(GL_SHADING_LANGUAGE_VERSION);
 	}

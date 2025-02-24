@@ -9,8 +9,8 @@
 
 #include <OvUI/Panels/PanelWindow.h>
 #include <OvUI/Widgets/Visual/Image.h>
-#include <OvRendering/Buffers/UniformBuffer.h>
-#include <OvRendering/Buffers/Framebuffer.h>
+#include <OvRendering/HAL/UniformBuffer.h>
+#include <OvRendering/HAL/Framebuffer.h>
 #include <OvRendering/Entities/Camera.h>
 #include <OvRendering/Core/CompositeRenderer.h>
 #include <OvCore/Rendering/SceneRenderer.h>
@@ -90,7 +90,7 @@ namespace OvEditor::Panels
 
 		OvMaths::FVector3 m_gridColor = OvMaths::FVector3 { 0.176f, 0.176f, 0.176f };
 
-		OvRendering::Buffers::Framebuffer m_fbo;
+		OvRendering::HAL::Framebuffer m_fbo;
 		std::unique_ptr<OvCore::Rendering::SceneRenderer> m_renderer;
 	};
 }

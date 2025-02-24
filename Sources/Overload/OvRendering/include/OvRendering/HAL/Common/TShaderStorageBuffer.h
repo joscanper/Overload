@@ -8,28 +8,29 @@
 
 #include <vector>
 
-#include "OvRendering/Context/Driver.h"
-#include "OvRendering/Settings/EAccessSpecifier.h"
+#include <OvRendering/Settings/EAccessSpecifier.h>
+#include <OvRendering/Settings/EGraphicsBackend.h>
 
 namespace OvRendering::Resources { class Shader; }
 
-namespace OvRendering::Buffers
+namespace OvRendering::HAL
 {
 	/**
-	* Wraps OpenGL SSBO
+	* TODO
 	*/
-	class ShaderStorageBuffer
+	template<Settings::EGraphicsBackend Backend, class Context>
+	class TShaderStorageBuffer
 	{
 	public:
 		/**
 		* Create a SSBO with the given access specifier hint
 		*/
-		ShaderStorageBuffer(Settings::EAccessSpecifier p_accessSpecifier);
+		TShaderStorageBuffer(Settings::EAccessSpecifier p_accessSpecifier);
 
 		/**
 		* Destroy the SSBO
 		*/
-		~ShaderStorageBuffer();
+		~TShaderStorageBuffer();
 
 		/**
 		* Bind the SSBO to the given binding point
@@ -45,12 +46,9 @@ namespace OvRendering::Buffers
 		/**
 		* Send the block data
 		*/
-		template<typename T>
-		void SendBlocks(T* p_data, size_t p_size);
+		void SendBlocks(void* p_data, size_t p_size);
 
-	private:
-		uint32_t m_bufferID;
+	protected:
+		Context m_context;
 	};
 }
-
-#include "OvRendering/Buffers/ShaderStorageBuffer.inl"

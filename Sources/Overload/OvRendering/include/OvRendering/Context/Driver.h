@@ -26,8 +26,6 @@
 #include <OvMaths/FVector4.h>
 #include <OvTools/Utils/OptRef.h>
 
-class DriverImpl;
-
 namespace OvRendering::Context
 {
 	/**

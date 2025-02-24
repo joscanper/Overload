@@ -12,7 +12,7 @@
 OvCore::Rendering::EngineBufferRenderFeature::EngineBufferRenderFeature(OvRendering::Core::CompositeRenderer& p_renderer)
 	: ARenderFeature(p_renderer)
 {
-	m_engineBuffer = std::make_unique<OvRendering::Buffers::UniformBuffer>(
+	m_engineBuffer = std::make_unique<OvRendering::HAL::UniformBuffer>(
 		/* UBO Data Layout */
 		sizeof(OvMaths::FMatrix4) +
 		sizeof(OvMaths::FMatrix4) +

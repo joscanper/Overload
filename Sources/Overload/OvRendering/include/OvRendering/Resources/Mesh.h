@@ -9,8 +9,8 @@
 #include <vector>
 #include <memory>
 
-#include "OvRendering/Buffers/VertexArray.h"
-#include "OvRendering/Buffers/IndexBuffer.h"
+#include "OvRendering/HAL/VertexArray.h"
+#include "OvRendering/HAL/IndexBuffer.h"
 #include "OvRendering/Resources/IMesh.h"
 #include "OvRendering/Geometry/Vertex.h"
 #include "OvRendering/Geometry/BoundingSphere.h"
@@ -70,9 +70,9 @@ namespace OvRendering::Resources
 		const uint32_t m_indicesCount;
 		const uint32_t m_materialIndex;
 
-		Buffers::VertexArray							m_vertexArray;
-		std::unique_ptr<Buffers::VertexBuffer<float>>	m_vertexBuffer;
-		std::unique_ptr<Buffers::IndexBuffer>			m_indexBuffer;
+		HAL::VertexArray m_vertexArray;
+		std::unique_ptr<HAL::VertexBuffer> m_vertexBuffer;
+		std::unique_ptr<HAL::IndexBuffer> m_indexBuffer;
 
 		Geometry::BoundingSphere m_boundingSphere;
 	};

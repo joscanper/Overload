@@ -74,8 +74,9 @@ void OvRendering::Resources::Mesh::CreateBuffers(const std::vector<Geometry::Ver
 		vertexData.push_back(vertex.bitangent[2]);
 	}
 
-	m_vertexBuffer	= std::make_unique<Buffers::VertexBuffer<float>>(vertexData);
-	m_indexBuffer	= std::make_unique<Buffers::IndexBuffer>(const_cast<uint32_t*>(p_indices.data()), p_indices.size());
+	m_vertexBuffer	= std::make_unique<HAL::VertexBuffer>();
+	m_vertexBuffer->UploadData(vertexData);
+	m_indexBuffer	= std::make_unique<HAL::IndexBuffer>(const_cast<uint32_t*>(p_indices.data()), p_indices.size());
 
 	uint64_t vertexSize = sizeof(Geometry::Vertex);
 
