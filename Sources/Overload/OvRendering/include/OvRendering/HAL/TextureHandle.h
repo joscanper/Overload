@@ -6,18 +6,17 @@
 
 #pragma once
 
-#define GFX_USE_OPENGL
-
-#if defined(GFX_USE_OPENGL)
+#if defined(GRAPHICS_API_OPENGL)
 #include <OvRendering/HAL/OpenGL/GLTextureHandle.h>
-#endif // defined(GFX_USE_OPENGL)
+#else
+#include <OvRendering/HAL/None/NoneTextureHandle.h>
+#endif // defined(GRAPHICS_API_OPENGL)
 
-namespace OvRendering
+namespace OvRendering::HAL
 {
-	namespace HAL
-	{
-#if defined(GFX_USE_OPENGL)
-		using TextureHandle = HAL::GLTextureHandle;
-#endif // defined(GFX_USE_OPENGL)
-	}
+#if defined(GRAPHICS_API_OPENGL)
+	using TextureHandle = GLTextureHandle;
+#else
+	using TextureHandle = NoneTextureHandle;
+#endif // defined(GRAPHICS_API_OPENGL)
 }

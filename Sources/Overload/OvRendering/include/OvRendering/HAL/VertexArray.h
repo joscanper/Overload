@@ -6,18 +6,17 @@
 
 #pragma once
 
-#define GFX_USE_OPENGL
-
-#if defined(GFX_USE_OPENGL)
+#if defined(GRAPHICS_API_OPENGL)
 #include <OvRendering/HAL/OpenGL/GLVertexArray.h>
-#endif // defined(GFX_USE_OPENGL)
+#else
+#include <OvRendering/HAL/None/NoneVertexArray.h>
+#endif // defined(GRAPHICS_API_OPENGL)
 
-namespace OvRendering
+namespace OvRendering::HAL
 {
-	namespace HAL
-	{
-#if defined(GFX_USE_OPENGL)
-		using VertexArray = HAL::GLVertexArray;
-#endif // defined(GFX_USE_OPENGL)
-	}
+#if defined(GRAPHICS_API_OPENGL)
+	using VertexArray = GLVertexArray;
+#else
+	using VertexArray = NoneVertexArray;
+#endif // defined(GRAPHICS_API_OPENGL)
 }

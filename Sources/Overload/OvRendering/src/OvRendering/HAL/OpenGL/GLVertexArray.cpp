@@ -4,6 +4,8 @@
 * @licence: MIT
 */
 
+#include <gl/glew.h>
+
 #include <OvRendering/HAL/OpenGL/GLVertexArray.h>
 
 template<>

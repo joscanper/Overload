@@ -6,18 +6,17 @@
 
 #pragma once
 
-#define GFX_USE_OPENGL
-
-#if defined(GFX_USE_OPENGL)
+#if defined(GRAPHICS_API_OPENGL)
 #include <OvRendering/HAL/OpenGL/GLBackend.h>
-#endif // defined(GFX_USE_OPENGL)
+#else
+#include <OvRendering/HAL/None/NoneBackend.h>
+#endif // defined(GRAPHICS_API_OPENGL)
 
-namespace OvRendering
+namespace OvRendering::HAL
 {
-	namespace HAL
-	{
-#if defined(GFX_USE_OPENGL)
-		using Backend = HAL::GLBackend;
-#endif // defined(GFX_USE_OPENGL)
-	}
+#if defined(GRAPHICS_API_OPENGL)
+	using Backend = GLBackend;
+#else
+	using Backend = NoneBackend;
+#endif // defined(GRAPHICS_API_OPENGL)
 }

@@ -6,10 +6,11 @@
 
 #pragma once
 
-#include "OvRendering/HAL/Common/TFramebuffer.h"
+#include <OvRendering/HAL/Common/TFramebuffer.h>
+#include <OvRendering/HAL/None/NoneTextureHandle.h>
 
 namespace OvRendering::HAL
 {
 	struct NoneFramebufferContext {};
-	using NoneFramebuffer = TFramebuffer<Settings::EGraphicsBackend::NONE, NoneFramebufferContext>;
+	using NoneFramebuffer = TFramebuffer<Settings::EGraphicsBackend::NONE, NoneFramebufferContext, NoneTextureHandleContext>;
 }

@@ -6,18 +6,17 @@
 
 #pragma once
 
-#define GFX_USE_OPENGL
-
-#if defined(GFX_USE_OPENGL)
+#if defined(GRAPHICS_API_OPENGL)
 #include <OvRendering/HAL/OpenGL/GLShaderStage.h>
-#endif // defined(GFX_USE_OPENGL)
+#else
+#include <OvRendering/HAL/None/NoneShaderStage.h>
+#endif // defined(GRAPHICS_API_OPENGL)
 
-namespace OvRendering
+namespace OvRendering::HAL
 {
-	namespace HAL
-	{
-#if defined(GFX_USE_OPENGL)
-		using ShaderStage = HAL::GLShaderStage;
-#endif // defined(GFX_USE_OPENGL)
-	}
+#if defined(GRAPHICS_API_OPENGL)
+	using ShaderStage = GLShaderStage;
+#else
+	using ShaderStage = NoneShaderStage;
+#endif // defined(GRAPHICS_API_OPENGL)
 }
