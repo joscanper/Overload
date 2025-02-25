@@ -39,7 +39,7 @@ void OvCore::Resources::Material::OnSerialize(tinyxml2::XMLDocument & p_doc, tin
 		tinyxml2::XMLNode* uniform = p_doc.NewElement("uniform");
 		uniformsNode->InsertEndChild(uniform); // Instead of p_node, use uniformNode (To create)
 
-		const OvRendering::Settings::UniformInfo* uniformInfo = m_shader->GetUniformInfo(name);
+		const OvRendering::Settings::UniformInfo* uniformInfo = m_shader->GetProgram().GetUniformInfo(name);
 
 		Serializer::SerializeString(p_doc, uniform, "name", name);
 
@@ -120,7 +120,7 @@ void OvCore::Resources::Material::OnDeserialize(tinyxml2::XMLDocument & p_doc, t
 					const std::string uniformName = uniformNameElement->GetText();
 
 					/* We collect information about the uniform (The uniform is identified in the shader by its name) */
-					const OvRendering::Settings::UniformInfo* uniformInfo = m_shader->GetUniformInfo(uniformName);
+					const OvRendering::Settings::UniformInfo* uniformInfo = m_shader->GetProgram().GetUniformInfo(uniformName);
 
 					/* We verify that the uniform is existant is the current shader */
 					if (uniformInfo)

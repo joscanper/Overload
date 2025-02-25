@@ -19,8 +19,7 @@ namespace
 	std::string __FILE_TRACE;
 }
 
-bool CompileShaderProgram(
-	OvRendering::Resources::Shader& p_shader,
+std::unique_ptr<OvRendering::HAL::ShaderProgram> CreateProgram(
 	const std::string& p_vertexShader,
 	const std::string& p_fragmentShader
 )
@@ -50,13 +49,17 @@ bool CompileShaderProgram(
 
 	if (vertexCompilationResult.success && fragmentCompilationResult.success)
 	{
-		p_shader.Attach(vertexStage);
-		p_shader.Attach(fragmentStage);
-		const auto linkResult = p_shader.Link();
+		auto program = std::make_unique<OvRendering::HAL::ShaderProgram>();
+		program->Attach(vertexStage);
+		program->Attach(fragmentStage);
+		const auto linkResult = program->Link();
+		program->Detach(vertexStage);
+		program->Detach(fragmentStage);
+
 		if (linkResult.success)
 		{
 			OVLOG_INFO("[COMPILE] \"" + __FILE_TRACE + "\": Success!");
-			return true;
+			return program;
 		}
 		else
 		{
@@ -64,7 +67,7 @@ bool CompileShaderProgram(
 		}
 	}
 
-	return false;
+	return nullptr;
 }
 
 bool ParseIncludeDirective(const std::string& line, std::string& includeFilePath)
@@ -164,32 +167,24 @@ OvRendering::Resources::Shader* OvRendering::Resources::Loaders::ShaderLoader::C
 
 	auto [vertex, fragment] = ParseShader(p_filePath, p_pathParser);
 
-	Shader* shader = new Shader(p_filePath);
+	if (auto program = CreateProgram(vertex, fragment))
+	{
+		return new Shader(p_filePath, std::move(program));
+	}
 
-	if (CompileShaderProgram(*shader, vertex, fragment))
-	{
-		return shader;
-	}
-	else
-	{
-		delete shader;
-		return nullptr;
-	}
+	return nullptr;
 }
 
 OvRendering::Resources::Shader* OvRendering::Resources::Loaders::ShaderLoader::CreateFromSource(const std::string& p_vertexShader, const std::string& p_fragmentShader)
 {
-	Shader* shader = new Shader("");
+	__FILE_TRACE = "{C++ embedded shader}";
 
-	if (CompileShaderProgram(*shader, p_vertexShader, p_fragmentShader))
+	if (auto program = CreateProgram(p_vertexShader, p_fragmentShader))
 	{
-		return shader;
+		return new Shader("", std::move(program));
 	}
-	else
-	{
-		delete shader;
-		return nullptr;
-	}
+
+	return nullptr;
 }
 
 void OvRendering::Resources::Loaders::ShaderLoader::Recompile(Shader& p_shader, const std::string& p_filePath, FilePathParserCallback p_pathParser)
@@ -198,9 +193,11 @@ void OvRendering::Resources::Loaders::ShaderLoader::Recompile(Shader& p_shader, 
 
 	auto [vertex, fragment] = ParseShader(p_filePath, p_pathParser);
 
-	p_shader.DetachAll();
-
-	if (!CompileShaderProgram(p_shader, vertex, fragment))
+	if (auto program = CreateProgram(vertex, fragment))
+	{
+		p_shader.SetProgram(std::move(program));
+	}
+	else
 	{
 		OVLOG_ERROR("[COMPILE] \"" + __FILE_TRACE + "\": Failed! Previous shader version keept");
 	}

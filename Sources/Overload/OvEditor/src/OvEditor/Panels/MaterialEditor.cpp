@@ -317,7 +317,7 @@ void OvEditor::Panels::MaterialEditor::GenerateShaderSettingsContent()
 	{
 		int orderID = 0;
 
-		auto uniformData = m_target->GetShader()->GetUniformInfo(name);
+		auto uniformData = m_target->GetShader()->GetProgram().GetUniformInfo(name);
 
 		if (uniformData && name.length() > 0 && name[0] != '_') // Uniforms starting with '_' are internal (private), so not exposed
 		{
@@ -338,7 +338,7 @@ void OvEditor::Panels::MaterialEditor::GenerateShaderSettingsContent()
 
 	for (auto& [order, info] : sortedUniformsData)
 	{
-		auto uniformData = m_target->GetShader()->GetUniformInfo(info.first);
+		auto uniformData = m_target->GetShader()->GetProgram().GetUniformInfo(info.first);
 		
 		if (uniformData)
 		{

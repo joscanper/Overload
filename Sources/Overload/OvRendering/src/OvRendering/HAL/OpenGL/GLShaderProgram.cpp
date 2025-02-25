@@ -34,20 +34,21 @@ void OvRendering::HAL::GLShaderProgram::Unbind() const
 }
 
 template<>
-void OvRendering::HAL::GLShaderProgram::Attach(GLShaderStage p_shader)
+void OvRendering::HAL::GLShaderProgram::Attach(GLShaderStage& p_shader)
 {
 	glAttachShader(id, p_shader.GetID());
+	m_attachedShaders.push_back(std::ref(p_shader));
 }
 
 template<>
-void OvRendering::HAL::GLShaderProgram::Detach(GLShaderStage p_shader)
+void OvRendering::HAL::GLShaderProgram::Detach(GLShaderStage& p_shader)
 {
 	glDetachShader(id, p_shader.GetID());
 	m_attachedShaders.erase(std::remove_if(
 		m_attachedShaders.begin(),
 		m_attachedShaders.end(),
-		[&p_shader](const GLShaderStage& shader) {
-			return shader.GetID() == p_shader.GetID();
+		[&p_shader](const std::reference_wrapper<GLShaderStage> shader) {
+			return shader.get().GetID() == p_shader.GetID();
 		}
 	));
 }
@@ -57,7 +58,7 @@ void OvRendering::HAL::GLShaderProgram::DetachAll()
 {
 	for (auto& shader : m_attachedShaders)
 	{
-		glDetachShader(id, shader.GetID());
+		glDetachShader(id, shader.get().GetID());
 	}
 
 	m_attachedShaders.clear();

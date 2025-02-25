@@ -4,8 +4,22 @@
 * @licence: MIT
 */
 
-#include "OvRendering/Resources/Shader.h"
+#include <OvDebug/Assertion.h>
+#include <OvRendering/Resources/Shader.h>
 
-OvRendering::Resources::Shader::Shader(const std::string p_path) : path(p_path)
+OvRendering::HAL::ShaderProgram& OvRendering::Resources::Shader::GetProgram()
 {
+	OVASSERT(m_program != nullptr, "Trying to access a null ShaderProgram");
+	return *m_program;
+}
+
+OvRendering::Resources::Shader::Shader(const std::string p_path, std::unique_ptr<HAL::ShaderProgram>&& p_program) : path(p_path)
+{
+	SetProgram(std::move(p_program));
+}
+
+void OvRendering::Resources::Shader::SetProgram(std::unique_ptr<HAL::ShaderProgram>&& p_program)
+{
+	OVASSERT(p_program != nullptr, "Cannot assign an invalid program!");
+	m_program = std::move(p_program);
 }
