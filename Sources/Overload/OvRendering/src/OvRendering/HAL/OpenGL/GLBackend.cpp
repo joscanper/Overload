@@ -11,88 +11,8 @@
 #include <OvDebug/Logger.h>
 #include <OvDebug/Assertion.h>
 #include <OvRendering/HAL/OpenGL/GLBackend.h>
+#include <OvRendering/HAL/OpenGL/GLTypes.h>
 #include <OvRendering/Utils/Conversions.h>
-
-constexpr GLenum ToGLEnum(OvRendering::Settings::ERasterizationMode value)
-{
-	return GL_POINT + static_cast<GLint>(value);
-}
-
-constexpr GLenum ToGLEnum(OvRendering::Settings::EComparaisonAlgorithm value)
-{
-	return GL_NEVER + static_cast<GLint>(value);
-}
-
-constexpr GLenum ToGLEnum(OvRendering::Settings::ECullFace value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::ECullFace::FRONT: return GL_FRONT;
-	case OvRendering::Settings::ECullFace::BACK: return GL_BACK;
-	case OvRendering::Settings::ECullFace::FRONT_AND_BACK: return GL_FRONT_AND_BACK;
-	}
-
-	static_assert(true);
-	return {};
-}
-
-constexpr GLenum ToGLEnum(OvRendering::Settings::EOperation value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::EOperation::KEEP: return GL_KEEP;
-	case OvRendering::Settings::EOperation::ZERO: return GL_ZERO;
-	case OvRendering::Settings::EOperation::REPLACE: return GL_REPLACE;
-	case OvRendering::Settings::EOperation::INCREMENT: return GL_INCR;
-	case OvRendering::Settings::EOperation::INCREMENT_WRAP: return GL_INCR_WRAP;
-	case OvRendering::Settings::EOperation::DECREMENT: return GL_DECR;
-	case OvRendering::Settings::EOperation::DECREMENT_WRAP: return GL_DECR_WRAP;
-	case OvRendering::Settings::EOperation::INVERT: return GL_INVERT;
-	}
-
-	static_assert(true);
-	return {};
-}
-
-constexpr GLenum ToGLEnum(OvRendering::Settings::ERenderingCapability value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::ERenderingCapability::BLEND: return GL_BLEND;
-	case OvRendering::Settings::ERenderingCapability::CULL_FACE: return GL_CULL_FACE;
-	case OvRendering::Settings::ERenderingCapability::DEPTH_TEST: return GL_DEPTH_TEST;
-	case OvRendering::Settings::ERenderingCapability::DITHER: return GL_DITHER;
-	case OvRendering::Settings::ERenderingCapability::POLYGON_OFFSET_FILL: return GL_POLYGON_OFFSET_FILL;
-	case OvRendering::Settings::ERenderingCapability::SAMPLE_ALPHA_TO_COVERAGE: return GL_SAMPLE_ALPHA_TO_COVERAGE;
-	case OvRendering::Settings::ERenderingCapability::SAMPLE_COVERAGE: return GL_SAMPLE_COVERAGE;
-	case OvRendering::Settings::ERenderingCapability::SCISSOR_TEST: return GL_SCISSOR_TEST;
-	case OvRendering::Settings::ERenderingCapability::STENCIL_TEST: return GL_STENCIL_TEST;
-	case OvRendering::Settings::ERenderingCapability::MULTISAMPLE: return GL_MULTISAMPLE;
-	}
-
-	static_assert(true);
-	return {};
-}
-
-constexpr GLenum ToGLEnum(OvRendering::Settings::EPrimitiveMode value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::EPrimitiveMode::POINTS: return GL_POINTS;
-	case OvRendering::Settings::EPrimitiveMode::LINES: return GL_LINES;
-	case OvRendering::Settings::EPrimitiveMode::LINE_LOOP: return GL_LINE_LOOP;
-	case OvRendering::Settings::EPrimitiveMode::LINE_STRIP: return GL_LINE_STRIP;
-	case OvRendering::Settings::EPrimitiveMode::TRIANGLES: return GL_TRIANGLES;
-	case OvRendering::Settings::EPrimitiveMode::TRIANGLE_STRIP: return GL_TRIANGLE_STRIP;
-	case OvRendering::Settings::EPrimitiveMode::TRIANGLE_FAN: return GL_TRIANGLE_FAN;
-	case OvRendering::Settings::EPrimitiveMode::LINES_ADJACENCY: return GL_LINES_ADJACENCY;
-	case OvRendering::Settings::EPrimitiveMode::LINE_STRIP_ADJACENCY: return GL_LINE_STRIP_ADJACENCY;
-	case OvRendering::Settings::EPrimitiveMode::PATCHES: return GL_PATCHES;
-	}
-
-	static_assert(true);
-	return {};
-}
 
 void GLDebugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int32_t length, const char* message, const void* userParam)
 {
@@ -337,7 +257,7 @@ namespace OvRendering::HAL
 		void* p_data
 	)
 	{
-		glReadPixels(p_x, p_y, p_width, p_height, static_cast<GLenum>(p_format), static_cast<GLenum>(p_type), p_data);
+		glReadPixels(p_x, p_y, p_width, p_height, ToGLenum(p_format), ToGLenum(p_type), p_data);
 	}
 
 	template<>

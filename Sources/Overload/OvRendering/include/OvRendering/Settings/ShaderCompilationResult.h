@@ -11,7 +11,7 @@
 namespace OvRendering::Settings
 {
 	/**
-	* TODO
+	* Structure that holds the result of a shader compilation
 	*/
 	struct ShaderCompilationResult
 	{

@@ -14,13 +14,13 @@
 namespace OvRendering::Settings
 {
 	/**
-	* Data structure containing information about a uniform
+	* Structure that holds information about a uniform
 	*/
 	struct UniformInfo
 	{
-		UniformType		type;
-		std::string		name;
-		uint32_t		location;
-		std::any		defaultValue;
+		UniformType type;
+		std::string name;
+		uint32_t location;
+		std::any defaultValue;
 	};
 }

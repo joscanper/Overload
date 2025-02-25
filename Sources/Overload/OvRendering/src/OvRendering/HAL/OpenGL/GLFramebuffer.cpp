@@ -4,9 +4,6 @@
 * @licence: MIT
 */
 
-
-#include <iostream>
-
 #include <GL/glew.h>
 
 #include <OvDebug/Assertion.h>
@@ -21,47 +18,50 @@ OvRendering::HAL::GLFramebuffer::TFramebuffer(uint16_t p_width, uint16_t p_heigh
 		.depthOnly = p_depthOnly
 	}
 {
-	// Generate OpenGL objects
 	glGenFramebuffers(1, &m_context.bufferID);
-	glGenTextures(1, &m_context.renderTexture);
+
 	if (!m_context.depthOnly)
 	{
 		glGenRenderbuffers(1, &m_context.depthStencilBuffer);
 	}
 
 	// Setup texture
-	// TODO: Use GLTexture
-	glBindTexture(GL_TEXTURE_2D, m_context.renderTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	m_context.renderTexture.Bind();
+
+	Settings::TextureDesc renderTextureDesc{
+		.width = m_context.width,
+		.height = m_context.height,
+		.firstFilter = Settings::ETextureFilteringMode::NEAREST,
+		.secondFilter = Settings::ETextureFilteringMode::NEAREST,
+		.horizontalWrapMode = Settings::ETextureWrapMode::CLAMP_TO_BORDER,
+		.verticalWrapMode = Settings::ETextureWrapMode::CLAMP_TO_BORDER,
+		.internalFormat = m_context.depthOnly ? Settings::EInternalFormat::DEPTH_COMPONENT : Settings::EInternalFormat::RGBA32F,
+		.format = m_context.depthOnly ? Settings::EFormat::DEPTH_COMPONENT : Settings::EFormat::RGBA,
+		.type = Settings::EPixelDataType::FLOAT
+	};
+
+	m_context.renderTexture.Upload(renderTextureDesc, nullptr);
 
 	if (m_context.depthOnly)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_context.width, m_context.height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 		float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 	}
-	else
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_context.width, m_context.height, 0, GL_RGBA, GL_FLOAT, nullptr);
-	}
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
+	m_context.renderTexture.Unbind();
 
 	// Setup framebuffer
 	Bind();
+
 	if (m_context.depthOnly)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_context.renderTexture, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_context.renderTexture.GetID(), 0);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 	}
 	else
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_context.renderTexture, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_context.renderTexture.GetID(), 0);
 
 		// Setup depth-stencil buffer
 		glBindRenderbuffer(GL_RENDERBUFFER, m_context.depthStencilBuffer);
@@ -77,9 +77,7 @@ OvRendering::HAL::GLFramebuffer::TFramebuffer(uint16_t p_width, uint16_t p_heigh
 template<>
 OvRendering::HAL::GLFramebuffer::~TFramebuffer()
 {
-	// Destroy OpenGL objects
 	glDeleteFramebuffers(1, &m_context.bufferID);
-	glDeleteTextures(1, &m_context.renderTexture);
 	if (!m_context.depthOnly)
 	{
 		glDeleteRenderbuffers(1, &m_context.depthStencilBuffer);
@@ -106,17 +104,15 @@ void OvRendering::HAL::GLFramebuffer::Resize(uint16_t p_width, uint16_t p_height
 		m_context.width = p_width;
 		m_context.height = p_height;
 
-		// Resize texture
-		glBindTexture(GL_TEXTURE_2D, m_context.renderTexture);
-		if (m_context.depthOnly) {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_context.width, m_context.height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-		}
-		else {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_context.width, m_context.height, 0, GL_RGBA, GL_FLOAT, nullptr);
-		}
-		glBindTexture(GL_TEXTURE_2D, 0);
+		auto desc = m_context.renderTexture.GetDesc();
+		desc.width = m_context.width;
+		desc.height = m_context.height;
+		m_context.renderTexture.Bind();
+		m_context.renderTexture.Upload(desc, nullptr);
+		m_context.renderTexture.Unbind();
 
-		if (!m_context.depthOnly) {
+		if (!m_context.depthOnly)
+		{
 			// Resize depth-stencil buffer
 			glBindRenderbuffer(GL_RENDERBUFFER, m_context.depthStencilBuffer);
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_STENCIL, m_context.width, m_context.height);
@@ -134,7 +130,7 @@ uint32_t OvRendering::HAL::GLFramebuffer::GetID() const
 template<>
 uint32_t OvRendering::HAL::GLFramebuffer::GetTextureID() const
 {
-	return m_context.renderTexture;
+	return m_context.renderTexture.GetID();
 }
 
 template<>
@@ -164,7 +160,7 @@ uint16_t OvRendering::HAL::GLFramebuffer::GetHeight() const
 template<>
 void OvRendering::HAL::GLFramebuffer::GenerateMipMaps() const
 {
-	glBindTexture(GL_TEXTURE_2D, m_context.renderTexture);
+	glBindTexture(GL_TEXTURE_2D, m_context.renderTexture.GetID());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);

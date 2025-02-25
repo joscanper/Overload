@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 
 #include <OvRendering/HAL/OpenGL/GLUniformBuffer.h>
+#include <OvRendering/HAL/OpenGL/GLTypes.h>
 #include <OvRendering/Resources/Shader.h>
 
 template<>
@@ -19,7 +20,7 @@ OvRendering::HAL::GLUniformBuffer::TUniformBuffer(
 {
 	glGenBuffers(1, &m_context.bufferID);
 	glBindBuffer(GL_UNIFORM_BUFFER, m_context.bufferID);
-	glBufferData(GL_UNIFORM_BUFFER, p_size, nullptr, static_cast<GLint>(p_accessSpecifier));
+	glBufferData(GL_UNIFORM_BUFFER, p_size, nullptr, ToGLenum(p_accessSpecifier));
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
