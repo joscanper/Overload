@@ -41,13 +41,13 @@ namespace OvRendering::HAL
 		* Attach a shader stage to the program
 		* @param p_shader
 		*/
-		void Attach(TShaderStage<Backend>& p_shader);
+		void Attach(const TShaderStage<Backend>& p_shader);
 
 		/**
 		* Detach a shader stage to the program
 		* @param p_shader
 		*/
-		void Detach(TShaderStage<Backend>& p_shader);
+		void Detach(const TShaderStage<Backend>& p_shader);
 
 		/**
 		* Detach all shader stages from the program
@@ -169,7 +169,7 @@ namespace OvRendering::HAL
 		Context m_context;
 
 	private:
-		std::vector<std::reference_wrapper<TShaderStage<Backend>>> m_attachedShaders;
+		std::vector<std::reference_wrapper<const TShaderStage<Backend>>> m_attachedShaders;
 		std::unordered_map<std::string, int> m_uniformLocationCache;
 	};
 }

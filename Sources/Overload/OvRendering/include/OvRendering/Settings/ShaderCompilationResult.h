@@ -15,7 +15,7 @@ namespace OvRendering::Settings
 	*/
 	struct ShaderCompilationResult
 	{
-		const bool success;
-        const std::string message;
+		bool success;
+		std::string message;
 	};
 }
