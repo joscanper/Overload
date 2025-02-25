@@ -78,9 +78,9 @@ void OvRendering::Data::Material::Bind(OvRendering::Resources::Texture* p_emptyT
 						tex.Bind(textureSlot);
 						m_shader->GetProgram().SetUniformInt(uniformData->name, textureSlot++);
 					}
-					else if (value.type() == typeid(Texture*))
+					else if (value.type() == typeid(Resources::Texture*))
 					{
-						if (auto tex = std::any_cast<Texture*>(value); tex)
+						if (auto tex = std::any_cast<Resources::Texture*>(value); tex)
 						{
 							tex->GetTexture().Bind(textureSlot);
 							m_shader->GetProgram().SetUniformInt(uniformData->name, textureSlot++);

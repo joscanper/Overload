@@ -37,6 +37,8 @@ void OvRendering::HAL::GLTexture::Upload(const Settings::TextureDesc& p_desc, vo
 	OVASSERT(p_desc.width > 0, "Texture width cannot be 0");
 	OVASSERT(p_desc.height > 0, "Texture height cannot be 0");
 
+	m_textureContext.desc = p_desc;
+
 	glBindTexture(GL_TEXTURE_2D, m_context.id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, p_desc.width, p_desc.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, p_data);
 

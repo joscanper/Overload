@@ -9,6 +9,7 @@
 #include <OvDebug/Logger.h>
 #include <OvRendering/HAL/OpenGL/GLShaderProgram.h>
 #include <OvRendering/HAL/OpenGL/GLTexture.h>
+#include <OvRendering/Resources/Texture.h>
 
 template<>
 OvRendering::HAL::GLShaderProgram::TShaderProgram() : m_context{
@@ -235,7 +236,7 @@ void OvRendering::HAL::GLShaderProgram::QueryUniforms()
 			case Settings::UniformType::UNIFORM_FLOAT_VEC3:	defaultValue = std::make_any<OvMaths::FVector3>(GetUniformVec3(name));		break;
 			case Settings::UniformType::UNIFORM_FLOAT_VEC4:	defaultValue = std::make_any<OvMaths::FVector4>(GetUniformVec4(name));		break;
 			case Settings::UniformType::UNIFORM_FLOAT_MAT4:	defaultValue = std::make_any<OvMaths::FMatrix4>(GetUniformMat4(name));		break;
-			case Settings::UniformType::UNIFORM_SAMPLER_2D:	defaultValue = std::make_any<GLTexture*>(nullptr);	break;
+			case Settings::UniformType::UNIFORM_SAMPLER_2D:	defaultValue = std::make_any<Resources::Texture*>(nullptr);	break;
 			}
 
 			if (defaultValue.has_value())
