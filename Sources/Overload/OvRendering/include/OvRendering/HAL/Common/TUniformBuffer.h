@@ -19,7 +19,7 @@ namespace OvRendering::HAL
 	* TODO
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
-	class TUniformBuffer
+	class TUniformBuffer final
 	{
 	public:
 		/**

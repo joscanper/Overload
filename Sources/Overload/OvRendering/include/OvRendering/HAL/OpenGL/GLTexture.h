@@ -7,9 +7,14 @@
 #pragma once
 
 #include "OvRendering/HAL/Common/TTexture.h"
+#include "OvRendering/HAL/OpenGL/GLTextureHandle.h"
 
 namespace OvRendering::HAL
 {
-	struct GLTextureContext {};
-	using GLTexture = TTexture<Settings::EGraphicsBackend::OPENGL, GLTextureContext>;
+	struct GLTextureContext
+	{
+		Settings::TextureDesc desc;
+	};
+
+	using GLTexture = TTexture<Settings::EGraphicsBackend::OPENGL, GLTextureContext, GLTextureHandleContext>;
 }

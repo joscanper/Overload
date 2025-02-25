@@ -16,7 +16,7 @@ namespace OvRendering::HAL
 	* TODO
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
-	class TIndexBuffer
+	class TIndexBuffer final
 	{
 	public:
 		/**
@@ -52,7 +52,7 @@ namespace OvRendering::HAL
 		*/
 		uint32_t GetID();
 
-	protected:
+	private:
 		Context m_context;
 	};
 }

@@ -68,7 +68,7 @@ namespace OvRendering::HAL
 		std::string GetVersion();
 		std::string GetShadingLanguageVersion();
 
-	protected:
+	private:
 		Context m_context;
 	};
 }

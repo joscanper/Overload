@@ -8,6 +8,7 @@
 
 #include <cstdint>
 #include <string>
+#include <memory>
 
 #include <OvRendering/Settings/ETextureFilteringMode.h>
 #include <OvRendering/HAL/Texture.h>
@@ -19,15 +20,26 @@ namespace OvRendering::Resources
 	/**
 	* Texture saved on the disk
 	*/
-	class Texture : public HAL::Texture
+	class Texture
 	{
 		friend class Loaders::TextureLoader;
 
+	public:
+		HAL::Texture& GetTexture();
+
 	private:
-		Texture(const std::string p_path);
+		Texture(const std::string p_path, std::unique_ptr<HAL::Texture>&& p_texture);
 		~Texture() = default;
+
+		/**
+		* TODO
+		*/
+		void SetTexture(std::unique_ptr<HAL::Texture>&& p_texture);
 
 	public:
 		const std::string path;
+
+	private:
+		std::unique_ptr<HAL::Texture> m_texture;
 	};
 }

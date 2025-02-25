@@ -7,6 +7,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <span>
 
 #include <OvMaths/FVector2.h>
 #include <OvMaths/FVector3.h>
@@ -23,8 +24,8 @@ namespace OvRendering::HAL
 	/**
 	* TODO
 	*/
-	template<Settings::EGraphicsBackend Backend, class Context>
-	class TShaderProgram
+	template<Settings::EGraphicsBackend Backend, class ProgramContext, class StageContext>
+	class TShaderProgram final
 	{
 	public:
 		/**
@@ -41,13 +42,13 @@ namespace OvRendering::HAL
 		* Attach a shader stage to the program
 		* @param p_shader
 		*/
-		void Attach(const TShaderStage<Backend>& p_shader);
+		void Attach(const TShaderStage<Backend, StageContext>& p_shader);
 
 		/**
 		* Detach a shader stage to the program
 		* @param p_shader
 		*/
-		void Detach(const TShaderStage<Backend>& p_shader);
+		void Detach(const TShaderStage<Backend, StageContext>& p_shader);
 
 		/**
 		* Detach all shader stages from the program
@@ -68,6 +69,11 @@ namespace OvRendering::HAL
 		* Unbind the program
 		*/
 		void Unbind() const;
+
+		/**
+		* TODO
+		*/
+		uint32_t GetID() const;
 
 		/**
 		* Send a int to the GPU via a shader uniform
@@ -158,18 +164,12 @@ namespace OvRendering::HAL
 		*/
 		void QueryUniforms();
 
-	private:
-		uint32_t GetUniformLocation(const std::string& name);
-
-	public:
-		const uint32_t id;
-		std::vector<Settings::UniformInfo> uniforms;
-
-	protected:
-		Context m_context;
+		/**
+		* TODO
+		*/
+		std::span<Settings::UniformInfo> GetUniforms();
 
 	private:
-		std::vector<std::reference_wrapper<const TShaderStage<Backend>>> m_attachedShaders;
-		std::unordered_map<std::string, int> m_uniformLocationCache;
+		ProgramContext m_context;
 	};
 }

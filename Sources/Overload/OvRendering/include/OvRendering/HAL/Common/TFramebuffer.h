@@ -23,8 +23,8 @@
 
 namespace OvRendering::HAL
 {
-	template<Settings::EGraphicsBackend Backend, class Context>
-	class TFramebuffer
+	template<Settings::EGraphicsBackend Backend, class FramebufferContext, class TextureHandleContext>
+	class TFramebuffer final
 	{
 	public:
 		/**
@@ -71,7 +71,7 @@ namespace OvRendering::HAL
 		/**
 		* Returns the ID of the OpenGL render texture
 		*/
-		TTextureHandle<Backend> GetTexture() const;
+		TTextureHandle<Backend, TextureHandleContext> GetTexture() const;
 
 		/**
 		* Returns the ID of the OpenGL render buffer
@@ -100,7 +100,7 @@ namespace OvRendering::HAL
 		*/
 		void BlitToBackBuffer(uint16_t p_backBufferWidth, uint16_t p_backBufferHeight) const;
 
-	protected:
-		Context m_context;
+	private:
+		FramebufferContext m_context;
 	};
 }

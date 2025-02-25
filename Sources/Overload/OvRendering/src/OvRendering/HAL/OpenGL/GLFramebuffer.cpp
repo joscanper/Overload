@@ -30,6 +30,7 @@ OvRendering::HAL::GLFramebuffer::TFramebuffer(uint16_t p_width, uint16_t p_heigh
 	}
 
 	// Setup texture
+	// TODO: Use GLTexture
 	glBindTexture(GL_TEXTURE_2D, m_context.renderTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
@@ -79,7 +80,8 @@ OvRendering::HAL::GLFramebuffer::~TFramebuffer()
 	// Destroy OpenGL objects
 	glDeleteFramebuffers(1, &m_context.bufferID);
 	glDeleteTextures(1, &m_context.renderTexture);
-	if (!m_context.depthOnly) {
+	if (!m_context.depthOnly)
+	{
 		glDeleteRenderbuffers(1, &m_context.depthStencilBuffer);
 	}
 }

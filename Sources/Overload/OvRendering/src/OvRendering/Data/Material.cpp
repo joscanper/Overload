@@ -36,8 +36,10 @@ void OvRendering::Data::Material::FillUniform()
 {
 	m_properties.clear();
 
-	for (const OvRendering::Settings::UniformInfo& element : m_shader->GetProgram().uniforms)
-		m_properties.emplace(element.name, MaterialProperty{ element.defaultValue, false });
+	for (const auto& uniform : m_shader->GetProgram().GetUniforms())
+	{
+		m_properties.emplace(uniform.name, MaterialProperty{ uniform.defaultValue, false });
+	}
 }
 
 void OvRendering::Data::Material::Bind(OvRendering::Resources::Texture* p_emptyTexture)
@@ -80,12 +82,12 @@ void OvRendering::Data::Material::Bind(OvRendering::Resources::Texture* p_emptyT
 					{
 						if (auto tex = std::any_cast<Texture*>(value); tex)
 						{
-							tex->Bind(textureSlot);
+							tex->GetTexture().Bind(textureSlot);
 							m_shader->GetProgram().SetUniformInt(uniformData->name, textureSlot++);
 						}
 						else if (p_emptyTexture)
 						{
-							p_emptyTexture->Bind(textureSlot);
+							p_emptyTexture->GetTexture().Bind(textureSlot);
 							m_shader->GetProgram().SetUniformInt(uniformData->name, textureSlot++);
 						}
 					}

@@ -17,7 +17,7 @@ namespace OvRendering::HAL
 	* Wraps OpenGL VAO
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
-	class TVertexArray
+	class TVertexArray final
 	{
 	public:
 		/**

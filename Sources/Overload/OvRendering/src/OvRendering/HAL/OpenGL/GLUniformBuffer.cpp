@@ -50,17 +50,17 @@ GLuint OvRendering::HAL::GLUniformBuffer::GetID() const
 template<>
 void OvRendering::HAL::GLUniformBuffer::BindBlockToShader(OvRendering::Resources::Shader& p_shader, uint32_t p_uniformBlockLocation, uint32_t p_bindingPoint)
 {
-	glUniformBlockBinding(p_shader.GetProgram().id, p_uniformBlockLocation, p_bindingPoint);
+	glUniformBlockBinding(p_shader.GetProgram().GetID(), p_uniformBlockLocation, p_bindingPoint);
 }
 
 template<>
 void OvRendering::HAL::GLUniformBuffer::BindBlockToShader(OvRendering::Resources::Shader& p_shader, const std::string& p_name, uint32_t p_bindingPoint)
 {
-	glUniformBlockBinding(p_shader.GetProgram().id, GetBlockLocation(p_shader, p_name), p_bindingPoint);
+	glUniformBlockBinding(p_shader.GetProgram().GetID(), GetBlockLocation(p_shader, p_name), p_bindingPoint);
 }
 
 template<>
 uint32_t OvRendering::HAL::GLUniformBuffer::GetBlockLocation(OvRendering::Resources::Shader& p_shader, const std::string& p_name)
 {
-	return glGetUniformBlockIndex(p_shader.GetProgram().id, p_name.c_str());
+	return glGetUniformBlockIndex(p_shader.GetProgram().GetID(), p_name.c_str());
 }

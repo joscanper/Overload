@@ -19,7 +19,6 @@ namespace OvRendering::Settings
 	{
 		uint32_t width;
 		uint32_t height;
-		uint32_t bpp;
 		Settings::ETextureFilteringMode firstFilter;
 		Settings::ETextureFilteringMode secondFilter;
 		bool generateMipmap;

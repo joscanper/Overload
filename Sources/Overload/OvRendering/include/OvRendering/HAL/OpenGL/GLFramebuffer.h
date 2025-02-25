@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include "OvRendering/HAL/Common/TFramebuffer.h"
+#include <OvRendering/HAL/Common/TFramebuffer.h>
+#include <OvRendering/HAL/OpenGL/GLTextureHandle.h>
 
 namespace OvRendering::HAL
 {
@@ -21,5 +22,5 @@ namespace OvRendering::HAL
 		uint32_t depthStencilBuffer = 0;
 	};
 
-	using GLFramebuffer = TFramebuffer<Settings::EGraphicsBackend::OPENGL, GLFramebufferContext>;
+	using GLFramebuffer = TFramebuffer<Settings::EGraphicsBackend::OPENGL, GLFramebufferContext, GLTextureHandleContext>;
 }

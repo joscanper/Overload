@@ -10,6 +10,11 @@
 
 namespace OvRendering::HAL
 {
-	// struct GLShaderStageContext {};
-	using GLShaderStage = TShaderStage<Settings::EGraphicsBackend::OPENGL>;
+	struct GLShaderStageContext
+	{
+		uint32_t id;
+		Settings::EShaderType type;
+	};
+
+	using GLShaderStage = TShaderStage<Settings::EGraphicsBackend::OPENGL, GLShaderStageContext>;
 }

@@ -22,6 +22,7 @@ GLenum GetGLShaderType(OvRendering::Settings::EShaderType p_type)
 	}
 }
 
+// TODO: Move out of this class
 std::string GetShaderTypeString(OvRendering::Settings::EShaderType p_type)
 {
 	switch (p_type)
@@ -36,41 +37,43 @@ std::string GetShaderTypeString(OvRendering::Settings::EShaderType p_type)
 }
 
 template<>
-OvRendering::HAL::GLShaderStage::TShaderStage(Settings::EShaderType p_type) : m_type(p_type)
+OvRendering::HAL::GLShaderStage::TShaderStage(Settings::EShaderType p_type) : m_context{
+	.id = static_cast<uint32_t>(glCreateShader(GetGLShaderType(p_type))),
+	.type = p_type,
+}
 {
-	m_id = glCreateShader(GetGLShaderType(p_type));
 }
 
 template<>
 OvRendering::HAL::GLShaderStage::~TShaderStage()
 {
-	glDeleteShader(m_id);
+	glDeleteShader(m_context.id);
 }
 
 template<>
 void OvRendering::HAL::GLShaderStage::Upload(const std::string& p_source) const
 {
 	const char* source = p_source.c_str();
-	glShaderSource(m_id, 1, &source, nullptr);
+	glShaderSource(m_context.id, 1, &source, nullptr);
 }
 
 template<>
 OvRendering::Settings::ShaderCompilationResult OvRendering::HAL::GLShaderStage::Compile() const
 {
-	glCompileShader(m_id);
+	glCompileShader(m_context.id);
 
 	GLint compileStatus;
-	glGetShaderiv(m_id, GL_COMPILE_STATUS, &compileStatus);
+	glGetShaderiv(m_context.id, GL_COMPILE_STATUS, &compileStatus);
 
 	if (compileStatus == GL_FALSE)
 	{
 		GLint maxLength;
-		glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &maxLength);
+		glGetShaderiv(m_context.id, GL_INFO_LOG_LENGTH, &maxLength);
 
 		std::string errorLog(maxLength, ' ');
-		glGetShaderInfoLog(m_id, maxLength, &maxLength, errorLog.data());
+		glGetShaderInfoLog(m_context.id, maxLength, &maxLength, errorLog.data());
 
-		std::string shaderTypeString = GetShaderTypeString(m_type);
+		std::string shaderTypeString = GetShaderTypeString(m_context.type);
 		std::string errorHeader = "[" + shaderTypeString + "] \"";
 		return {
 			.success = false,
@@ -86,5 +89,5 @@ OvRendering::Settings::ShaderCompilationResult OvRendering::HAL::GLShaderStage::
 template<>
 uint32_t OvRendering::HAL::GLShaderStage::GetID() const
 {
-	return m_id;
+	return m_context.id;
 }

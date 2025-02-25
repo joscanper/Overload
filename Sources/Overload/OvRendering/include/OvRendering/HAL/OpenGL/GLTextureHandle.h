@@ -10,5 +10,10 @@
 
 namespace OvRendering::HAL
 {
-	using GLTextureHandle = TTextureHandle<Settings::EGraphicsBackend::OPENGL>;
+	struct GLTextureHandleContext
+	{
+		uint32_t id;
+	};
+
+	using GLTextureHandle = TTextureHandle<Settings::EGraphicsBackend::OPENGL, GLTextureHandleContext>;
 }

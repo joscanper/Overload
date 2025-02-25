@@ -16,7 +16,7 @@ namespace OvRendering::HAL
 	* Wraps OpenGL VBO
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
-	class TVertexBuffer
+	class TVertexBuffer final
 	{
 	public:
 		/**

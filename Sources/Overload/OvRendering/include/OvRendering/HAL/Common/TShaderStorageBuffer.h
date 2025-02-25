@@ -19,7 +19,7 @@ namespace OvRendering::HAL
 	* TODO
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
-	class TShaderStorageBuffer
+	class TShaderStorageBuffer final
 	{
 	public:
 		/**
@@ -48,7 +48,7 @@ namespace OvRendering::HAL
 		*/
 		void SendBlocks(void* p_data, size_t p_size);
 
-	protected:
+	private:
 		Context m_context;
 	};
 }

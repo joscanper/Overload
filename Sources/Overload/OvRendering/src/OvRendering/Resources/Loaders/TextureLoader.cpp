@@ -48,27 +48,20 @@ void FreeImage(uint8_t* p_data)
 
 OvRendering::Resources::Texture* OvRendering::Resources::Loaders::TextureLoader::Create(const std::string& p_filepath, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
 {
-	// TODO: Update resource loaders to return unique_ptrs
-	Texture* texture = new Texture{ p_filepath };
-
 	if (Image image{ p_filepath })
 	{
+		auto texture = std::make_unique<HAL::Texture>();
 		texture->Upload({
 			.width = static_cast<uint32_t>(image.width),
 			.height = static_cast<uint32_t>(image.height),
-			.bpp = static_cast<uint32_t>(image.bpp),
 			.firstFilter = p_firstFilter,
 			.secondFilter = p_secondFilter,
 			.generateMipmap = p_generateMipmap
 		}, image.data);
-	}
-	else
-	{
-		delete texture;
-		texture = nullptr;
+		return new Texture{ p_filepath, std::move(texture) };
 	}
 
-	return texture;
+	return nullptr;
 }
 
 OvRendering::Resources::Texture* OvRendering::Resources::Loaders::TextureLoader::CreatePixel(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
@@ -85,7 +78,7 @@ OvRendering::Resources::Texture* OvRendering::Resources::Loaders::TextureLoader:
 
 OvRendering::Resources::Texture* OvRendering::Resources::Loaders::TextureLoader::CreateFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
 {
-	Texture* texture = new Texture{ "" };
+	auto texture = std::make_unique<HAL::Texture>();
 
 	texture->Upload({
 		.width = p_width,
@@ -95,21 +88,22 @@ OvRendering::Resources::Texture* OvRendering::Resources::Loaders::TextureLoader:
 		.generateMipmap = p_generateMipmap
 	}, p_data);
 
-	return texture;
+	return new Texture("", std::move(texture));
 }
 
 void OvRendering::Resources::Loaders::TextureLoader::Reload(Texture& p_texture, const std::string& p_filePath, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
 {
 	if (Image image{p_texture.path})
 	{
-		p_texture.Upload({
+		auto texture = std::make_unique<HAL::Texture>();
+		texture->Upload({
 			.width = static_cast<uint32_t>(image.width),
 			.height = static_cast<uint32_t>(image.height),
-			.bpp = static_cast<uint32_t>(image.bpp),
 			.firstFilter = p_firstFilter,
 			.secondFilter = p_secondFilter,
 			.generateMipmap = p_generateMipmap
 			}, image.data);
+		p_texture.SetTexture(std::move(texture));
 	}
 }
 

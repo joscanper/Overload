@@ -10,7 +10,7 @@
 
 namespace OvRendering::HAL
 {
-	template<Settings::EGraphicsBackend Backend>
+	template<Settings::EGraphicsBackend Backend, class Context>
 	class TTextureHandle
 	{
 	public:
@@ -42,6 +42,6 @@ namespace OvRendering::HAL
 		uint32_t GetID() const;
 
 	protected:
-		uint32_t m_id = 0;
+		Context m_context;
 	};
 }

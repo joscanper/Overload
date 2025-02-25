@@ -17,8 +17,8 @@ namespace OvRendering::HAL
 	/**
 	* TODO
 	*/
-	template<Settings::EGraphicsBackend Backend>
-	class TShaderStage
+	template<Settings::EGraphicsBackend Backend, class Context>
+	class TShaderStage final
 	{
 	public:
 		/**
@@ -46,8 +46,7 @@ namespace OvRendering::HAL
 		*/
 		uint32_t GetID() const;
 
-	protected:
-		uint32_t m_id;
-		Settings::EShaderType m_type;
+	private:
+		Context m_context;
 	};
 }

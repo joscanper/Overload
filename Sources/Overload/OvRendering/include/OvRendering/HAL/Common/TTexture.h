@@ -15,8 +15,8 @@ namespace OvRendering::HAL
 	/**
 	* TODO
 	*/
-	template<Settings::EGraphicsBackend Backend, class Context>
-	class TTexture : public TTextureHandle<Backend>
+	template<Settings::EGraphicsBackend Backend, class TextureContext, class TextureHandleContext>
+	class TTexture final : public TTextureHandle<Backend, TextureHandleContext>
 	{
 	public:
 		/**
@@ -42,6 +42,6 @@ namespace OvRendering::HAL
 		const Settings::TextureDesc& GetDesc() const;
 
 	private:
-		Context m_context;
+		TextureContext m_textureContext;
 	};
 }

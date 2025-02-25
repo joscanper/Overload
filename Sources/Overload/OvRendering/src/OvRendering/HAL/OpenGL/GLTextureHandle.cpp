@@ -9,7 +9,9 @@
 #include <OvRendering/HAL/OpenGL/GLTextureHandle.h>
 
 template<>
-OvRendering::HAL::GLTextureHandle::TTextureHandle(uint32_t p_id) : m_id(p_id)
+OvRendering::HAL::GLTextureHandle::TTextureHandle(uint32_t p_id) : m_context{
+	.id = p_id
+}
 {
 }
 
@@ -17,7 +19,7 @@ template<>
 void OvRendering::HAL::GLTextureHandle::Bind(uint32_t p_slot) const
 {
 	glActiveTexture(GL_TEXTURE0 + p_slot);
-	glBindTexture(GL_TEXTURE_2D, m_id);
+	glBindTexture(GL_TEXTURE_2D, m_context.id);
 }
 
 template<>
@@ -29,5 +31,5 @@ void OvRendering::HAL::GLTextureHandle::Unbind() const
 template<>
 uint32_t OvRendering::HAL::GLTextureHandle::GetID() const
 {
-	return m_id;
+	return m_context.id;
 }
