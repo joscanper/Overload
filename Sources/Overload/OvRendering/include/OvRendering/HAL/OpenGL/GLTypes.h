@@ -23,333 +23,307 @@
 #include <OvRendering/Settings/EDataType.h>
 #include <OvRendering/Settings/EAccessSpecifier.h>
 #include <OvRendering/Settings/UniformType.h>
+#include <OvTools/Utils/EnumMapper.h>
 
-constexpr GLenum ToGLEnum(OvRendering::Settings::ERasterizationMode value)
+namespace OvRendering::Settings
 {
-	return GL_POINT + static_cast<GLint>(value);
-}
+	template <>
+	struct MappingFor<EComparaisonAlgorithm, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<EComparaisonAlgorithm::NEVER, GL_NEVER>,
+			EnumValuePair<EComparaisonAlgorithm::LESS, GL_LESS>,
+			EnumValuePair<EComparaisonAlgorithm::EQUAL, GL_EQUAL>,
+			EnumValuePair<EComparaisonAlgorithm::LESS_EQUAL, GL_LEQUAL>,
+			EnumValuePair<EComparaisonAlgorithm::GREATER, GL_GREATER>,
+			EnumValuePair<EComparaisonAlgorithm::NOTEQUAL, GL_NOTEQUAL>,
+			EnumValuePair<EComparaisonAlgorithm::GREATER_EQUAL, GL_GEQUAL>,
+			EnumValuePair<EComparaisonAlgorithm::ALWAYS, GL_ALWAYS>
+		>;
+	};
 
-constexpr GLenum ToGLEnum(OvRendering::Settings::EComparaisonAlgorithm value)
-{
-	return GL_NEVER + static_cast<GLint>(value);
-}
+	template <>
+	struct MappingFor<ERasterizationMode, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<ERasterizationMode::POINT, GL_POINT>,
+			EnumValuePair<ERasterizationMode::LINE, GL_LINE>,
+			EnumValuePair<ERasterizationMode::FILL, GL_FILL>
+		>;
+	};
 
-constexpr GLenum ToGLEnum(OvRendering::Settings::ECullFace value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::ECullFace::FRONT: return GL_FRONT;
-	case OvRendering::Settings::ECullFace::BACK: return GL_BACK;
-	case OvRendering::Settings::ECullFace::FRONT_AND_BACK: return GL_FRONT_AND_BACK;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<ECullFace, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<ECullFace::FRONT, GL_FRONT>,
+			EnumValuePair<ECullFace::BACK, GL_BACK>,
+			EnumValuePair<ECullFace::FRONT_AND_BACK, GL_FRONT_AND_BACK>
+		>;
+	};
 
-constexpr GLenum ToGLEnum(OvRendering::Settings::EOperation value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::EOperation::KEEP: return GL_KEEP;
-	case OvRendering::Settings::EOperation::ZERO: return GL_ZERO;
-	case OvRendering::Settings::EOperation::REPLACE: return GL_REPLACE;
-	case OvRendering::Settings::EOperation::INCREMENT: return GL_INCR;
-	case OvRendering::Settings::EOperation::INCREMENT_WRAP: return GL_INCR_WRAP;
-	case OvRendering::Settings::EOperation::DECREMENT: return GL_DECR;
-	case OvRendering::Settings::EOperation::DECREMENT_WRAP: return GL_DECR_WRAP;
-	case OvRendering::Settings::EOperation::INVERT: return GL_INVERT;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<EOperation, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<EOperation::KEEP, GL_KEEP>,
+			EnumValuePair<EOperation::ZERO, GL_ZERO>,
+			EnumValuePair<EOperation::REPLACE, GL_REPLACE>,
+			EnumValuePair<EOperation::INCREMENT, GL_INCR>,
+			EnumValuePair<EOperation::INCREMENT_WRAP, GL_INCR_WRAP>,
+			EnumValuePair<EOperation::DECREMENT, GL_DECR>,
+			EnumValuePair<EOperation::DECREMENT_WRAP, GL_DECR_WRAP>,
+			EnumValuePair<EOperation::INVERT, GL_INVERT>
+		>;
+	};
 
-constexpr GLenum ToGLEnum(OvRendering::Settings::ERenderingCapability value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::ERenderingCapability::BLEND: return GL_BLEND;
-	case OvRendering::Settings::ERenderingCapability::CULL_FACE: return GL_CULL_FACE;
-	case OvRendering::Settings::ERenderingCapability::DEPTH_TEST: return GL_DEPTH_TEST;
-	case OvRendering::Settings::ERenderingCapability::DITHER: return GL_DITHER;
-	case OvRendering::Settings::ERenderingCapability::POLYGON_OFFSET_FILL: return GL_POLYGON_OFFSET_FILL;
-	case OvRendering::Settings::ERenderingCapability::SAMPLE_ALPHA_TO_COVERAGE: return GL_SAMPLE_ALPHA_TO_COVERAGE;
-	case OvRendering::Settings::ERenderingCapability::SAMPLE_COVERAGE: return GL_SAMPLE_COVERAGE;
-	case OvRendering::Settings::ERenderingCapability::SCISSOR_TEST: return GL_SCISSOR_TEST;
-	case OvRendering::Settings::ERenderingCapability::STENCIL_TEST: return GL_STENCIL_TEST;
-	case OvRendering::Settings::ERenderingCapability::MULTISAMPLE: return GL_MULTISAMPLE;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<ERenderingCapability, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<ERenderingCapability::BLEND, GL_BLEND>,
+			EnumValuePair<ERenderingCapability::CULL_FACE, GL_CULL_FACE>,
+			EnumValuePair<ERenderingCapability::DEPTH_TEST, GL_DEPTH_TEST>,
+			EnumValuePair<ERenderingCapability::DITHER, GL_DITHER>,
+			EnumValuePair<ERenderingCapability::POLYGON_OFFSET_FILL, GL_POLYGON_OFFSET_FILL>,
+			EnumValuePair<ERenderingCapability::SAMPLE_ALPHA_TO_COVERAGE, GL_SAMPLE_ALPHA_TO_COVERAGE>,
+			EnumValuePair<ERenderingCapability::SAMPLE_COVERAGE, GL_SAMPLE_COVERAGE>,
+			EnumValuePair<ERenderingCapability::SCISSOR_TEST, GL_SCISSOR_TEST>,
+			EnumValuePair<ERenderingCapability::STENCIL_TEST, GL_STENCIL_TEST>,
+			EnumValuePair<ERenderingCapability::MULTISAMPLE, GL_MULTISAMPLE>
+		>;
+	};
 
-constexpr GLenum ToGLEnum(OvRendering::Settings::EPrimitiveMode value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::EPrimitiveMode::POINTS: return GL_POINTS;
-	case OvRendering::Settings::EPrimitiveMode::LINES: return GL_LINES;
-	case OvRendering::Settings::EPrimitiveMode::LINE_LOOP: return GL_LINE_LOOP;
-	case OvRendering::Settings::EPrimitiveMode::LINE_STRIP: return GL_LINE_STRIP;
-	case OvRendering::Settings::EPrimitiveMode::TRIANGLES: return GL_TRIANGLES;
-	case OvRendering::Settings::EPrimitiveMode::TRIANGLE_STRIP: return GL_TRIANGLE_STRIP;
-	case OvRendering::Settings::EPrimitiveMode::TRIANGLE_FAN: return GL_TRIANGLE_FAN;
-	case OvRendering::Settings::EPrimitiveMode::LINES_ADJACENCY: return GL_LINES_ADJACENCY;
-	case OvRendering::Settings::EPrimitiveMode::LINE_STRIP_ADJACENCY: return GL_LINE_STRIP_ADJACENCY;
-	case OvRendering::Settings::EPrimitiveMode::PATCHES: return GL_PATCHES;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<EPrimitiveMode, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<EPrimitiveMode::POINTS, GL_POINTS>,
+			EnumValuePair<EPrimitiveMode::LINES, GL_LINES>,
+			EnumValuePair<EPrimitiveMode::LINE_LOOP, GL_LINE_LOOP>,
+			EnumValuePair<EPrimitiveMode::LINE_STRIP, GL_LINE_STRIP>,
+			EnumValuePair<EPrimitiveMode::TRIANGLES, GL_TRIANGLES>,
+			EnumValuePair<EPrimitiveMode::TRIANGLE_STRIP, GL_TRIANGLE_STRIP>,
+			EnumValuePair<EPrimitiveMode::TRIANGLE_FAN, GL_TRIANGLE_FAN>,
+			EnumValuePair<EPrimitiveMode::LINES_ADJACENCY, GL_LINES_ADJACENCY>,
+			EnumValuePair<EPrimitiveMode::LINE_STRIP_ADJACENCY, GL_LINE_STRIP_ADJACENCY>,
+			EnumValuePair<EPrimitiveMode::PATCHES, GL_PATCHES>
+		>;
+	};
 
-constexpr GLenum ToGLenum(OvRendering::Settings::EFormat value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::EFormat::RED: return GL_RED;
-	case OvRendering::Settings::EFormat::RG: return GL_RG;
-	case OvRendering::Settings::EFormat::RGB: return GL_RGB;
-	case OvRendering::Settings::EFormat::BGR: return GL_BGR;
-	case OvRendering::Settings::EFormat::RGBA: return GL_RGBA;
-	case OvRendering::Settings::EFormat::BGRA: return GL_BGRA;
-	case OvRendering::Settings::EFormat::RED_INTEGER: return GL_RED_INTEGER;
-	case OvRendering::Settings::EFormat::RG_INTEGER: return GL_RG_INTEGER;
-	case OvRendering::Settings::EFormat::RGB_INTEGER: return GL_RGB_INTEGER;
-	case OvRendering::Settings::EFormat::BGR_INTEGER: return GL_BGR_INTEGER;
-	case OvRendering::Settings::EFormat::RGBA_INTEGER: return GL_RGBA_INTEGER;
-	case OvRendering::Settings::EFormat::BGRA_INTEGER: return GL_BGRA_INTEGER;
-	case OvRendering::Settings::EFormat::STENCIL_INDEX: return GL_STENCIL_INDEX;
-	case OvRendering::Settings::EFormat::DEPTH_COMPONENT: return GL_DEPTH_COMPONENT;
-	case OvRendering::Settings::EFormat::DEPTH_STENCIL: return GL_DEPTH_STENCIL;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<EFormat, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<EFormat::RED, GL_RED>,
+			EnumValuePair<EFormat::RG, GL_RG>,
+			EnumValuePair<EFormat::RGB, GL_RGB>,
+			EnumValuePair<EFormat::BGR, GL_BGR>,
+			EnumValuePair<EFormat::RGBA, GL_RGBA>,
+			EnumValuePair<EFormat::BGRA, GL_BGRA>,
+			EnumValuePair<EFormat::RED_INTEGER, GL_RED_INTEGER>,
+			EnumValuePair<EFormat::RG_INTEGER, GL_RG_INTEGER>,
+			EnumValuePair<EFormat::RGB_INTEGER, GL_RGB_INTEGER>,
+			EnumValuePair<EFormat::BGR_INTEGER, GL_BGR_INTEGER>,
+			EnumValuePair<EFormat::RGBA_INTEGER, GL_RGBA_INTEGER>,
+			EnumValuePair<EFormat::BGRA_INTEGER, GL_BGRA_INTEGER>,
+			EnumValuePair<EFormat::STENCIL_INDEX, GL_STENCIL_INDEX>,
+			EnumValuePair<EFormat::DEPTH_COMPONENT, GL_DEPTH_COMPONENT>,
+			EnumValuePair<EFormat::DEPTH_STENCIL, GL_DEPTH_STENCIL>
+		>;
+	};
 
-constexpr GLenum ToGLenum(OvRendering::Settings::EInternalFormat value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::EInternalFormat::DEPTH_COMPONENT: return GL_DEPTH_COMPONENT;
-	case OvRendering::Settings::EInternalFormat::DEPTH_STENCIL: return GL_DEPTH_STENCIL;
-	case OvRendering::Settings::EInternalFormat::RED: return GL_RED;
-	case OvRendering::Settings::EInternalFormat::RG: return GL_RG;
-	case OvRendering::Settings::EInternalFormat::RGB: return GL_RGB;
-	case OvRendering::Settings::EInternalFormat::RGBA: return GL_RGBA;
-	case OvRendering::Settings::EInternalFormat::R8: return GL_R8;
-	case OvRendering::Settings::EInternalFormat::R8_SNORM: return GL_R8_SNORM;
-	case OvRendering::Settings::EInternalFormat::R16: return GL_R16;
-	case OvRendering::Settings::EInternalFormat::R16_SNORM: return GL_R16_SNORM;
-	case OvRendering::Settings::EInternalFormat::RG8: return GL_RG8;
-	case OvRendering::Settings::EInternalFormat::RG8_SNORM: return GL_RG8_SNORM;
-	case OvRendering::Settings::EInternalFormat::RG16: return GL_RG16;
-	case OvRendering::Settings::EInternalFormat::RG16_SNORM: return GL_RG16_SNORM;
-	case OvRendering::Settings::EInternalFormat::R3_G3_B2: return GL_R3_G3_B2;
-	case OvRendering::Settings::EInternalFormat::RGB4: return GL_RGB4;
-	case OvRendering::Settings::EInternalFormat::RGB5: return GL_RGB5;
-	case OvRendering::Settings::EInternalFormat::RGB8: return GL_RGB8;
-	case OvRendering::Settings::EInternalFormat::RGB8_SNORM: return GL_RGB8_SNORM;
-	case OvRendering::Settings::EInternalFormat::RGB10: return GL_RGB10;
-	case OvRendering::Settings::EInternalFormat::RGB12: return GL_RGB12;
-	case OvRendering::Settings::EInternalFormat::RGB16_SNORM: return GL_RGB16_SNORM;
-	case OvRendering::Settings::EInternalFormat::RGBA2: return GL_RGBA2;
-	case OvRendering::Settings::EInternalFormat::RGBA4: return GL_RGBA4;
-	case OvRendering::Settings::EInternalFormat::RGB5_A1: return GL_RGB5_A1;
-	case OvRendering::Settings::EInternalFormat::RGBA8: return GL_RGBA8;
-	case OvRendering::Settings::EInternalFormat::RGBA8_SNORM: return GL_RGBA8_SNORM;
-	case OvRendering::Settings::EInternalFormat::RGB10_A2: return GL_RGB10_A2;
-	case OvRendering::Settings::EInternalFormat::RGB10_A2UI: return GL_RGB10_A2UI;
-	case OvRendering::Settings::EInternalFormat::RGBA12: return GL_RGBA12;
-	case OvRendering::Settings::EInternalFormat::RGBA16: return GL_RGBA16;
-	case OvRendering::Settings::EInternalFormat::SRGB8: return GL_SRGB8;
-	case OvRendering::Settings::EInternalFormat::SRGB8_ALPHA8: return GL_SRGB8_ALPHA8;
-	case OvRendering::Settings::EInternalFormat::R16F: return GL_R16F;
-	case OvRendering::Settings::EInternalFormat::RG16F: return GL_RG16F;
-	case OvRendering::Settings::EInternalFormat::RGB16F: return GL_RGB16F;
-	case OvRendering::Settings::EInternalFormat::RGBA16F: return GL_RGBA16F;
-	case OvRendering::Settings::EInternalFormat::R32F: return GL_R32F;
-	case OvRendering::Settings::EInternalFormat::RG32F: return GL_RG32F;
-	case OvRendering::Settings::EInternalFormat::RGB32F: return GL_RGB32F;
-	case OvRendering::Settings::EInternalFormat::RGBA32F: return GL_RGBA32F;
-	case OvRendering::Settings::EInternalFormat::R11F_G11F_B10F: return GL_R11F_G11F_B10F;
-	case OvRendering::Settings::EInternalFormat::RGB9_E5: return GL_RGB9_E5;
-	case OvRendering::Settings::EInternalFormat::R8I: return GL_R8I;
-	case OvRendering::Settings::EInternalFormat::R8UI: return GL_R8UI;
-	case OvRendering::Settings::EInternalFormat::R16I: return GL_R16I;
-	case OvRendering::Settings::EInternalFormat::R16UI: return GL_R16UI;
-	case OvRendering::Settings::EInternalFormat::R32I: return GL_R32I;
-	case OvRendering::Settings::EInternalFormat::R32UI: return GL_R32UI;
-	case OvRendering::Settings::EInternalFormat::RG8I: return GL_RG8I;
-	case OvRendering::Settings::EInternalFormat::RG8UI: return GL_RG8UI;
-	case OvRendering::Settings::EInternalFormat::RG16I: return GL_RG16I;
-	case OvRendering::Settings::EInternalFormat::RG16UI: return GL_RG16UI;
-	case OvRendering::Settings::EInternalFormat::RG32I: return GL_RG32I;
-	case OvRendering::Settings::EInternalFormat::RG32UI: return GL_RG32UI;
-	case OvRendering::Settings::EInternalFormat::RGB8I: return GL_RGB8I;
-	case OvRendering::Settings::EInternalFormat::RGB8UI: return GL_RGB8UI;
-	case OvRendering::Settings::EInternalFormat::RGB16I: return GL_RGB16I;
-	case OvRendering::Settings::EInternalFormat::RGB16UI: return GL_RGB16UI;
-	case OvRendering::Settings::EInternalFormat::RGB32I: return GL_RGB32I;
-	case OvRendering::Settings::EInternalFormat::RGB32UI: return GL_RGB32UI;
-	case OvRendering::Settings::EInternalFormat::RGBA8I: return GL_RGBA8I;
-	case OvRendering::Settings::EInternalFormat::RGBA8UI: return GL_RGBA8UI;
-	case OvRendering::Settings::EInternalFormat::RGBA16I: return GL_RGBA16I;
-	case OvRendering::Settings::EInternalFormat::RGBA16UI: return GL_RGBA16UI;
-	case OvRendering::Settings::EInternalFormat::RGBA32I: return GL_RGBA32I;
-	case OvRendering::Settings::EInternalFormat::RGBA32UI: return GL_RGBA32UI;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_RED: return GL_COMPRESSED_RED;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_RG: return GL_COMPRESSED_RG;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_RGB: return GL_COMPRESSED_RGB;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_RGBA: return GL_COMPRESSED_RGBA;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_SRGB: return GL_COMPRESSED_SRGB;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_SRGB_ALPHA: return GL_COMPRESSED_SRGB_ALPHA;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_RED_RGTC1: return GL_COMPRESSED_RED_RGTC1;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_SIGNED_RED_RGTC1: return GL_COMPRESSED_SIGNED_RED_RGTC1;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_RG_RGTC2: return GL_COMPRESSED_RG_RGTC2;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_SIGNED_RG_RGTC2: return GL_COMPRESSED_SIGNED_RG_RGTC2;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_RGBA_BPTC_UNORM: return GL_COMPRESSED_RGBA_BPTC_UNORM;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_SRGB_ALPHA_BPTC_UNORM: return GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_RGB_BPTC_SIGNED_FLOAT: return GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT;
-	case OvRendering::Settings::EInternalFormat::COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT: return GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<ETextureFilteringMode, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<ETextureFilteringMode::NEAREST, GL_NEAREST>,
+			EnumValuePair<ETextureFilteringMode::LINEAR, GL_LINEAR>,
+			EnumValuePair<ETextureFilteringMode::NEAREST_MIPMAP_NEAREST, GL_NEAREST_MIPMAP_NEAREST>,
+			EnumValuePair<ETextureFilteringMode::LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR>,
+			EnumValuePair<ETextureFilteringMode::LINEAR_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_NEAREST>,
+			EnumValuePair<ETextureFilteringMode::NEAREST_MIPMAP_LINEAR, GL_NEAREST_MIPMAP_LINEAR>
+		>;
+	};
 
-constexpr GLenum ToGLenum(OvRendering::Settings::EPixelDataType value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::EPixelDataType::BYTE: return GL_BYTE;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_BYTE: return GL_UNSIGNED_BYTE;
-	case OvRendering::Settings::EPixelDataType::BITMAP: return GL_BITMAP;
-	case OvRendering::Settings::EPixelDataType::SHORT: return GL_SHORT;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_SHORT: return GL_UNSIGNED_SHORT;
-	case OvRendering::Settings::EPixelDataType::INT: return GL_INT;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_INT: return GL_UNSIGNED_INT;
-	case OvRendering::Settings::EPixelDataType::FLOAT: return GL_FLOAT;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_BYTE_3_3_2: return GL_UNSIGNED_BYTE_3_3_2;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_BYTE_2_3_3_REV: return GL_UNSIGNED_BYTE_2_3_3_REV;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_SHORT_5_6_5: return GL_UNSIGNED_SHORT_5_6_5;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_SHORT_5_6_5_REV: return GL_UNSIGNED_SHORT_5_6_5_REV;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_SHORT_4_4_4_4: return GL_UNSIGNED_SHORT_4_4_4_4;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_SHORT_4_4_4_4_REV: return GL_UNSIGNED_SHORT_4_4_4_4_REV;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_SHORT_5_5_5_1: return GL_UNSIGNED_SHORT_5_5_5_1;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_SHORT_1_5_5_5_REV: return GL_UNSIGNED_SHORT_1_5_5_5_REV;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_INT_8_8_8_8: return GL_UNSIGNED_INT_8_8_8_8;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_INT_8_8_8_8_REV: return GL_UNSIGNED_INT_8_8_8_8_REV;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_INT_10_10_10_2: return GL_UNSIGNED_INT_10_10_10_2;
-	case OvRendering::Settings::EPixelDataType::UNSIGNED_INT_2_10_10_10_REV: return GL_UNSIGNED_INT_2_10_10_10_REV;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<ETextureWrapMode, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<ETextureWrapMode::REPEAT, GL_REPEAT>,
+			EnumValuePair<ETextureWrapMode::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE>,
+			EnumValuePair<ETextureWrapMode::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER>,
+			EnumValuePair<ETextureWrapMode::MIRRORED_REPEAT, GL_MIRRORED_REPEAT>,
+			EnumValuePair<ETextureWrapMode::MIRROR_CLAMP_TO_EDGE, GL_MIRROR_CLAMP_TO_EDGE>
+		>;
+	};
 
-constexpr GLenum ToGLenum(OvRendering::Settings::ETextureFilteringMode value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::ETextureFilteringMode::NEAREST: return GL_NEAREST;
-	case OvRendering::Settings::ETextureFilteringMode::LINEAR: return GL_LINEAR;
-	case OvRendering::Settings::ETextureFilteringMode::NEAREST_MIPMAP_NEAREST: return GL_NEAREST_MIPMAP_NEAREST;
-	case OvRendering::Settings::ETextureFilteringMode::LINEAR_MIPMAP_LINEAR: return GL_LINEAR_MIPMAP_LINEAR;
-	case OvRendering::Settings::ETextureFilteringMode::LINEAR_MIPMAP_NEAREST: return GL_LINEAR_MIPMAP_NEAREST;
-	case OvRendering::Settings::ETextureFilteringMode::NEAREST_MIPMAP_LINEAR: return GL_NEAREST_MIPMAP_LINEAR;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<EPixelDataFormat, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<EPixelDataFormat::COLOR_INDEX, GL_COLOR_INDEX>,
+			EnumValuePair<EPixelDataFormat::STENCIL_INDEX, GL_STENCIL_INDEX>,
+			EnumValuePair<EPixelDataFormat::DEPTH_COMPONENT, GL_DEPTH_COMPONENT>,
+			EnumValuePair<EPixelDataFormat::RED, GL_RED>,
+			EnumValuePair<EPixelDataFormat::GREEN, GL_GREEN>,
+			EnumValuePair<EPixelDataFormat::BLUE, GL_BLUE>,
+			EnumValuePair<EPixelDataFormat::ALPHA, GL_ALPHA>,
+			EnumValuePair<EPixelDataFormat::RGB, GL_RGB>,
+			EnumValuePair<EPixelDataFormat::BGR, GL_BGR>,
+			EnumValuePair<EPixelDataFormat::RGBA, GL_RGBA>,
+			EnumValuePair<EPixelDataFormat::BGRA, GL_BGRA>,
+			EnumValuePair<EPixelDataFormat::LUMINANCE, GL_LUMINANCE>,
+			EnumValuePair<EPixelDataFormat::LUMINANCE_ALPHA, GL_LUMINANCE_ALPHA>
+		>;
+	};
 
-constexpr GLenum ToGLenum(OvRendering::Settings::ETextureWrapMode value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::ETextureWrapMode::REPEAT: return GL_REPEAT;
-	case OvRendering::Settings::ETextureWrapMode::CLAMP_TO_EDGE: return GL_CLAMP_TO_EDGE;
-	case OvRendering::Settings::ETextureWrapMode::CLAMP_TO_BORDER: return GL_CLAMP_TO_BORDER;
-	case OvRendering::Settings::ETextureWrapMode::MIRRORED_REPEAT: return GL_MIRRORED_REPEAT;
-	case OvRendering::Settings::ETextureWrapMode::MIRROR_CLAMP_TO_EDGE: return GL_MIRROR_CLAMP_TO_EDGE;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<EPixelDataType, GLenum> {
+		using type = std::tuple <
+			EnumValuePair<EPixelDataType::BYTE, GL_BYTE>,
+			EnumValuePair<EPixelDataType::UNSIGNED_BYTE, GL_UNSIGNED_BYTE>,
+			EnumValuePair<EPixelDataType::BITMAP, GL_BITMAP>,
+			EnumValuePair<EPixelDataType::SHORT, GL_SHORT>,
+			EnumValuePair<EPixelDataType::UNSIGNED_SHORT, GL_UNSIGNED_SHORT>,
+			EnumValuePair<EPixelDataType::INT, GL_INT>,
+			EnumValuePair<EPixelDataType::UNSIGNED_INT, GL_UNSIGNED_INT>,
+			EnumValuePair<EPixelDataType::FLOAT, GL_FLOAT>,
+			EnumValuePair<EPixelDataType::UNSIGNED_BYTE_3_3_2, GL_UNSIGNED_BYTE_3_3_2>,
+			EnumValuePair<EPixelDataType::UNSIGNED_BYTE_2_3_3_REV, GL_UNSIGNED_BYTE_2_3_3_REV>,
+			EnumValuePair<EPixelDataType::UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_5_6_5>,
+			EnumValuePair<EPixelDataType::UNSIGNED_SHORT_5_6_5_REV, GL_UNSIGNED_SHORT_5_6_5_REV>,
+			EnumValuePair<EPixelDataType::UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_4_4_4_4>,
+			EnumValuePair<EPixelDataType::UNSIGNED_SHORT_4_4_4_4_REV, GL_UNSIGNED_SHORT_4_4_4_4_REV>,
+			EnumValuePair<EPixelDataType::UNSIGNED_SHORT_5_5_5_1, GL_UNSIGNED_SHORT_5_5_5_1>,
+			EnumValuePair<EPixelDataType::UNSIGNED_SHORT_1_5_5_5_REV, GL_UNSIGNED_SHORT_1_5_5_5_REV>,
+			EnumValuePair<EPixelDataType::UNSIGNED_INT_8_8_8_8, GL_UNSIGNED_INT_8_8_8_8>,
+			EnumValuePair<EPixelDataType::UNSIGNED_INT_8_8_8_8_REV, GL_UNSIGNED_INT_8_8_8_8_REV>,
+			EnumValuePair<EPixelDataType::UNSIGNED_INT_10_10_10_2, GL_UNSIGNED_INT_10_10_10_2>,
+			EnumValuePair<EPixelDataType::UNSIGNED_INT_2_10_10_10_REV, GL_UNSIGNED_INT_2_10_10_10_REV>
+		> ;
+	};
 
-constexpr GLenum ToGLenum(OvRendering::Settings::EPixelDataFormat value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::EPixelDataFormat::COLOR_INDEX: return GL_COLOR_INDEX;
-	case OvRendering::Settings::EPixelDataFormat::STENCIL_INDEX: return GL_STENCIL_INDEX;
-	case OvRendering::Settings::EPixelDataFormat::DEPTH_COMPONENT: return GL_DEPTH_COMPONENT;
-	case OvRendering::Settings::EPixelDataFormat::RED: return GL_RED;
-	case OvRendering::Settings::EPixelDataFormat::GREEN: return GL_GREEN;
-	case OvRendering::Settings::EPixelDataFormat::BLUE: return GL_BLUE;
-	case OvRendering::Settings::EPixelDataFormat::ALPHA: return GL_ALPHA;
-	case OvRendering::Settings::EPixelDataFormat::RGB: return GL_RGB;
-	case OvRendering::Settings::EPixelDataFormat::BGR: return GL_BGR;
-	case OvRendering::Settings::EPixelDataFormat::RGBA: return GL_RGBA;
-	case OvRendering::Settings::EPixelDataFormat::BGRA: return GL_BGRA;
-	case OvRendering::Settings::EPixelDataFormat::LUMINANCE: return GL_LUMINANCE;
-	case OvRendering::Settings::EPixelDataFormat::LUMINANCE_ALPHA: return GL_LUMINANCE_ALPHA;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<EDataType, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<EDataType::BYTE, GL_BYTE>,
+			EnumValuePair<EDataType::UNSIGNED_BYTE, GL_UNSIGNED_BYTE>,
+			EnumValuePair<EDataType::SHORT, GL_SHORT>,
+			EnumValuePair<EDataType::UNSIGNED_SHORT, GL_UNSIGNED_SHORT>,
+			EnumValuePair<EDataType::INT, GL_INT>,
+			EnumValuePair<EDataType::UNSIGNED_INT, GL_UNSIGNED_INT>,
+			EnumValuePair<EDataType::FLOAT, GL_FLOAT>,
+			EnumValuePair<EDataType::DOUBLE, GL_DOUBLE>
+		>;
+	};
 
-constexpr GLenum ToGLenum(OvRendering::Settings::EDataType value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::EDataType::BYTE: return GL_BYTE;
-	case OvRendering::Settings::EDataType::UNSIGNED_BYTE: return GL_UNSIGNED_BYTE;
-	case OvRendering::Settings::EDataType::SHORT: return GL_SHORT;
-	case OvRendering::Settings::EDataType::UNSIGNED_SHORT: return GL_UNSIGNED_SHORT;
-	case OvRendering::Settings::EDataType::INT: return GL_INT;
-	case OvRendering::Settings::EDataType::UNSIGNED_INT: return GL_UNSIGNED_INT;
-	case OvRendering::Settings::EDataType::FLOAT: return GL_FLOAT;
-	case OvRendering::Settings::EDataType::DOUBLE: return GL_DOUBLE;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<EAccessSpecifier, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<EAccessSpecifier::STREAM_DRAW, GL_STREAM_DRAW>,
+			EnumValuePair<EAccessSpecifier::STREAM_READ, GL_STREAM_READ>,
+			EnumValuePair<EAccessSpecifier::STREAM_COPY, GL_STREAM_COPY>,
+			EnumValuePair<EAccessSpecifier::DYNAMIC_DRAW, GL_DYNAMIC_DRAW>,
+			EnumValuePair<EAccessSpecifier::DYNAMIC_READ, GL_DYNAMIC_READ>,
+			EnumValuePair<EAccessSpecifier::DYNAMIC_COPY, GL_DYNAMIC_COPY>,
+			EnumValuePair<EAccessSpecifier::STATIC_DRAW, GL_STATIC_DRAW>,
+			EnumValuePair<EAccessSpecifier::STATIC_READ, GL_STATIC_READ>,
+			EnumValuePair<EAccessSpecifier::STATIC_COPY, GL_STATIC_COPY>
+		>;
+	};
 
-constexpr GLenum ToGLenum(OvRendering::Settings::EAccessSpecifier value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::EAccessSpecifier::STREAM_DRAW: return GL_STREAM_DRAW;
-	case OvRendering::Settings::EAccessSpecifier::STREAM_READ: return GL_STREAM_READ;
-	case OvRendering::Settings::EAccessSpecifier::STREAM_COPY: return GL_STREAM_COPY;
-	case OvRendering::Settings::EAccessSpecifier::DYNAMIC_DRAW: return GL_DYNAMIC_DRAW;
-	case OvRendering::Settings::EAccessSpecifier::DYNAMIC_READ: return GL_DYNAMIC_READ;
-	case OvRendering::Settings::EAccessSpecifier::DYNAMIC_COPY: return GL_DYNAMIC_COPY;
-	case OvRendering::Settings::EAccessSpecifier::STATIC_DRAW: return GL_STATIC_DRAW;
-	case OvRendering::Settings::EAccessSpecifier::STATIC_READ: return GL_STATIC_READ;
-	case OvRendering::Settings::EAccessSpecifier::STATIC_COPY: return GL_STATIC_COPY;
-	}
-	return {};
-}
+	template <>
+	struct MappingFor<UniformType, GLenum> {
+		using type = std::tuple<
+			EnumValuePair<UniformType::UNIFORM_BOOL, GL_BOOL>,
+			EnumValuePair<UniformType::UNIFORM_INT, GL_INT>,
+			EnumValuePair<UniformType::UNIFORM_FLOAT, GL_FLOAT>,
+			EnumValuePair<UniformType::UNIFORM_FLOAT_VEC2, GL_FLOAT_VEC2>,
+			EnumValuePair<UniformType::UNIFORM_FLOAT_VEC3, GL_FLOAT_VEC3>,
+			EnumValuePair<UniformType::UNIFORM_FLOAT_VEC4, GL_FLOAT_VEC4>,
+			EnumValuePair<UniformType::UNIFORM_FLOAT_MAT4, GL_FLOAT_MAT4>,
+			EnumValuePair<UniformType::UNIFORM_DOUBLE_MAT4, GL_DOUBLE_MAT4>,
+			EnumValuePair<UniformType::UNIFORM_SAMPLER_2D, GL_SAMPLER_2D>,
+			EnumValuePair<UniformType::UNIFORM_SAMPLER_CUBE, GL_SAMPLER_CUBE>
+		>;
+	};
 
-constexpr GLenum ToGLenum(OvRendering::Settings::UniformType value)
-{
-	switch (value)
-	{
-	case OvRendering::Settings::UniformType::UNIFORM_BOOL: return GL_BOOL;
-	case OvRendering::Settings::UniformType::UNIFORM_INT: return GL_INT;
-	case OvRendering::Settings::UniformType::UNIFORM_FLOAT: return GL_FLOAT;
-	case OvRendering::Settings::UniformType::UNIFORM_FLOAT_VEC2: return GL_FLOAT_VEC2;
-	case OvRendering::Settings::UniformType::UNIFORM_FLOAT_VEC3: return GL_FLOAT_VEC3;
-	case OvRendering::Settings::UniformType::UNIFORM_FLOAT_VEC4: return GL_FLOAT_VEC4;
-	case OvRendering::Settings::UniformType::UNIFORM_FLOAT_MAT4: return GL_FLOAT_MAT4;
-	case OvRendering::Settings::UniformType::UNIFORM_DOUBLE_MAT4: return GL_DOUBLE_MAT4;
-	case OvRendering::Settings::UniformType::UNIFORM_SAMPLER_2D: return GL_SAMPLER_2D;
-	case OvRendering::Settings::UniformType::UNIFORM_SAMPLER_CUBE: return GL_SAMPLER_CUBE;
-	}
-	return {};
-}
-
-constexpr OvRendering::Settings::UniformType FromGLenum(GLenum value)
-{
-	switch (value)
-	{
-	case GL_BOOL: return OvRendering::Settings::UniformType::UNIFORM_BOOL;
-	case GL_INT: return OvRendering::Settings::UniformType::UNIFORM_INT;
-	case GL_FLOAT: return OvRendering::Settings::UniformType::UNIFORM_FLOAT;
-	case GL_FLOAT_VEC2: return OvRendering::Settings::UniformType::UNIFORM_FLOAT_VEC2;
-	case GL_FLOAT_VEC3: return OvRendering::Settings::UniformType::UNIFORM_FLOAT_VEC3;
-	case GL_FLOAT_VEC4: return OvRendering::Settings::UniformType::UNIFORM_FLOAT_VEC4;
-	case GL_FLOAT_MAT4: return OvRendering::Settings::UniformType::UNIFORM_FLOAT_MAT4;
-	case GL_DOUBLE_MAT4: return OvRendering::Settings::UniformType::UNIFORM_DOUBLE_MAT4;
-	case GL_SAMPLER_2D: return OvRendering::Settings::UniformType::UNIFORM_SAMPLER_2D;
-	case GL_SAMPLER_CUBE: return OvRendering::Settings::UniformType::UNIFORM_SAMPLER_CUBE;
-	}
-	return {};
+	// Internal format has a large number of enums, so including it here as well
+	template <>
+	struct MappingFor<EInternalFormat, GLenum> {
+		using type = std::tuple <
+			EnumValuePair<EInternalFormat::DEPTH_COMPONENT, GL_DEPTH_COMPONENT>,
+			EnumValuePair<EInternalFormat::DEPTH_STENCIL, GL_DEPTH_STENCIL>,
+			EnumValuePair<EInternalFormat::RED, GL_RED>,
+			EnumValuePair<EInternalFormat::RG, GL_RG>,
+			EnumValuePair<EInternalFormat::RGB, GL_RGB>,
+			EnumValuePair<EInternalFormat::RGBA, GL_RGBA>,
+			EnumValuePair<EInternalFormat::R8, GL_R8>,
+			EnumValuePair<EInternalFormat::R8_SNORM, GL_R8_SNORM>,
+			EnumValuePair<EInternalFormat::R16, GL_R16>,
+			EnumValuePair<EInternalFormat::R16_SNORM, GL_R16_SNORM>,
+			EnumValuePair<EInternalFormat::RG8, GL_RG8>,
+			EnumValuePair<EInternalFormat::RG8_SNORM, GL_RG8_SNORM>,
+			EnumValuePair<EInternalFormat::RG16, GL_RG16>,
+			EnumValuePair<EInternalFormat::RG16_SNORM, GL_RG16_SNORM>,
+			EnumValuePair<EInternalFormat::R3_G3_B2, GL_R3_G3_B2>,
+			EnumValuePair<EInternalFormat::RGB4, GL_RGB4>,
+			EnumValuePair<EInternalFormat::RGB5, GL_RGB5>,
+			EnumValuePair<EInternalFormat::RGB8, GL_RGB8>,
+			EnumValuePair<EInternalFormat::RGB8_SNORM, GL_RGB8_SNORM>,
+			EnumValuePair<EInternalFormat::RGB10, GL_RGB10>,
+			EnumValuePair<EInternalFormat::RGB12, GL_RGB12>,
+			EnumValuePair<EInternalFormat::RGB16_SNORM, GL_RGB16_SNORM>,
+			EnumValuePair<EInternalFormat::RGBA2, GL_RGBA2>,
+			EnumValuePair<EInternalFormat::RGBA4, GL_RGBA4>,
+			EnumValuePair<EInternalFormat::RGB5_A1, GL_RGB5_A1>,
+			EnumValuePair<EInternalFormat::RGBA8, GL_RGBA8>,
+			EnumValuePair<EInternalFormat::RGBA8_SNORM, GL_RGBA8_SNORM>,
+			EnumValuePair<EInternalFormat::RGB10_A2, GL_RGB10_A2>,
+			EnumValuePair<EInternalFormat::RGB10_A2UI, GL_RGB10_A2UI>,
+			EnumValuePair<EInternalFormat::RGBA12, GL_RGBA12>,
+			EnumValuePair<EInternalFormat::RGBA16, GL_RGBA16>,
+			EnumValuePair<EInternalFormat::SRGB8, GL_SRGB8>,
+			EnumValuePair<EInternalFormat::SRGB8_ALPHA8, GL_SRGB8_ALPHA8>,
+			EnumValuePair<EInternalFormat::R16F, GL_R16F>,
+			EnumValuePair<EInternalFormat::RG16F, GL_RG16F>,
+			EnumValuePair<EInternalFormat::RGB16F, GL_RGB16F>,
+			EnumValuePair<EInternalFormat::RGBA16F, GL_RGBA16F>,
+			EnumValuePair<EInternalFormat::R32F, GL_R32F>,
+			EnumValuePair<EInternalFormat::RG32F, GL_RG32F>,
+			EnumValuePair<EInternalFormat::RGB32F, GL_RGB32F>,
+			EnumValuePair<EInternalFormat::RGBA32F, GL_RGBA32F>,
+			EnumValuePair<EInternalFormat::R11F_G11F_B10F, GL_R11F_G11F_B10F>,
+			EnumValuePair<EInternalFormat::RGB9_E5, GL_RGB9_E5>,
+			EnumValuePair<EInternalFormat::R8I, GL_R8I>,
+			EnumValuePair<EInternalFormat::R8UI, GL_R8UI>,
+			EnumValuePair<EInternalFormat::R16I, GL_R16I>,
+			EnumValuePair<EInternalFormat::R16UI, GL_R16UI>,
+			EnumValuePair<EInternalFormat::R32I, GL_R32I>,
+			EnumValuePair<EInternalFormat::R32UI, GL_R32UI>,
+			EnumValuePair<EInternalFormat::RG8I, GL_RG8I>,
+			EnumValuePair<EInternalFormat::RG8UI, GL_RG8UI>,
+			EnumValuePair<EInternalFormat::RG16I, GL_RG16I>,
+			EnumValuePair<EInternalFormat::RG16UI, GL_RG16UI>,
+			EnumValuePair<EInternalFormat::RG32I, GL_RG32I>,
+			EnumValuePair<EInternalFormat::RG32UI, GL_RG32UI>,
+			EnumValuePair<EInternalFormat::RGB8I, GL_RGB8I>,
+			EnumValuePair<EInternalFormat::RGB8UI, GL_RGB8UI>,
+			EnumValuePair<EInternalFormat::RGB16I, GL_RGB16I>,
+			EnumValuePair<EInternalFormat::RGB16UI, GL_RGB16UI>,
+			EnumValuePair<EInternalFormat::RGB32I, GL_RGB32I>,
+			EnumValuePair<EInternalFormat::RGB32UI, GL_RGB32UI>,
+			EnumValuePair<EInternalFormat::RGBA8I, GL_RGBA8I>,
+			EnumValuePair<EInternalFormat::RGBA8UI, GL_RGBA8UI>,
+			EnumValuePair<EInternalFormat::RGBA16I, GL_RGBA16I>,
+			EnumValuePair<EInternalFormat::RGBA16UI, GL_RGBA16UI>,
+			EnumValuePair<EInternalFormat::RGBA32I, GL_RGBA32I>,
+			EnumValuePair<EInternalFormat::RGBA32UI, GL_RGBA32UI>,
+			EnumValuePair<EInternalFormat::COMPRESSED_RED, GL_COMPRESSED_RED>,
+			EnumValuePair<EInternalFormat::COMPRESSED_RG, GL_COMPRESSED_RG>,
+			EnumValuePair<EInternalFormat::COMPRESSED_RGB, GL_COMPRESSED_RGB>,
+			EnumValuePair<EInternalFormat::COMPRESSED_RGBA, GL_COMPRESSED_RGBA>,
+			EnumValuePair<EInternalFormat::COMPRESSED_SRGB, GL_COMPRESSED_SRGB>,
+			EnumValuePair<EInternalFormat::COMPRESSED_SRGB_ALPHA, GL_COMPRESSED_SRGB_ALPHA>,
+			EnumValuePair<EInternalFormat::COMPRESSED_RED_RGTC1, GL_COMPRESSED_RED_RGTC1>,
+			EnumValuePair<EInternalFormat::COMPRESSED_SIGNED_RED_RGTC1, GL_COMPRESSED_SIGNED_RED_RGTC1>,
+			EnumValuePair<EInternalFormat::COMPRESSED_RG_RGTC2, GL_COMPRESSED_RG_RGTC2>,
+			EnumValuePair<EInternalFormat::COMPRESSED_SIGNED_RG_RGTC2, GL_COMPRESSED_SIGNED_RG_RGTC2>,
+			EnumValuePair<EInternalFormat::COMPRESSED_RGBA_BPTC_UNORM, GL_COMPRESSED_RGBA_BPTC_UNORM>,
+			EnumValuePair<EInternalFormat::COMPRESSED_SRGB_ALPHA_BPTC_UNORM, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM>,
+			EnumValuePair<EInternalFormat::COMPRESSED_RGB_BPTC_SIGNED_FLOAT, GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT>,
+			EnumValuePair<EInternalFormat::COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT>
+		> ;
+	};
 }

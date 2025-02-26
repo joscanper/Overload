@@ -223,7 +223,7 @@ void OvRendering::HAL::GLShaderProgram::QueryUniforms()
 		GLsizei actualLength = 0;
 		glGetActiveUniform(m_context.id, unif, static_cast<GLsizei>(nameData.size()), &actualLength, &arraySize, &type, &nameData[0]);
 		std::string name(static_cast<char*>(nameData.data()), actualLength);
-		Settings::UniformType uniformType = FromGLenum(type);
+		const auto uniformType = ValueToEnum<Settings::UniformType>(type);
 
 		if (!IsEngineUBOMember(name))
 		{

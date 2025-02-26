@@ -257,31 +257,31 @@ namespace OvRendering::HAL
 		void* p_data
 	)
 	{
-		glReadPixels(p_x, p_y, p_width, p_height, ToGLenum(p_format), ToGLenum(p_type), p_data);
+		glReadPixels(p_x, p_y, p_width, p_height, EnumToValue<GLenum>(p_format), EnumToValue<GLenum>(p_type), p_data);
 	}
 
 	template<>
 	void GLBackend::DrawElements(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_indexCount)
 	{
-		glDrawElements(ToGLEnum(p_primitiveMode), p_indexCount, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(EnumToValue<GLenum>(p_primitiveMode), p_indexCount, GL_UNSIGNED_INT, nullptr);
 	}
 
 	template<>
 	void GLBackend::DrawElementsInstanced(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_indexCount, uint32_t p_instances)
 	{
-		glDrawElementsInstanced(ToGLEnum(p_primitiveMode), p_indexCount, GL_UNSIGNED_INT, nullptr, p_instances);
+		glDrawElementsInstanced(EnumToValue<GLenum>(p_primitiveMode), p_indexCount, GL_UNSIGNED_INT, nullptr, p_instances);
 	}
 
 	template<>
 	void GLBackend::DrawArrays(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_vertexCount)
 	{
-		glDrawArrays(ToGLEnum(p_primitiveMode), 0, p_vertexCount);
+		glDrawArrays(EnumToValue<GLenum>(p_primitiveMode), 0, p_vertexCount);
 	}
 
 	template<>
 	void GLBackend::DrawArraysInstanced(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_vertexCount, uint32_t p_instances)
 	{
-		glDrawArraysInstanced(ToGLEnum(p_primitiveMode), 0, p_vertexCount, p_instances);
+		glDrawArraysInstanced(EnumToValue<GLenum>(p_primitiveMode), 0, p_vertexCount, p_instances);
 	}
 
 	template<>
@@ -299,31 +299,31 @@ namespace OvRendering::HAL
 	template<>
 	void GLBackend::SetRasterizationMode(Settings::ERasterizationMode p_rasterizationMode)
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, ToGLEnum(p_rasterizationMode));
+		glPolygonMode(GL_FRONT_AND_BACK, EnumToValue<GLenum>(p_rasterizationMode));
 	}
 
 	template<>
 	void GLBackend::SetCapability(Settings::ERenderingCapability p_capability, bool p_value)
 	{
-		(p_value ? glEnable : glDisable)(ToGLEnum(p_capability));
+		(p_value ? glEnable : glDisable)(EnumToValue<GLenum>(p_capability));
 	}
 
 	template<>
 	bool GLBackend::GetCapability(Settings::ERenderingCapability p_capability)
 	{
-		return glIsEnabled(ToGLEnum(p_capability));
+		return glIsEnabled(EnumToValue<GLenum>(p_capability));
 	}
 
 	template<>
 	void GLBackend::SetStencilAlgorithm(Settings::EComparaisonAlgorithm p_algorithm, int32_t p_reference, uint32_t p_mask)
 	{
-		glStencilFunc(ToGLEnum(p_algorithm), p_reference, p_mask);
+		glStencilFunc(EnumToValue<GLenum>(p_algorithm), p_reference, p_mask);
 	}
 
 	template<>
 	void GLBackend::SetDepthAlgorithm(Settings::EComparaisonAlgorithm p_algorithm)
 	{
-		glDepthFunc(ToGLEnum(p_algorithm));
+		glDepthFunc(EnumToValue<GLenum>(p_algorithm));
 	}
 
 	template<>
@@ -335,13 +335,13 @@ namespace OvRendering::HAL
 	template<>
 	void GLBackend::SetStencilOperations(Settings::EOperation p_stencilFail, Settings::EOperation p_depthFail, Settings::EOperation p_bothPass)
 	{
-		glStencilOp(ToGLEnum(p_stencilFail), ToGLEnum(p_depthFail), ToGLEnum(p_bothPass));
+		glStencilOp(EnumToValue<GLenum>(p_stencilFail), EnumToValue<GLenum>(p_depthFail), EnumToValue<GLenum>(p_bothPass));
 	}
 
 	template<>
 	void GLBackend::SetCullFace(Settings::ECullFace p_cullFace)
 	{
-		glCullFace(ToGLEnum(p_cullFace));
+		glCullFace(EnumToValue<GLenum>(p_cullFace));
 	}
 
 	template<>

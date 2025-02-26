@@ -14,7 +14,7 @@ OvRendering::HAL::GLShaderStorageBuffer::TShaderStorageBuffer(Settings::EAccessS
 {
 	glGenBuffers(1, &m_context.bufferID);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_context.bufferID);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, 0, nullptr, ToGLenum(p_accessSpecifier));
+	glBufferData(GL_SHADER_STORAGE_BUFFER, 0, nullptr, EnumToValue<GLenum>(p_accessSpecifier));
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 

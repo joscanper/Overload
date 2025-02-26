@@ -35,7 +35,7 @@ void OvRendering::HAL::GLVertexArray::BindAttribute(
 	Bind();
 	p_vertexBuffer.Bind();
 	glEnableVertexAttribArray(p_attribute);
-	glVertexAttribPointer(static_cast<GLenum>(p_attribute), static_cast<GLint>(p_count), ToGLenum(p_type), GL_FALSE, static_cast<GLsizei>(p_stride), reinterpret_cast<const GLvoid*>(p_offset));
+	glVertexAttribPointer(static_cast<GLenum>(p_attribute), static_cast<GLint>(p_count), EnumToValue<GLenum>(p_type), GL_FALSE, static_cast<GLsizei>(p_stride), reinterpret_cast<const GLvoid*>(p_offset));
 }
 
 template<>
