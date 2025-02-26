@@ -22,19 +22,19 @@
 namespace OvRendering::HAL
 {
 	/**
-	* TODO
+	* Represents a shader program, used to link shader stages together
 	*/
 	template<Settings::EGraphicsBackend Backend, class ProgramContext, class StageContext>
 	class TShaderProgram final
 	{
 	public:
 		/**
-		* TODO
+		* Constructor
 		*/
 		TShaderProgram();
 
 		/**
-		* TODO
+		* Destructor
 		*/
 		~TShaderProgram();
 
@@ -56,7 +56,8 @@ namespace OvRendering::HAL
 		void DetachAll();
 
 		/**
-		* TODO
+		* Link the shader stages together
+		* @return The linking result
 		*/
 		Settings::ShaderLinkingResult Link();
 
@@ -71,7 +72,7 @@ namespace OvRendering::HAL
 		void Unbind() const;
 
 		/**
-		* TODO
+		* Returns the ID of the program
 		*/
 		uint32_t GetID() const;
 
@@ -165,7 +166,7 @@ namespace OvRendering::HAL
 		void QueryUniforms();
 
 		/**
-		* TODO
+		* Returns the uniforms of the program
 		*/
 		std::span<Settings::UniformInfo> GetUniforms();
 

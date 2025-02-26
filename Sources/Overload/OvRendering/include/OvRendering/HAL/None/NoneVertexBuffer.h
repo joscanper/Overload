@@ -15,13 +15,7 @@ namespace OvRendering::HAL
 
 	template<>
 	template<class T>
-	void NoneVertexBuffer::UploadData(T* p_data, size_t p_elements)
-	{
-	}
-
-	template<>
-	template<class T>
-	void NoneVertexBuffer::UploadData(std::vector<T>& p_data)
+	void NoneVertexBuffer::Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage)
 	{
 	}
 }

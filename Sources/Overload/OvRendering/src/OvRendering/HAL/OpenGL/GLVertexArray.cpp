@@ -13,7 +13,6 @@ template<>
 OvRendering::HAL::GLVertexArray::TVertexArray()
 {
 	glGenVertexArrays(1, &m_context.bufferID);
-	glBindVertexArray(m_context.bufferID);
 }
 
 template<>

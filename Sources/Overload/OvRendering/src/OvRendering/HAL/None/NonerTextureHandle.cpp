@@ -12,7 +12,7 @@ OvRendering::HAL::NoneTextureHandle::TTextureHandle(uint32_t p_id)
 }
 
 template<>
-void OvRendering::HAL::NoneTextureHandle::Bind(uint32_t p_slot) const
+void OvRendering::HAL::NoneTextureHandle::Bind(std::optional<uint32_t> p_slot) const
 {
 }
 

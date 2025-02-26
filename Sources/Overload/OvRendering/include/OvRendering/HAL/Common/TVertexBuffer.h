@@ -6,14 +6,15 @@
 
 #pragma once
 
-#include <vector>
+#include <span>
 
 #include <OvRendering/Settings/EGraphicsBackend.h>
+#include <OvRendering/Settings/EAccessSpecifier.h>
 
 namespace OvRendering::HAL
 {
 	/**
-	* Wraps OpenGL VBO
+	* Represents a vertex buffer, used to store vertex data on the GPU
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
 	class TVertexBuffer final
@@ -30,19 +31,12 @@ namespace OvRendering::HAL
 		~TVertexBuffer();
 
 		/**
-		* Create the VBO using a pointer to the first element and a size (number of elements)
+		* Upload vertex data from to the GPU
 		* @param p_data
-		* @parma p_elements
+		* @parma p_usage
 		*/
 		template <class T>
-		void UploadData(T* p_data, size_t p_elements);
-
-		/**
-		* Create the EBO using a vector
-		* @param p_data
-		*/
-		template <class T>
-		void UploadData(std::vector<T>& p_data);
+		void Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW);
 
 		/**
 		* Bind the buffer

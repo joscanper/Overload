@@ -15,34 +15,37 @@
 namespace OvRendering::HAL
 {
 	/**
-	* TODO
+	* Part of a shader program that is responsible of a specific stage (Vertex, Fragment, Geometry, etc.)
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
 	class TShaderStage final
 	{
 	public:
 		/**
-		* TODO
+		* Create a shader stage of the given type
+		* @param p_type
 		*/
 		TShaderStage(Settings::EShaderType p_type);
 
 		/**
-		* TODO
+		* Destructor of the shader stage
 		*/
 		~TShaderStage();
 
 		/**
-		* TODO
+		* Upload shader source from the CPU to the GPU
+		* @param p_source
 		*/
 		void Upload(const std::string& p_source) const;
 
 		/**
-		* TODO
+		* Compile the uploaded shader source
+		* @return The compilation result
 		*/
 		Settings::ShaderCompilationResult Compile() const;
 
 		/**
-		* TODO
+		* @return The ID of the shader stage
 		*/
 		uint32_t GetID() const;
 

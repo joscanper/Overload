@@ -16,9 +16,13 @@ OvRendering::HAL::GLTextureHandle::TTextureHandle(uint32_t p_id) : m_context{
 }
 
 template<>
-void OvRendering::HAL::GLTextureHandle::Bind(uint32_t p_slot) const
+void OvRendering::HAL::GLTextureHandle::Bind(std::optional<uint32_t> p_slot) const
 {
-	glActiveTexture(GL_TEXTURE0 + p_slot);
+	if (p_slot.has_value())
+	{
+		glActiveTexture(GL_TEXTURE0 + p_slot.value());
+	}
+
 	glBindTexture(GL_TEXTURE_2D, m_context.id);
 }
 

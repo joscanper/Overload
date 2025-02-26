@@ -64,6 +64,7 @@ OvRendering::HAL::GLFramebuffer::TFramebuffer(uint16_t p_width, uint16_t p_heigh
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_context.renderTexture.GetID(), 0);
 
 		// Setup depth-stencil buffer
+		// TODO: separated RenderBuffer into its own class
 		glBindRenderbuffer(GL_RENDERBUFFER, m_context.depthStencilBuffer);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_STENCIL, m_context.width, m_context.height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_context.depthStencilBuffer);

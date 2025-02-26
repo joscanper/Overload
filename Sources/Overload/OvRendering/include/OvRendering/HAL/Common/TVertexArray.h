@@ -6,15 +6,14 @@
 
 #pragma once
 
-#include "OvRendering/Settings/EDataType.h"
+#include <OvRendering/HAL/VertexBuffer.h>
+#include <OvRendering/Settings/EDataType.h>
 #include <OvRendering/Settings/EGraphicsBackend.h>
-
-#include "OvRendering/HAL/VertexBuffer.h"
 
 namespace OvRendering::HAL
 {
 	/**
-	* Wraps OpenGL VAO
+	* Represents a vertex array, used to layout vertex data on the GPU
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
 	class TVertexArray final

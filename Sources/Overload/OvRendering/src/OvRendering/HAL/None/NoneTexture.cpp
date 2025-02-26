@@ -21,8 +21,6 @@ void OvRendering::HAL::NoneTexture::Upload(const Settings::TextureDesc& p_desc, 
 {
 }
 
-
-
 template<>
 const OvRendering::Settings::TextureDesc& OvRendering::HAL::NoneTexture::GetDesc() const
 {

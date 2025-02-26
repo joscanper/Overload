@@ -10,12 +10,9 @@
 #include <OvRendering/HAL/OpenGL/GLShaderStorageBuffer.h>
 
 template<>
-OvRendering::HAL::GLShaderStorageBuffer::TShaderStorageBuffer(Settings::EAccessSpecifier p_accessSpecifier)
+OvRendering::HAL::GLShaderStorageBuffer::TShaderStorageBuffer()
 {
 	glGenBuffers(1, &m_context.bufferID);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_context.bufferID);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, 0, nullptr, EnumToValue<GLenum>(p_accessSpecifier));
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
 template<>
@@ -25,17 +22,16 @@ OvRendering::HAL::GLShaderStorageBuffer::~TShaderStorageBuffer()
 }
 
 template<>
-void OvRendering::HAL::GLShaderStorageBuffer::SendBlocks(void* p_data, size_t p_size)
+void OvRendering::HAL::GLShaderStorageBuffer::Bind(std::optional<uint32_t> p_bindingPoint)
 {
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_context.bufferID);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, p_size, p_data, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-}
-
-template<>
-void OvRendering::HAL::GLShaderStorageBuffer::Bind(uint32_t p_bindingPoint)
-{
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, p_bindingPoint, m_context.bufferID);
+	if (p_bindingPoint.has_value())
+	{
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, p_bindingPoint.value(), m_context.bufferID);
+	}
+	else
+	{
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_context.bufferID);
+	}
 }
 
 template<>

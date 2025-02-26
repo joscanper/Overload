@@ -7,18 +7,12 @@
 #include <GL/glew.h>
 
 #include <OvRendering/HAL/OpenGL/GLIndexBuffer.h>
+#include <OvRendering/HAL/OpenGL/GLTypes.h>
 
 template<>
-OvRendering::HAL::GLIndexBuffer::TIndexBuffer(unsigned int* p_data, size_t p_elements)
+OvRendering::HAL::GLIndexBuffer::TIndexBuffer()
 {
 	glGenBuffers(1, &m_context.bufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_context.bufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, p_elements * sizeof(unsigned int), p_data, GL_STATIC_DRAW);
-}
-
-template<>
-OvRendering::HAL::GLIndexBuffer::TIndexBuffer(std::vector<uint32_t>& p_data) : TIndexBuffer(p_data.data(), p_data.size())
-{
 }
 
 template<>
@@ -37,6 +31,14 @@ template<>
 void OvRendering::HAL::GLIndexBuffer::Unbind()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+template<>
+void OvRendering::HAL::GLIndexBuffer::Upload(std::span<const uint32_t> p_data, Settings::EAccessSpecifier p_usage)
+{
+	Bind();
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, p_data.size_bytes(), p_data.data(), EnumToValue<GLenum>(p_usage));
+	Unbind();
 }
 
 template<>

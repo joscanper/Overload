@@ -9,6 +9,7 @@
 #include <GL/glew.h>
 
 #include "OvRendering/HAL/Common/TVertexBuffer.h"
+#include "OvRendering/HAL/OpenGL/GLTypes.h"
 
 namespace OvRendering::HAL
 {
@@ -21,16 +22,10 @@ namespace OvRendering::HAL
 
 	template<>
 	template<class T>
-	void GLVertexBuffer::UploadData(T* p_data, size_t p_elements)
+	void GLVertexBuffer::Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_context.bufferID);
-		glBufferData(GL_ARRAY_BUFFER, p_elements * sizeof(T), p_data, GL_STATIC_DRAW);
-	}
-
-	template<>
-	template<class T>
-	void GLVertexBuffer::UploadData(std::vector<T>& p_data)
-	{
-		UploadData(p_data.data(), p_data.size());
+		Bind();
+		glBufferData(GL_ARRAY_BUFFER, p_data.size_bytes(), p_data.data(), EnumToValue<GLenum>(p_usage));
+		Unbind();
 	}
 }

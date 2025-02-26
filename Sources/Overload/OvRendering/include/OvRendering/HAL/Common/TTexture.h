@@ -13,7 +13,7 @@
 namespace OvRendering::HAL
 {
 	/**
-	* TODO
+	* Represents a texture, used to store image data on the GPU
 	*/
 	template<Settings::EGraphicsBackend Backend, class TextureContext, class TextureHandleContext>
 	class TTexture final : public TTextureHandle<Backend, TextureHandleContext>
@@ -30,11 +30,11 @@ namespace OvRendering::HAL
 		~TTexture();
 
 		/**
-		* Upload the given data to the texture
+		* Upload the given texture data to the GPU
 		* @param p_desc
 		* @param p_data
 		*/
-		void Upload(const Settings::TextureDesc& p_desc, void* p_data);
+		void Upload(const Settings::TextureDesc& p_desc, void* p_data); // TODO: Investigate use of weak_ptr
 
 		/**
 		* Returns the texture description

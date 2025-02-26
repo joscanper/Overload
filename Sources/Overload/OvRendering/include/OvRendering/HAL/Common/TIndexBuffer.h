@@ -6,9 +6,10 @@
 
 #pragma once
 
-#include <vector>
+#include <span>
 
-#include "OvRendering/Settings/EGraphicsBackend.h"
+#include <OvRendering/Settings/EGraphicsBackend.h>
+#include <OvRendering/Settings/EAccessSpecifier.h>
 
 namespace OvRendering::HAL
 {
@@ -20,17 +21,9 @@ namespace OvRendering::HAL
 	{
 	public:
 		/**
-		* Create the Index Buffer using a pointer to the first element and a size (number of elements)
-		* @param p_data
-		* @parma p_elements
+		* Create an index buffer
 		*/
-		TIndexBuffer(unsigned int* p_data, size_t p_elements);
-
-		/**
-		* Create the IBO using a vector
-		* @param p_data
-		*/
-		TIndexBuffer(std::vector<uint32_t>& p_data);
+		TIndexBuffer();
 
 		/**
 		* Destructor
@@ -46,6 +39,13 @@ namespace OvRendering::HAL
 		* Unbind the buffer
 		*/
 		void Unbind();
+
+		/**
+		* Upload data index data to the GPU
+		* @param p_data
+		* @param p_usage
+		*/
+		void Upload(std::span<const uint32_t> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW);
 
 		/**
 		* Returns the ID of the IBO

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <vector>
+#include <span>
 #include <memory>
 
 #include "OvRendering/HAL/VertexArray.h"
@@ -29,7 +29,11 @@ namespace OvRendering::Resources
 		* @param p_indices
 		* @param p_materialIndex
 		*/
-		Mesh(const std::vector<Geometry::Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, uint32_t p_materialIndex);
+		Mesh(
+			std::span<const Geometry::Vertex> p_vertices,
+			std::span<const uint32_t> p_indices,
+			uint32_t p_materialIndex = 0
+		);
 
 		/**
 		* Bind the mesh (Actually bind its VAO)
@@ -62,8 +66,8 @@ namespace OvRendering::Resources
 		const OvRendering::Geometry::BoundingSphere& GetBoundingSphere() const;
 
 	private:
-		void CreateBuffers(const std::vector<Geometry::Vertex>& p_vertices, const std::vector<uint32_t>& p_indices);
-		void ComputeBoundingSphere(const std::vector<Geometry::Vertex>& p_vertices);
+		void Upload(std::span<const Geometry::Vertex> p_vertices, std::span<const uint32_t> p_indices);
+		void ComputeBoundingSphere(std::span<const Geometry::Vertex> p_vertices);
 
 	private:
 		const uint32_t m_vertexCount;
@@ -71,8 +75,8 @@ namespace OvRendering::Resources
 		const uint32_t m_materialIndex;
 
 		HAL::VertexArray m_vertexArray;
-		std::unique_ptr<HAL::VertexBuffer> m_vertexBuffer;
-		std::unique_ptr<HAL::IndexBuffer> m_indexBuffer;
+		HAL::VertexBuffer m_vertexBuffer;
+		HAL::IndexBuffer m_indexBuffer;
 
 		Geometry::BoundingSphere m_boundingSphere;
 	};

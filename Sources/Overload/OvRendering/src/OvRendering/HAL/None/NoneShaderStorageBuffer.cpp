@@ -7,7 +7,7 @@
 #include <OvRendering/HAL/None/NoneShaderStorageBuffer.h>
 
 template<>
-OvRendering::HAL::NoneShaderStorageBuffer::TShaderStorageBuffer(Settings::EAccessSpecifier p_accessSpecifier)
+OvRendering::HAL::NoneShaderStorageBuffer::TShaderStorageBuffer()
 {
 }
 
@@ -17,12 +17,7 @@ OvRendering::HAL::NoneShaderStorageBuffer::~TShaderStorageBuffer()
 }
 
 template<>
-void OvRendering::HAL::NoneShaderStorageBuffer::SendBlocks(void* p_data, size_t p_size)
-{
-}
-
-template<>
-void OvRendering::HAL::NoneShaderStorageBuffer::Bind(uint32_t p_bindingPoint)
+void OvRendering::HAL::NoneShaderStorageBuffer::Bind(std::optional<uint32_t> p_bindingPoint)
 {
 }
 

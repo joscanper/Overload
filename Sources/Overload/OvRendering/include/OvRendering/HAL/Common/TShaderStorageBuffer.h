@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include <vector>
+#include <span>
+#include <optional>
 
 #include <OvRendering/Settings/EAccessSpecifier.h>
 #include <OvRendering/Settings/EGraphicsBackend.h>
@@ -16,7 +17,7 @@ namespace OvRendering::Resources { class Shader; }
 namespace OvRendering::HAL
 {
 	/**
-	* TODO
+	* Shader storage buffer object, used to store data of variable size that can be accessed by shaders
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
 	class TShaderStorageBuffer final
@@ -25,7 +26,7 @@ namespace OvRendering::HAL
 		/**
 		* Create a SSBO with the given access specifier hint
 		*/
-		TShaderStorageBuffer(Settings::EAccessSpecifier p_accessSpecifier);
+		TShaderStorageBuffer();
 
 		/**
 		* Destroy the SSBO
@@ -33,20 +34,23 @@ namespace OvRendering::HAL
 		~TShaderStorageBuffer();
 
 		/**
-		* Bind the SSBO to the given binding point
+		* Bind the SSBO to the optional given binding point
 		* @param p_bindingPoint
 		*/
-		void Bind(uint32_t p_bindingPoint);
+		void Bind(std::optional<uint32_t> p_bindingPoint = std::nullopt);
 
 		/**
-		* Unbind the SSBO from the currently binding point
+		* Unbind the SSBO
 		*/
 		void Unbind();
 
 		/**
-		* Send the block data
+		* Sends the given shader storage buffer data to the GPU
+		* @param p_data
+		* @param p_usage
 		*/
-		void SendBlocks(void* p_data, size_t p_size);
+		template<class T>
+		void Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW);
 
 	private:
 		Context m_context;

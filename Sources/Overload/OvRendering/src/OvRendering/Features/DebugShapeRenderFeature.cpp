@@ -12,25 +12,29 @@
 OvRendering::Features::DebugShapeRenderFeature::DebugShapeRenderFeature(Core::CompositeRenderer& p_renderer)
 	: ARenderFeature(p_renderer)
 {
-	std::vector<Geometry::Vertex> vertices;
-	vertices.push_back
-	({
-		0, 0, 0,
-		0, 0,
-		0, 0, 0,
-		0, 0, 0,
-		0, 0, 0
-	});
-	vertices.push_back
-	({
-		0, 0, 0,
-		0, 0,
-		0, 0, 0,
-		0, 0, 0,
-		0, 0, 0
+	constexpr auto kVertices = std::to_array<Geometry::Vertex>({
+		{
+			0, 0, 0,
+			0, 0,
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0
+		},
+		{
+			0, 0, 0,
+			0, 0,
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0
+		}
 	});
 
-	m_lineMesh = new Resources::Mesh(vertices, { 0, 1 }, 0);
+	constexpr auto kIndices = std::to_array<uint32_t>({ 0, 1 });
+
+	m_lineMesh = std::make_unique<Resources::Mesh>(
+		kVertices,
+		kIndices
+	);
 
 	// TODO: Move these out of here, maybe we could have proper source files for these.
 	std::string vertexShader = R"(
@@ -67,7 +71,6 @@ void main()
 
 OvRendering::Features::DebugShapeRenderFeature::~DebugShapeRenderFeature()
 {
-	delete m_lineMesh;
 	OvRendering::Resources::Loaders::ShaderLoader::Destroy(m_lineShader);
 }
 
@@ -100,7 +103,7 @@ void OvRendering::Features::DebugShapeRenderFeature::DrawLine(
 
 	OvRendering::Entities::Drawable drawable;
 	drawable.material = *m_lineMaterial;
-	drawable.mesh = m_lineMesh;
+	drawable.mesh = m_lineMesh.get();
 	drawable.stateMask = m_lineMaterial->GenerateStateMask();
 	drawable.primitiveMode = Settings::EPrimitiveMode::LINES;
 

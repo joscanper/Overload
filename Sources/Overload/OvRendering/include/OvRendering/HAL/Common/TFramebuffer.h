@@ -6,19 +6,19 @@
 
 #pragma once
 
-#include "OvRendering/Settings/DriverSettings.h"
-#include "OvRendering/Settings/ERenderingCapability.h"
-#include "OvRendering/Settings/EPrimitiveMode.h"
-#include "OvRendering/Settings/ERasterizationMode.h"
-#include "OvRendering/Settings/EComparaisonAlgorithm.h"
-#include "OvRendering/Settings/EOperation.h"
-#include "OvRendering/Settings/ECullFace.h"
-#include "OvRendering/Settings/ECullingOptions.h"
-#include "OvRendering/Settings/EPixelDataFormat.h"
-#include "OvRendering/Settings/EPixelDataType.h"
-#include "OvRendering/Settings/EGraphicsBackend.h"
-#include "OvRendering/Data/PipelineState.h"
-#include "OvRendering/Resources/Texture.h"
+#include <OvRendering/Settings/DriverSettings.h>
+#include <OvRendering/Settings/ERenderingCapability.h>
+#include <OvRendering/Settings/EPrimitiveMode.h>
+#include <OvRendering/Settings/ERasterizationMode.h>
+#include <OvRendering/Settings/EComparaisonAlgorithm.h>
+#include <OvRendering/Settings/EOperation.h>
+#include <OvRendering/Settings/ECullFace.h>
+#include <OvRendering/Settings/ECullingOptions.h>
+#include <OvRendering/Settings/EPixelDataFormat.h>
+#include <OvRendering/Settings/EPixelDataType.h>
+#include <OvRendering/Settings/EGraphicsBackend.h>
+#include <OvRendering/Data/PipelineState.h>
+#include <OvRendering/Resources/Texture.h>
 #include <OvRendering/HAL/Common/TTextureHandle.h>
 
 namespace OvRendering::HAL

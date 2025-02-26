@@ -16,7 +16,7 @@ namespace OvRendering::Resources { class Shader; }
 namespace OvRendering::HAL
 {
 	/**
-	* TODO
+	* Represents a uniform buffer object, used to store uniform data that can be accessed by shaders
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
 	class TUniformBuffer final
@@ -24,9 +24,9 @@ namespace OvRendering::HAL
 	public:
 		/**
 		* Create a UniformBuffer
-		* @param p_size (Specify the size in bytes of the UBO data)
-		* @param p_bindingPoint (Specify the binding point on which the uniform buffer should be binded)
-		* @parma p_offset (The offset of the UBO, sizeof previouses UBO if the binding point is != 0)
+		* @param p_size Specify the size in bytes of the UBO data
+		* @param p_bindingPoint Specify the binding point on which the uniform buffer should be binded
+		* @param p_offset The offset of the UBO, sizeof previouses UBO if the binding point is != 0
 		* @param p_accessSpecifier
 		*/
 		TUniformBuffer(
