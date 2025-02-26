@@ -5,6 +5,8 @@
 */
 
 #include <algorithm>
+#include <iostream>
+#include <intrin.h>
 
 #include "OvRendering/Resources/Mesh.h"
 
@@ -53,35 +55,10 @@ const OvRendering::Geometry::BoundingSphere& OvRendering::Resources::Mesh::GetBo
 
 void OvRendering::Resources::Mesh::Upload(std::span<const Geometry::Vertex> p_vertices, std::span<const uint32_t> p_indices)
 {
-	std::vector<float> vertexData;
-	vertexData.reserve(p_vertices.size() * 14);
-
-	for (const auto& vertex : p_vertices)
-	{
-		vertexData.push_back(vertex.position[0]);
-		vertexData.push_back(vertex.position[1]);
-		vertexData.push_back(vertex.position[2]);
-
-		vertexData.push_back(vertex.texCoords[0]);
-		vertexData.push_back(vertex.texCoords[1]);
-
-		vertexData.push_back(vertex.normals[0]);
-		vertexData.push_back(vertex.normals[1]);
-		vertexData.push_back(vertex.normals[2]);
-
-		vertexData.push_back(vertex.tangent[0]);
-		vertexData.push_back(vertex.tangent[1]);
-		vertexData.push_back(vertex.tangent[2]);
-
-		vertexData.push_back(vertex.bitangent[0]);
-		vertexData.push_back(vertex.bitangent[1]);
-		vertexData.push_back(vertex.bitangent[2]);
-	}
-
-	m_vertexBuffer.Upload<float>(vertexData);
+	m_vertexBuffer.Upload<Geometry::Vertex>(p_vertices);
 	m_indexBuffer.Upload(p_indices);
 
-	const uint64_t vertexSize = sizeof(Geometry::Vertex);
+	constexpr uint64_t vertexSize = sizeof(Geometry::Vertex);
 
 	m_vertexArray.Bind();
 	m_indexBuffer.Bind();
