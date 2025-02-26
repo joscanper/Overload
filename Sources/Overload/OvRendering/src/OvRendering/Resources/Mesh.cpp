@@ -79,19 +79,19 @@ void OvRendering::Resources::Mesh::Upload(std::span<const Geometry::Vertex> p_ve
 	}
 
 	m_vertexBuffer.Upload<float>(vertexData);
-	m_vertexBuffer.Bind();
 	m_indexBuffer.Upload(p_indices);
 
 	const uint64_t vertexSize = sizeof(Geometry::Vertex);
 
+	m_vertexArray.Bind();
 	m_indexBuffer.Bind();
 	m_vertexArray.BindAttribute(0, m_vertexBuffer, Settings::EDataType::FLOAT, 3, vertexSize, 0);
 	m_vertexArray.BindAttribute(1, m_vertexBuffer, Settings::EDataType::FLOAT, 2, vertexSize, sizeof(float) * 3);
 	m_vertexArray.BindAttribute(2, m_vertexBuffer, Settings::EDataType::FLOAT, 3, vertexSize, sizeof(float) * 5);
 	m_vertexArray.BindAttribute(3, m_vertexBuffer, Settings::EDataType::FLOAT, 3, vertexSize, sizeof(float) * 8);
 	m_vertexArray.BindAttribute(4, m_vertexBuffer, Settings::EDataType::FLOAT, 3, vertexSize, sizeof(float) * 11);
+	m_vertexArray.Unbind();
 	m_indexBuffer.Unbind();
-	m_vertexBuffer.Unbind();
 }
 
 void OvRendering::Resources::Mesh::ComputeBoundingSphere(std::span<const Geometry::Vertex> p_vertices)

@@ -36,22 +36,22 @@ namespace OvRendering::HAL
 		* @parma p_usage
 		*/
 		template <class T>
-		void Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW);
+		void Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
 
 		/**
 		* Bind the buffer
 		*/
-		void Bind();
+		void Bind() const;
 
 		/**
 		* Bind the buffer
 		*/
-		void Unbind();
+		void Unbind() const;
 
 		/**
 		* Returnd the ID of the VBO
 		*/
-		uint32_t GetID();
+		uint32_t GetID() const;
 
 	private:
 		Context m_context;

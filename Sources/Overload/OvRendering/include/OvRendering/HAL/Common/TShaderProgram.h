@@ -168,7 +168,7 @@ namespace OvRendering::HAL
 		/**
 		* Returns the uniforms of the program
 		*/
-		std::span<Settings::UniformInfo> GetUniforms();
+		std::span<const Settings::UniformInfo> GetUniforms() const;
 
 	private:
 		ProgramContext m_context;

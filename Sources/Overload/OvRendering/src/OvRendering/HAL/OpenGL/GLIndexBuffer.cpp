@@ -22,19 +22,19 @@ OvRendering::HAL::GLIndexBuffer::~TIndexBuffer()
 }
 
 template<>
-void OvRendering::HAL::GLIndexBuffer::Bind()
+void OvRendering::HAL::GLIndexBuffer::Bind() const
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_context.bufferID);
 }
 
 template<>
-void OvRendering::HAL::GLIndexBuffer::Unbind()
+void OvRendering::HAL::GLIndexBuffer::Unbind() const
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 template<>
-void OvRendering::HAL::GLIndexBuffer::Upload(std::span<const uint32_t> p_data, Settings::EAccessSpecifier p_usage)
+void OvRendering::HAL::GLIndexBuffer::Upload(std::span<const uint32_t> p_data, Settings::EAccessSpecifier p_usage) const
 {
 	Bind();
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, p_data.size_bytes(), p_data.data(), EnumToValue<GLenum>(p_usage));
@@ -42,7 +42,7 @@ void OvRendering::HAL::GLIndexBuffer::Upload(std::span<const uint32_t> p_data, S
 }
 
 template<>
-uint32_t OvRendering::HAL::GLIndexBuffer::GetID()
+uint32_t OvRendering::HAL::GLIndexBuffer::GetID() const
 {
 	return m_context.bufferID;
 }

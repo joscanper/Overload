@@ -33,24 +33,24 @@ namespace OvRendering::HAL
 		/**
 		* Bind the buffer
 		*/
-		void Bind();
+		void Bind() const;
 
 		/**
 		* Unbind the buffer
 		*/
-		void Unbind();
+		void Unbind() const;
 
 		/**
 		* Upload data index data to the GPU
 		* @param p_data
 		* @param p_usage
 		*/
-		void Upload(std::span<const uint32_t> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW);
+		void Upload(std::span<const uint32_t> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
 
 		/**
 		* Returns the ID of the IBO
 		*/
-		uint32_t GetID();
+		uint32_t GetID() const;
 
 	private:
 		Context m_context;

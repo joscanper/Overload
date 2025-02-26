@@ -22,7 +22,7 @@ OvRendering::HAL::GLShaderStorageBuffer::~TShaderStorageBuffer()
 }
 
 template<>
-void OvRendering::HAL::GLShaderStorageBuffer::Bind(std::optional<uint32_t> p_bindingPoint)
+void OvRendering::HAL::GLShaderStorageBuffer::Bind(std::optional<uint32_t> p_bindingPoint) const
 {
 	if (p_bindingPoint.has_value())
 	{
@@ -35,7 +35,7 @@ void OvRendering::HAL::GLShaderStorageBuffer::Bind(std::optional<uint32_t> p_bin
 }
 
 template<>
-void OvRendering::HAL::GLShaderStorageBuffer::Unbind()
+void OvRendering::HAL::GLShaderStorageBuffer::Unbind() const
 {
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }

@@ -269,7 +269,7 @@ const OvRendering::Settings::UniformInfo* OvRendering::HAL::GLShaderProgram::Get
 }
 
 template<>
-std::span<OvRendering::Settings::UniformInfo> OvRendering::HAL::GLShaderProgram::GetUniforms()
+std::span<const OvRendering::Settings::UniformInfo> OvRendering::HAL::GLShaderProgram::GetUniforms() const
 {
 	return m_context.uniforms;
 }

@@ -135,7 +135,7 @@ const OvRendering::Settings::UniformInfo* OvRendering::HAL::NoneShaderProgram::G
 }
 
 template<>
-std::span<OvRendering::Settings::UniformInfo> OvRendering::HAL::NoneShaderProgram::GetUniforms()
+std::span<const OvRendering::Settings::UniformInfo> OvRendering::HAL::NoneShaderProgram::GetUniforms() const
 {
 	return {};
 }

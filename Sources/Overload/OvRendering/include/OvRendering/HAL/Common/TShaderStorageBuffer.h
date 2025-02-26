@@ -37,12 +37,12 @@ namespace OvRendering::HAL
 		* Bind the SSBO to the optional given binding point
 		* @param p_bindingPoint
 		*/
-		void Bind(std::optional<uint32_t> p_bindingPoint = std::nullopt);
+		void Bind(std::optional<uint32_t> p_bindingPoint = std::nullopt) const;
 
 		/**
 		* Unbind the SSBO
 		*/
-		void Unbind();
+		void Unbind() const;
 
 		/**
 		* Sends the given shader storage buffer data to the GPU
@@ -50,7 +50,7 @@ namespace OvRendering::HAL
 		* @param p_usage
 		*/
 		template<class T>
-		void Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW);
+		void Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
 
 	private:
 		Context m_context;

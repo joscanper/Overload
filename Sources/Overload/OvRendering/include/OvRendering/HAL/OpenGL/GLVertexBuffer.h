@@ -22,7 +22,7 @@ namespace OvRendering::HAL
 
 	template<>
 	template<class T>
-	void GLVertexBuffer::Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage)
+	void GLVertexBuffer::Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage) const
 	{
 		Bind();
 		glBufferData(GL_ARRAY_BUFFER, p_data.size_bytes(), p_data.data(), EnumToValue<GLenum>(p_usage));

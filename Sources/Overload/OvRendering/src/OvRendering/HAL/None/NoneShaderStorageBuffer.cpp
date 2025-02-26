@@ -17,11 +17,11 @@ OvRendering::HAL::NoneShaderStorageBuffer::~TShaderStorageBuffer()
 }
 
 template<>
-void OvRendering::HAL::NoneShaderStorageBuffer::Bind(std::optional<uint32_t> p_bindingPoint)
+void OvRendering::HAL::NoneShaderStorageBuffer::Bind(std::optional<uint32_t> p_bindingPoint) const
 {
 }
 
 template<>
-void OvRendering::HAL::NoneShaderStorageBuffer::Unbind()
+void OvRendering::HAL::NoneShaderStorageBuffer::Unbind() const
 {
 }
