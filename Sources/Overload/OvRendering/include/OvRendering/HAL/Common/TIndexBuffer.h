@@ -14,7 +14,7 @@
 namespace OvRendering::HAL
 {
 	/**
-	* TODO
+	* Represents an index buffer, used to store index data on the GPU
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
 	class TIndexBuffer final

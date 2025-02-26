@@ -22,6 +22,8 @@ OvRendering::HAL::GLTexture::~TTexture()
 	glDeleteTextures(1, &m_context.id);
 }
 
+#include <memory>
+
 template<>
 void OvRendering::HAL::GLTexture::Upload(const Settings::TextureDesc& p_desc, void* p_data)
 {

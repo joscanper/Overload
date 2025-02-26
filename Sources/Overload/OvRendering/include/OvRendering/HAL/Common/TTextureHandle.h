@@ -20,7 +20,7 @@ namespace OvRendering::HAL
 	{
 	public:
 		/**
-		* Default constructor of the texture handle
+		* Default constructor of t he texture handle
 		*/
 		TTextureHandle() = default;
 

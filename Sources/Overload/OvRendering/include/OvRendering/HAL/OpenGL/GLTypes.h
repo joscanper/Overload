@@ -22,6 +22,7 @@
 #include <OvRendering/Settings/EPixelDataType.h>
 #include <OvRendering/Settings/EDataType.h>
 #include <OvRendering/Settings/EAccessSpecifier.h>
+#include <OvRendering/Settings/EShaderType.h>
 #include <OvRendering/Settings/UniformType.h>
 #include <OvTools/Utils/EnumMapper.h>
 
@@ -366,5 +367,15 @@ struct OvTools::Utils::MappingFor<OvRendering::Settings::EInternalFormat, GLenum
 		EnumValuePair<EnumType::COMPRESSED_SRGB_ALPHA_BPTC_UNORM, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM>,
 		EnumValuePair<EnumType::COMPRESSED_RGB_BPTC_SIGNED_FLOAT, GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT>,
 		EnumValuePair<EnumType::COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT>
+	> ;
+};
+
+template <>
+struct OvTools::Utils::MappingFor<OvRendering::Settings::EShaderType, GLenum>
+{
+	using EnumType = OvRendering::Settings::EShaderType;
+	using type = std::tuple <
+		EnumValuePair<EnumType::VERTEX, GL_VERTEX_SHADER>,
+		EnumValuePair<EnumType::FRAGMENT, GL_FRAGMENT_SHADER>
 	> ;
 };

@@ -34,7 +34,6 @@ namespace OvRendering::HAL
 
 		/**
 		* Clears the specified buffers.
-		*
 		* @param p_colorBuffer Clears the color buffer if true.
 		* @param p_depthBuffer Clears the depth buffer if true.
 		* @param p_stencilBuffer Clears the stencil buffer if true.
@@ -43,7 +42,6 @@ namespace OvRendering::HAL
 
 		/**
 		* Reads pixels from the framebuffer.
-		*
 		* @param p_x The x-coordinate of the lower-left corner.
 		* @param p_y The y-coordinate of the lower-left corner.
 		* @param p_width The width of the pixel rectangle.
@@ -64,7 +62,6 @@ namespace OvRendering::HAL
 
 		/**
 		* Renders primitives from array data.
-		*
 		* @param p_primitiveMode Specifies the kind of primitives to render.
 		* @param p_indexCount The number of elements to render.
 		*/
@@ -72,7 +69,6 @@ namespace OvRendering::HAL
 
 		/**
 		* Renders multiple instances of a set of elements.
-		*
 		* @param p_primitiveMode Specifies the kind of primitives to render.
 		* @param p_indexCount The number of elements to render.
 		* @param p_instances The number of instances to render.
@@ -81,7 +77,6 @@ namespace OvRendering::HAL
 
 		/**
 		* Renders primitives from array data without indexing.
-		*
 		* @param p_primitiveMode Specifies the kind of primitives to render.
 		* @param p_vertexCount The number of vertices to render.
 		*/
@@ -89,7 +84,6 @@ namespace OvRendering::HAL
 
 		/**
 		* Renders multiple instances of a set of vertices.
-		*
 		* @param p_primitiveMode Specifies the kind of primitives to render.
 		* @param p_vertexCount The number of vertices to render.
 		* @param p_instances The number of instances to render.
@@ -98,7 +92,6 @@ namespace OvRendering::HAL
 
 		/**
 		* Sets the clear color for the color buffer.
-		*
 		* @param p_red The red component of the clear color.
 		* @param p_green The green component of the clear color.
 		* @param p_blue The blue component of the clear color.

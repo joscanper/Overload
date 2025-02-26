@@ -5,8 +5,6 @@
 */
 
 #include <algorithm>
-#include <iostream>
-#include <intrin.h>
 
 #include "OvRendering/Resources/Mesh.h"
 

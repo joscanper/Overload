@@ -34,7 +34,7 @@ namespace OvRendering::HAL
 		* @param p_desc
 		* @param p_data
 		*/
-		void Upload(const Settings::TextureDesc& p_desc, void* p_data); // TODO: Investigate use of weak_ptr
+		void Upload(const Settings::TextureDesc& p_desc, void* p_data);
 
 		/**
 		* Returns the texture description

@@ -8,19 +8,7 @@
 
 #include <OvDebug/Logger.h>
 #include <OvRendering/HAL/OpenGL/GLShaderStage.h>
-
-GLenum GetGLShaderType(OvRendering::Settings::EShaderType p_type)
-{
-	switch (p_type)
-	{
-	case OvRendering::Settings::EShaderType::VERTEX:
-		return GL_VERTEX_SHADER;
-	case OvRendering::Settings::EShaderType::FRAGMENT:
-		return GL_FRAGMENT_SHADER;
-	default:
-		return 0;
-	}
-}
+#include <OvRendering/HAL/OpenGL/GLTypes.h>
 
 // TODO: Move out of this class
 std::string GetShaderTypeString(OvRendering::Settings::EShaderType p_type)
@@ -38,7 +26,7 @@ std::string GetShaderTypeString(OvRendering::Settings::EShaderType p_type)
 
 template<>
 OvRendering::HAL::GLShaderStage::TShaderStage(Settings::EShaderType p_type) : m_context{
-	.id = static_cast<uint32_t>(glCreateShader(GetGLShaderType(p_type))),
+	.id = static_cast<uint32_t>(glCreateShader(EnumToValue<GLenum>(p_type))),
 	.type = p_type,
 }
 {

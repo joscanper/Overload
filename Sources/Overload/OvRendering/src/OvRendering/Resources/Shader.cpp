@@ -7,7 +7,7 @@
 #include <OvDebug/Assertion.h>
 #include <OvRendering/Resources/Shader.h>
 
-OvRendering::HAL::ShaderProgram& OvRendering::Resources::Shader::GetProgram()
+OvRendering::HAL::ShaderProgram& OvRendering::Resources::Shader::GetProgram() const
 {
 	OVASSERT(m_program != nullptr, "Trying to access a null ShaderProgram");
 	return *m_program;

@@ -16,29 +16,22 @@ namespace OvRendering::Resources
 	namespace Loaders { class ShaderLoader; }
 
 	/**
-	* TODO
+	* Represents a shader resource, which wraps a shader program and adds a path to it.
+	* Can be seen as a "Shader Asset".
 	*/
 	class Shader
 	{
 		friend class Loaders::ShaderLoader;
 
 	public:
-		HAL::ShaderProgram& GetProgram();
+		/**
+		* Returns the associated shader program
+		*/
+		HAL::ShaderProgram& GetProgram() const;
 
 	private:
-		/**
-		* TODO
-		*/
 		Shader(const std::string p_path, std::unique_ptr<HAL::ShaderProgram>&& p_program);
-
-		/**
-		* TODO
-		*/
 		~Shader() = default;
-
-		/**
-		* TODO
-		*/
 		void SetProgram(std::unique_ptr<HAL::ShaderProgram>&& p_program);
 
 	public:
