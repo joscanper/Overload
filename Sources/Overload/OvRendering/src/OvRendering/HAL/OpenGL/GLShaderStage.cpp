@@ -4,25 +4,14 @@
 * @licence: MIT
 */
 
+#include <algorithm>
+
 #include <GL/glew.h>
 
 #include <OvDebug/Logger.h>
 #include <OvRendering/HAL/OpenGL/GLShaderStage.h>
 #include <OvRendering/HAL/OpenGL/GLTypes.h>
-
-// TODO: Move out of this class
-std::string GetShaderTypeString(OvRendering::Settings::EShaderType p_type)
-{
-	switch (p_type)
-	{
-	case OvRendering::Settings::EShaderType::VERTEX:
-		return "VERTEX SHADER";
-	case OvRendering::Settings::EShaderType::FRAGMENT:
-		return "FRAGMENT SHADER";
-	default:
-		return "UNKNOWN SHADER";
-	}
-}
+#include <OvRendering/Utils/ShaderUtil.h>
 
 template<>
 OvRendering::HAL::GLShaderStage::TShaderStage(Settings::EShaderType p_type) : m_context{
@@ -61,8 +50,10 @@ OvRendering::Settings::ShaderCompilationResult OvRendering::HAL::GLShaderStage::
 		std::string errorLog(maxLength, ' ');
 		glGetShaderInfoLog(m_context.id, maxLength, &maxLength, errorLog.data());
 
-		std::string shaderTypeString = GetShaderTypeString(m_context.type);
-		std::string errorHeader = "[" + shaderTypeString + "] \"";
+		std::string shaderTypeStr = Utils::GetShaderTypeName(m_context.type);
+		std::transform(shaderTypeStr.begin(), shaderTypeStr.end(), shaderTypeStr.begin(), std::toupper);
+		std::string errorHeader = "[" + shaderTypeStr + " SHADER] \"";
+
 		return {
 			.success = false,
 			.message = errorLog

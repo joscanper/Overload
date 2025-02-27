@@ -25,15 +25,14 @@ namespace OvRendering::Resources
 		friend class Loaders::TextureLoader;
 
 	public:
+		/**
+		* Returns the associated HAL::Texture instance
+		*/
 		HAL::Texture& GetTexture();
 
 	private:
 		Texture(const std::string p_path, std::unique_ptr<HAL::Texture>&& p_texture);
 		~Texture() = default;
-
-		/**
-		* TODO
-		*/
 		void SetTexture(std::unique_ptr<HAL::Texture>&& p_texture);
 
 	public:

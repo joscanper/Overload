@@ -4,11 +4,12 @@
 * @licence: MIT
 */
 
-#include <sstream>
-#include <fstream>
+#include <algorithm>
 #include <array>
+#include <fstream>
 #include <optional>
 #include <span>
+#include <sstream>
 
 #include <OvDebug/Logger.h>
 #include <OvDebug/Assertion.h>
@@ -17,6 +18,7 @@
 #include <OvRendering/Resources/Shader.h>
 #include <OvRendering/HAL/ShaderProgram.h>
 #include <OvRendering/HAL/ShaderStage.h>
+#include <OvRendering/Utils/ShaderUtil.h>
 
 namespace
 {
@@ -33,19 +35,6 @@ namespace
 		const OvRendering::HAL::ShaderStage stage;
 		std::optional<OvRendering::Settings::ShaderCompilationResult> compilationResult;
 	};
-
-	std::string GetShaderTypeString(OvRendering::Settings::EShaderType p_type)
-	{
-		switch (p_type)
-		{
-		case OvRendering::Settings::EShaderType::VERTEX:
-			return "VERTEX";
-		case OvRendering::Settings::EShaderType::FRAGMENT:
-			return "FRAGMENT";
-		default:
-			return "UNKNOWN";
-		}
-	}
 
 	std::unique_ptr<OvRendering::HAL::ShaderProgram> CreateProgram(
 		std::span<ShaderStageDesc> p_stages,
@@ -68,7 +57,9 @@ namespace
 			const auto compilationResult = processedStage.stage.Compile();
 			if (!compilationResult.success)
 			{
-				OVLOG_ERROR("[" + GetShaderTypeString(stageInput.type) + " COMPILE] \"" + __FILE_TRACE + "\": " + compilationResult.message);
+				std::string shaderTypeStr = OvRendering::Utils::GetShaderTypeName(stageInput.type);
+				std::transform(shaderTypeStr.begin(), shaderTypeStr.end(), shaderTypeStr.begin(), std::toupper);
+				OVLOG_ERROR("[" + shaderTypeStr + " COMPILE] \"" + __FILE_TRACE + "\": " + compilationResult.message);
 				++errorCount;
 			}
 		}
