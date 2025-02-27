@@ -63,14 +63,14 @@ void OvRendering::Data::Material::Bind(OvRendering::Resources::Texture* p_emptyT
 			{
 				switch (uniformData->type)
 				{
-				case OvRendering::Settings::UniformType::UNIFORM_BOOL:			if (value.type() == typeid(bool))		m_shader->GetProgram().SetUniformInt(name, std::any_cast<bool>(value));			break;
-				case OvRendering::Settings::UniformType::UNIFORM_INT:			if (value.type() == typeid(int))		m_shader->GetProgram().SetUniformInt(name, std::any_cast<int>(value));			break;
-				case OvRendering::Settings::UniformType::UNIFORM_FLOAT:		if (value.type() == typeid(float))		m_shader->GetProgram().SetUniformFloat(name, std::any_cast<float>(value));		break;
-				case OvRendering::Settings::UniformType::UNIFORM_FLOAT_VEC2:	if (value.type() == typeid(FVector2))	m_shader->GetProgram().SetUniformVec2(name, std::any_cast<FVector2>(value));		break;
-				case OvRendering::Settings::UniformType::UNIFORM_FLOAT_VEC3:	if (value.type() == typeid(FVector3))	m_shader->GetProgram().SetUniformVec3(name, std::any_cast<FVector3>(value));		break;
-				case OvRendering::Settings::UniformType::UNIFORM_FLOAT_VEC4:	if (value.type() == typeid(FVector4))	m_shader->GetProgram().SetUniformVec4(name, std::any_cast<FVector4>(value));		break;
-				case OvRendering::Settings::UniformType::UNIFORM_FLOAT_MAT4:	if (value.type() == typeid(FMatrix4))	m_shader->GetProgram().SetUniformMat4(name, std::any_cast<FMatrix4>(value));		break;
-				case OvRendering::Settings::UniformType::UNIFORM_SAMPLER_2D:
+				case OvRendering::Settings::EUniformType::BOOL:			if (value.type() == typeid(bool))		m_shader->GetProgram().SetUniformInt(name, std::any_cast<bool>(value));			break;
+				case OvRendering::Settings::EUniformType::INT:			if (value.type() == typeid(int))		m_shader->GetProgram().SetUniformInt(name, std::any_cast<int>(value));			break;
+				case OvRendering::Settings::EUniformType::FLOAT:		if (value.type() == typeid(float))		m_shader->GetProgram().SetUniformFloat(name, std::any_cast<float>(value));		break;
+				case OvRendering::Settings::EUniformType::FLOAT_VEC2:	if (value.type() == typeid(FVector2))	m_shader->GetProgram().SetUniformVec2(name, std::any_cast<FVector2>(value));		break;
+				case OvRendering::Settings::EUniformType::FLOAT_VEC3:	if (value.type() == typeid(FVector3))	m_shader->GetProgram().SetUniformVec3(name, std::any_cast<FVector3>(value));		break;
+				case OvRendering::Settings::EUniformType::FLOAT_VEC4:	if (value.type() == typeid(FVector4))	m_shader->GetProgram().SetUniformVec4(name, std::any_cast<FVector4>(value));		break;
+				case OvRendering::Settings::EUniformType::FLOAT_MAT4:	if (value.type() == typeid(FMatrix4))	m_shader->GetProgram().SetUniformMat4(name, std::any_cast<FMatrix4>(value));		break;
+				case OvRendering::Settings::EUniformType::SAMPLER_2D:
 				{
 					if (value.type() == typeid(HAL::TextureHandle))
 					{

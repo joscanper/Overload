@@ -6,9 +6,9 @@
 
 #pragma once
 
+#include <OvRendering/HAL/Common/TTextureHandle.h>
 #include <OvRendering/Settings/EGraphicsBackend.h>
 #include <OvRendering/Settings/TextureDesc.h>
-#include <OvRendering/HAL/Common/TTextureHandle.h>
 
 namespace OvRendering::HAL
 {

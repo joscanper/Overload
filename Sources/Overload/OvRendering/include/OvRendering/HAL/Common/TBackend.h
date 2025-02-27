@@ -21,6 +21,9 @@
 
 namespace OvRendering::HAL
 {
+	/**
+	* Backend class that wraps the selected graphics API's context.
+	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
 	class TBackend final
 	{

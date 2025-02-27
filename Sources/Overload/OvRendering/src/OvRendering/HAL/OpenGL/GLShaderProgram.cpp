@@ -223,7 +223,7 @@ void OvRendering::HAL::GLShaderProgram::QueryUniforms()
 		GLsizei actualLength = 0;
 		glGetActiveUniform(m_context.id, unif, static_cast<GLsizei>(nameData.size()), &actualLength, &arraySize, &type, &nameData[0]);
 		std::string name(static_cast<char*>(nameData.data()), actualLength);
-		const auto uniformType = ValueToEnum<Settings::UniformType>(type);
+		const auto uniformType = ValueToEnum<Settings::EUniformType>(type);
 
 		if (!IsEngineUBOMember(name))
 		{
@@ -231,14 +231,14 @@ void OvRendering::HAL::GLShaderProgram::QueryUniforms()
 
 			switch (uniformType)
 			{
-			case Settings::UniformType::UNIFORM_BOOL: defaultValue = std::make_any<bool>(GetUniformInt(name)); break;
-			case Settings::UniformType::UNIFORM_INT: defaultValue = std::make_any<int>(GetUniformInt(name)); break;
-			case Settings::UniformType::UNIFORM_FLOAT: defaultValue = std::make_any<float>(GetUniformFloat(name)); break;
-			case Settings::UniformType::UNIFORM_FLOAT_VEC2:	defaultValue = std::make_any<OvMaths::FVector2>(GetUniformVec2(name)); break;
-			case Settings::UniformType::UNIFORM_FLOAT_VEC3:	defaultValue = std::make_any<OvMaths::FVector3>(GetUniformVec3(name)); break;
-			case Settings::UniformType::UNIFORM_FLOAT_VEC4:	defaultValue = std::make_any<OvMaths::FVector4>(GetUniformVec4(name)); break;
-			case Settings::UniformType::UNIFORM_FLOAT_MAT4:	defaultValue = std::make_any<OvMaths::FMatrix4>(GetUniformMat4(name)); break;
-			case Settings::UniformType::UNIFORM_SAMPLER_2D:	defaultValue = std::make_any<Resources::Texture*>(nullptr); break;
+			case Settings::EUniformType::BOOL: defaultValue = std::make_any<bool>(GetUniformInt(name)); break;
+			case Settings::EUniformType::INT: defaultValue = std::make_any<int>(GetUniformInt(name)); break;
+			case Settings::EUniformType::FLOAT: defaultValue = std::make_any<float>(GetUniformFloat(name)); break;
+			case Settings::EUniformType::FLOAT_VEC2:	defaultValue = std::make_any<OvMaths::FVector2>(GetUniformVec2(name)); break;
+			case Settings::EUniformType::FLOAT_VEC3:	defaultValue = std::make_any<OvMaths::FVector3>(GetUniformVec3(name)); break;
+			case Settings::EUniformType::FLOAT_VEC4:	defaultValue = std::make_any<OvMaths::FVector4>(GetUniformVec4(name)); break;
+			case Settings::EUniformType::FLOAT_MAT4:	defaultValue = std::make_any<OvMaths::FMatrix4>(GetUniformMat4(name)); break;
+			case Settings::EUniformType::SAMPLER_2D:	defaultValue = std::make_any<Resources::Texture*>(nullptr); break;
 			}
 
 			if (defaultValue.has_value())

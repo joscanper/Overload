@@ -8,8 +8,8 @@
 
 #include <GL/glew.h>
 
-#include "OvRendering/HAL/Common/TVertexBuffer.h"
-#include "OvRendering/HAL/OpenGL/GLTypes.h"
+#include <OvRendering/HAL/Common/TVertexBuffer.h>
+#include <OvRendering/HAL/OpenGL/GLTypes.h>
 
 namespace OvRendering::HAL
 {

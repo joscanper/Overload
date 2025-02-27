@@ -23,6 +23,9 @@
 
 namespace OvRendering::HAL
 {
+	/**
+	* Represents a framebuffer, used to store render data
+	*/
 	template<Settings::EGraphicsBackend Backend, class FramebufferContext, class TextureHandleContext>
 	class TFramebuffer final
 	{

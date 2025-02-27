@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "OvRendering/HAL/Common/TShaderStage.h"
+#include <OvRendering/HAL/Common/TShaderStage.h>
 
 namespace OvRendering::HAL
 {

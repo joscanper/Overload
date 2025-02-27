@@ -12,8 +12,6 @@
 #include <OvRendering/Settings/EAccessSpecifier.h>
 #include <OvRendering/Settings/EGraphicsBackend.h>
 
-namespace OvRendering::Resources { class Shader; }
-
 namespace OvRendering::HAL
 {
 	/**

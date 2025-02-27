@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "OvRendering/HAL/Common/TVertexArray.h"
+#include <OvRendering/HAL/Common/TVertexArray.h>
 
 namespace OvRendering::HAL
 {

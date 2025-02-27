@@ -9,8 +9,8 @@
 #include <string>
 
 #include <OvRendering/Settings/EGraphicsBackend.h>
-#include <OvRendering/Settings/ShaderCompilationResult.h>
 #include <OvRendering/Settings/EShaderType.h>
+#include <OvRendering/Settings/ShaderCompilationResult.h>
 
 namespace OvRendering::HAL
 {

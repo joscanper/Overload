@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "OvRendering/HAL/Common/TIndexBuffer.h"
+#include <OvRendering/HAL/Common/TIndexBuffer.h>
 
 namespace OvRendering::HAL
 {

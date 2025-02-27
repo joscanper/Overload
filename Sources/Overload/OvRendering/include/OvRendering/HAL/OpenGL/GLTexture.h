@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "OvRendering/HAL/Common/TTexture.h"
-#include "OvRendering/HAL/OpenGL/GLTextureHandle.h"
+#include <OvRendering/HAL/Common/TTexture.h>
+#include <OvRendering/HAL/OpenGL/GLTextureHandle.h>
 
 namespace OvRendering::HAL
 {

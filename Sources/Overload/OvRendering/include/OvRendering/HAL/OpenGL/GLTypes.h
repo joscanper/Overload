@@ -23,7 +23,7 @@
 #include <OvRendering/Settings/EDataType.h>
 #include <OvRendering/Settings/EAccessSpecifier.h>
 #include <OvRendering/Settings/EShaderType.h>
-#include <OvRendering/Settings/UniformType.h>
+#include <OvRendering/Settings/EUniformType.h>
 #include <OvTools/Utils/EnumMapper.h>
 
 namespace OvRendering::HAL
@@ -264,20 +264,20 @@ struct OvTools::Utils::MappingFor<OvRendering::Settings::EAccessSpecifier, GLenu
 };
 
 template <>
-struct OvTools::Utils::MappingFor<OvRendering::Settings::UniformType, GLenum>
+struct OvTools::Utils::MappingFor<OvRendering::Settings::EUniformType, GLenum>
 {
-	using EnumType = OvRendering::Settings::UniformType;
+	using EnumType = OvRendering::Settings::EUniformType;
 	using type = std::tuple<
-		EnumValuePair<EnumType::UNIFORM_BOOL, GL_BOOL>,
-		EnumValuePair<EnumType::UNIFORM_INT, GL_INT>,
-		EnumValuePair<EnumType::UNIFORM_FLOAT, GL_FLOAT>,
-		EnumValuePair<EnumType::UNIFORM_FLOAT_VEC2, GL_FLOAT_VEC2>,
-		EnumValuePair<EnumType::UNIFORM_FLOAT_VEC3, GL_FLOAT_VEC3>,
-		EnumValuePair<EnumType::UNIFORM_FLOAT_VEC4, GL_FLOAT_VEC4>,
-		EnumValuePair<EnumType::UNIFORM_FLOAT_MAT4, GL_FLOAT_MAT4>,
-		EnumValuePair<EnumType::UNIFORM_DOUBLE_MAT4, GL_DOUBLE_MAT4>,
-		EnumValuePair<EnumType::UNIFORM_SAMPLER_2D, GL_SAMPLER_2D>,
-		EnumValuePair<EnumType::UNIFORM_SAMPLER_CUBE, GL_SAMPLER_CUBE>
+		EnumValuePair<EnumType::BOOL, GL_BOOL>,
+		EnumValuePair<EnumType::INT, GL_INT>,
+		EnumValuePair<EnumType::FLOAT, GL_FLOAT>,
+		EnumValuePair<EnumType::FLOAT_VEC2, GL_FLOAT_VEC2>,
+		EnumValuePair<EnumType::FLOAT_VEC3, GL_FLOAT_VEC3>,
+		EnumValuePair<EnumType::FLOAT_VEC4, GL_FLOAT_VEC4>,
+		EnumValuePair<EnumType::FLOAT_MAT4, GL_FLOAT_MAT4>,
+		EnumValuePair<EnumType::DOUBLE_MAT4, GL_DOUBLE_MAT4>,
+		EnumValuePair<EnumType::SAMPLER_2D, GL_SAMPLER_2D>,
+		EnumValuePair<EnumType::SAMPLER_CUBE, GL_SAMPLER_CUBE>
 	>;
 };
 

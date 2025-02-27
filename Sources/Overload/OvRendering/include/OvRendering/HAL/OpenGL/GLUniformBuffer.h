@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "OvRendering/HAL/Common/TUniformBuffer.h"
-
 #include <GL/glew.h>
+
+#include <OvRendering/HAL/Common/TUniformBuffer.h>
 
 namespace OvRendering::HAL
 {

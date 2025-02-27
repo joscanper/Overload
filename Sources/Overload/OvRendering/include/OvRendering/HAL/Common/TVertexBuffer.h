@@ -8,8 +8,8 @@
 
 #include <span>
 
-#include <OvRendering/Settings/EGraphicsBackend.h>
 #include <OvRendering/Settings/EAccessSpecifier.h>
+#include <OvRendering/Settings/EGraphicsBackend.h>
 
 namespace OvRendering::HAL
 {

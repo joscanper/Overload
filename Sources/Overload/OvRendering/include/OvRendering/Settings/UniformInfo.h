@@ -9,7 +9,7 @@
 #include <string>
 #include <any>
 
-#include "OvRendering/Settings/UniformType.h"
+#include <OvRendering/Settings/EUniformType.h>
 
 namespace OvRendering::Settings
 {
@@ -18,7 +18,7 @@ namespace OvRendering::Settings
 	*/
 	struct UniformInfo
 	{
-		UniformType type;
+		EUniformType type;
 		std::string name;
 		uint32_t location;
 		std::any defaultValue;
