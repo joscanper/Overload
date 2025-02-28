@@ -222,3 +222,13 @@ void OvRendering::HAL::GLTexture::GenerateMipMaps() const
 	glGenerateMipmap(GL_TEXTURE_2D);
 	Unbind();
 }
+
+template<>
+void OvRendering::HAL::GLTexture::SetBorderColor(const OvMaths::FVector4& p_color)
+{
+	OVASSERT(IsValid(), "Cannot set border color of a non-allocated texture");
+
+	Bind();
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &p_color.x);
+	Unbind();
+}

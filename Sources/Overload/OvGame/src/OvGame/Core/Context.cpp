@@ -142,7 +142,7 @@ OvGame::Core::Context::Context() :
 	ServiceLocator::Provide<OvAudio::Core::AudioPlayer>(*audioPlayer);
 	ServiceLocator::Provide<OvCore::Scripting::ScriptEngine>(*scriptEngine);
 
-	framebuffer = std::make_unique<OvRendering::HAL::Framebuffer>(windowSettings.width, windowSettings.height);
+	framebuffer = std::make_unique<OvCore::Rendering::RenderFramebuffer>(windowSettings.width, windowSettings.height);
 }
 
 OvGame::Core::Context::~Context()

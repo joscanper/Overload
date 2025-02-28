@@ -8,7 +8,8 @@
 #include <OvCore/Global/ServiceLocator.h>
 #include <OvCore/ResourceManagement/ShaderManager.h>
 
-OvCore::Rendering::PostProcess::BloomEffect::BloomEffect(OvRendering::Core::CompositeRenderer& p_renderer) : AEffect(p_renderer)
+OvCore::Rendering::PostProcess::BloomEffect::BloomEffect(OvRendering::Core::CompositeRenderer& p_renderer) :
+	AEffect(p_renderer)
 {
 	auto& shaderManager = OVSERVICE(OvCore::ResourceManagement::ShaderManager);
 

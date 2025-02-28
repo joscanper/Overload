@@ -8,6 +8,7 @@
 
 #include <OvRendering/Core/ARenderPass.h>
 #include <OvCore/Rendering/PostProcess/AEffect.h>
+#include <OvCore/Rendering/RenderFramebuffer.h>
 
 namespace OvCore::Rendering
 {
@@ -29,6 +30,6 @@ namespace OvCore::Rendering
 	private:
 		OvRendering::Data::Material m_blitMaterial;
 		std::vector<std::unique_ptr<PostProcess::AEffect>> m_effects;
-		std::array<OvRendering::HAL::Framebuffer, 2> m_pingPongBuffers;
+		std::array<RenderFramebuffer, 2> m_pingPongBuffers;
 	};
 }

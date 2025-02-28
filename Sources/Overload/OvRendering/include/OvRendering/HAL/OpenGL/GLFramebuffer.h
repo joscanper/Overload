@@ -19,11 +19,11 @@ namespace OvRendering::HAL
 	{
 		using Attachment = TFramebufferAttachment<Backend, GLTextureContext, GLTextureHandleContext, GLRenderbufferContext>;
 
-		std::unordered_map<uint32_t, Attachment> attachments;
+		uint32_t id = 0;
 		uint16_t width = 0;
 		uint16_t height = 0;
-		bool depthOnly = false;
-		uint32_t id = 0;
+		bool valid = false;
+		std::unordered_map<uint32_t, Attachment> attachments;
 	};
 
 	using GLFramebufferContext = TGLFramebufferContext<

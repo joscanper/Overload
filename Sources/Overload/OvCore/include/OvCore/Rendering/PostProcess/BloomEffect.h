@@ -7,6 +7,7 @@
 #pragma once
 
 #include <OvCore/Rendering/PostProcess/AEffect.h>
+#include <OvCore/Rendering/RenderFramebuffer.h>
 #include <OvRendering/Data/Material.h>
 
 namespace OvCore::Rendering::PostProcess
@@ -59,7 +60,7 @@ namespace OvCore::Rendering::PostProcess
 		) override;
 
 	private:
-		std::array<OvRendering::HAL::Framebuffer, 2> m_bloomPingPong;
+		std::array<RenderFramebuffer, 2> m_bloomPingPong;
 		OvRendering::Data::Material m_brightnessMaterial;
 		OvRendering::Data::Material m_blurMaterial;
 		OvRendering::Data::Material m_bloomMaterial;

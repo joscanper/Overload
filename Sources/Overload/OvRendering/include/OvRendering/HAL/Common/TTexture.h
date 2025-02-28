@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <OvMaths/FVector4.h>
 #include <OvRendering/HAL/Common/TTextureHandle.h>
 #include <OvRendering/Settings/EGraphicsBackend.h>
 #include <OvRendering/Settings/TextureDesc.h>
@@ -20,12 +21,12 @@ namespace OvRendering::HAL
 	{
 	public:
 		/**
-		* Create a texture
+		* Creates a texture
 		*/
 		TTexture();
 
 		/**
-		* Deletes the internal texture
+		* Deletes the texture
 		*/
 		~TTexture();
 
@@ -66,9 +67,15 @@ namespace OvRendering::HAL
 		const Settings::TextureDesc& GetDesc() const;
 
 		/**
-		* Generate mip maps for the texture
+		* Generates mip maps for the texture
 		*/
 		void GenerateMipMaps() const;
+
+		/**
+		* Sets the border color for the texture
+		* @param p_color
+		*/
+		void SetBorderColor(const OvMaths::FVector4& p_color);
 
 	private:
 		TextureContext m_textureContext;

@@ -11,16 +11,17 @@
 constexpr uint32_t kLuminanceBufferResolution = 1024;
 constexpr uint32_t kExposureBufferResolution = 1;
 
-OvCore::Rendering::PostProcess::AutoExposureEffect::AutoExposureEffect(OvRendering::Core::CompositeRenderer& p_renderer) : AEffect(p_renderer)
+OvCore::Rendering::PostProcess::AutoExposureEffect::AutoExposureEffect(OvRendering::Core::CompositeRenderer& p_renderer) :
+	AEffect(p_renderer),
+	m_exposurePingPongBuffer {
+		RenderFramebuffer(kExposureBufferResolution, kExposureBufferResolution),
+		RenderFramebuffer(kExposureBufferResolution, kExposureBufferResolution)
+	},
+	m_luminanceBuffer{ kLuminanceBufferResolution, kLuminanceBufferResolution, true }
 {
 	m_luminanceMaterial.SetShader(OVSERVICE(OvCore::ResourceManagement::ShaderManager)[":Shaders\\PostProcess\\Luminance.ovfx"]);
 	m_exposureMaterial.SetShader(OVSERVICE(OvCore::ResourceManagement::ShaderManager)[":Shaders\\PostProcess\\AutoExposure.ovfx"]);
 	m_compensationMaterial.SetShader(OVSERVICE(OvCore::ResourceManagement::ShaderManager)[":Shaders\\PostProcess\\ApplyExposure.ovfx"]);
-
-	for (auto& buffer : m_exposurePingPongBuffer)
-	{
-		buffer.Resize(kExposureBufferResolution, kExposureBufferResolution);
-	}
 }
 
 void OvCore::Rendering::PostProcess::AutoExposureEffect::Draw(

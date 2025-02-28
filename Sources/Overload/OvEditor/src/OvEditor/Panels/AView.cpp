@@ -13,7 +13,8 @@ OvEditor::Panels::AView::AView
 	const std::string& p_title,
 	bool p_opened,
 	const OvUI::Settings::PanelWindowSettings& p_windowSettings
-) : PanelWindow(p_title, p_opened, p_windowSettings)
+) : PanelWindow(p_title, p_opened, p_windowSettings),
+	m_fbo{ static_cast<uint16_t>(GetSize().x), static_cast<uint16_t>(GetSize().y) }
 {
 	const auto tex = m_fbo.GetAttachment<OvRendering::HAL::Texture>(OvRendering::Settings::EFramebufferAttachment::COLOR);
 	m_image = &CreateWidget<OvUI::Widgets::Visual::Image>(tex->GetID(), OvMaths::FVector2{0.f, 0.f});

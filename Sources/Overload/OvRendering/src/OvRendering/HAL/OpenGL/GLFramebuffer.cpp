@@ -16,7 +16,6 @@ template<>
 template<>
 void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLRenderbuffer> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index)
 {
-	OVASSERT(IsValid(), "Cannot set an attachment on an invalid framebuffer");
 	OVASSERT(p_toAttach != nullptr, "Cannot attach a null renderbuffer");
 
 	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
@@ -30,7 +29,6 @@ template<>
 template<>
 void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLTexture> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index)
 {
-	OVASSERT(IsValid(), "Cannot set an attachment on an invalid framebuffer");
 	OVASSERT(p_toAttach != nullptr, "Cannot attach a null texture");
 
 	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
@@ -41,76 +39,9 @@ void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLTexture> p_toAtta
 }
 
 template<>
-OvRendering::HAL::GLFramebuffer::TFramebuffer(uint16_t p_width, uint16_t p_height, bool p_depthOnly) :
-	m_context {
-		.width = p_width, 
-		.height = p_height,
-		.depthOnly = p_depthOnly
-	}
+OvRendering::HAL::GLFramebuffer::TFramebuffer()
 {
 	glGenFramebuffers(1, &m_context.id);
-
-	m_context.width = std::max(static_cast<uint16_t>(1), m_context.width);
-	m_context.height = std::max(static_cast<uint16_t>(1), m_context.height);
-
-	std::shared_ptr<GLRenderbuffer> renderbuffer;
-	std::shared_ptr<GLTexture> renderTexture = std::make_shared<GLTexture>();
-
-	if (!m_context.depthOnly)
-	{
-		renderbuffer = std::make_shared<GLRenderbuffer>();
-	}
-
-	Settings::TextureDesc renderTextureDesc{
-		.width = m_context.width,
-		.height = m_context.height,
-		.minFilter = Settings::ETextureFilteringMode::LINEAR,
-		.magFilter = Settings::ETextureFilteringMode::LINEAR,
-		.horizontalWrap = Settings::ETextureWrapMode::CLAMP_TO_BORDER,
-		.verticalWrap = Settings::ETextureWrapMode::CLAMP_TO_BORDER,
-		.internalFormat = m_context.depthOnly ? Settings::EInternalFormat::DEPTH_COMPONENT : Settings::EInternalFormat::RGBA32F,
-		.useMipMaps = false,
-		.mutableDesc = Settings::MutableTextureDesc{
-			.format = m_context.depthOnly ? Settings::EFormat::DEPTH_COMPONENT : Settings::EFormat::RGBA,
-			.type = Settings::EPixelDataType::FLOAT
-		}
-	};
-
-	renderTexture->Allocate(renderTextureDesc);
-
-	if (m_context.depthOnly)
-	{
-		float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		renderTexture->Bind();
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor); // TODO: Move that to GLTexture
-		renderTexture->Unbind();
-	}
-
-	if (m_context.depthOnly)
-	{
-		Attach<GLTexture>(renderTexture, Settings::EFramebufferAttachment::DEPTH);
-		Bind();
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-		Unbind();
-	}
-	else
-	{
-		Attach<GLTexture>(renderTexture, Settings::EFramebufferAttachment::COLOR);
-
-		renderbuffer->Allocate(m_context.width, m_context.height, Settings::EInternalFormat::DEPTH_STENCIL);
-		Attach<GLRenderbuffer>(renderbuffer, Settings::EFramebufferAttachment::DEPTH);
-		Attach<GLRenderbuffer>(renderbuffer, Settings::EFramebufferAttachment::STENCIL);
-	}
-
-	Bind();
-	GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (fboStatus != GL_FRAMEBUFFER_COMPLETE)
-	{
-		OVLOG_ERROR("Framebuffer not complete!");
-	}
-
-	Unbind();
 }
 
 template<>
@@ -131,18 +62,29 @@ void OvRendering::HAL::GLFramebuffer::Unbind() const
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+bool OvRendering::HAL::GLFramebuffer::Validate()
+{
+	const GLenum status = glCheckNamedFramebufferStatus(m_context.id, GL_FRAMEBUFFER);
+
+	if (status != GL_FRAMEBUFFER_COMPLETE)
+	{
+		OVFLOG_ERROR("Framebuffer validation failed with status: " + std::to_string(status));
+		return m_context.valid = false;
+	}
+
+	return m_context.valid = true;
+}
+
 template<>
 bool OvRendering::HAL::GLFramebuffer::IsValid() const
 {
-	return true;
+	return m_context.valid;
 }
 
 template<>
 template<>
 OvTools::Utils::OptRef<OvRendering::HAL::GLTexture> OvRendering::HAL::GLFramebuffer::GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index) const
 {
-	OVASSERT(IsValid(), "Cannot get an attachment from an invalid framebuffer");
-
 	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
 
 	if (m_context.attachments.contains(attachmentIndex))
@@ -162,8 +104,6 @@ template<>
 template<>
 OvTools::Utils::OptRef<OvRendering::HAL::GLRenderbuffer> OvRendering::HAL::GLFramebuffer::GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index) const
 {
-	OVASSERT(IsValid(), "Cannot get an attachment from an invalid framebuffer");
-
 	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
 
 	if (m_context.attachments.contains(attachmentIndex))
@@ -201,6 +141,44 @@ void OvRendering::HAL::GLFramebuffer::Resize(uint16_t p_width, uint16_t p_height
 			}
 		}
 	}
+}
+
+template<>
+void OvRendering::HAL::GLFramebuffer::SetTargetDrawBuffer(std::optional<uint32_t> p_index)
+{
+	OVASSERT(IsValid(), "Invalid framebuffer");
+
+	Bind();
+
+	if (p_index.has_value())
+	{
+		glDrawBuffer(GL_COLOR_ATTACHMENT0 + p_index.value());
+	}
+	else
+	{
+		glDrawBuffer(GL_NONE);
+	}
+
+	Unbind();
+}
+
+template<>
+void OvRendering::HAL::GLFramebuffer::SetTargetReadBuffer(std::optional<uint32_t> p_index)
+{
+	OVASSERT(IsValid(), "Invalid framebuffer");
+
+	Bind();
+
+	if (p_index.has_value())
+	{
+		glReadBuffer(GL_COLOR_ATTACHMENT0 + p_index.value());
+	}
+	else
+	{
+		glReadBuffer(GL_NONE);
+	}
+
+	Unbind();
 }
 
 template<>

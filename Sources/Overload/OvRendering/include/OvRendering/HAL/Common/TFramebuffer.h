@@ -38,18 +38,15 @@ namespace OvRendering::HAL
 	* Represents a framebuffer, used to store render data
 	*/
 	template<Settings::EGraphicsBackend Backend, class FramebufferContext, class TextureContext, class TextureHandleContext, class RenderBufferContext>
-	class TFramebuffer final
+	class TFramebuffer
 	{
 	public:
 		using Attachment = TFramebufferAttachment<Backend, TextureContext, TextureHandleContext, RenderBufferContext>;
 
 		/**
 		* Create the framebuffer
-		* @param p_width
-		* @param p_height
-		* @param p_depthOnly
 		*/
-		TFramebuffer(uint16_t p_width = 0, uint16_t p_height = 0, bool p_depthOnly = false);
+		TFramebuffer();
 
 		/**
 		* Destructor
@@ -67,6 +64,13 @@ namespace OvRendering::HAL
 		void Unbind() const;
 
 		/**
+		* Validate the framebuffer. Must be executed at least once after the framebuffer creation.
+		* @note It's recommended to call this method after each attachment change.
+		* @return Returns true if the framebuffer has been validated successfully
+		*/
+		bool Validate();
+
+		/**
 		* Returns true if the framebuffer is valid
 		*/
 		bool IsValid() const;
@@ -78,11 +82,6 @@ namespace OvRendering::HAL
 		* @param p_forceUpdate Force the resizing operation even if the width and height didn't change
 		*/
 		void Resize(uint16_t p_width, uint16_t p_height, bool p_forceUpdate = false);
-
-		/**
-		* Returns the ID of the OpenGL framebuffer
-		*/
-		uint32_t GetID() const;
 
 		/**
 		* Attach the given texture or render buffer to the framebuffer, at the given attachment point
@@ -102,6 +101,23 @@ namespace OvRendering::HAL
 		OvTools::Utils::OptRef<T> GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index = 0) const;
 
 		/**
+		* Selects which color attachment to draw to
+		* @param p_index index of the color attachment, if set to std::nullopt, no color will be drawn
+		*/
+		void SetTargetDrawBuffer(std::optional<uint32_t> p_index);
+
+		/**
+		* Selects which color attachment to read from
+		* @param p_index index of the color attachment, if set to std::nullopt, no color attachment will be available for read
+		*/
+		void SetTargetReadBuffer(std::optional<uint32_t> p_index);
+
+		/**
+		* Returns the ID of the OpenGL framebuffer
+		*/
+		uint32_t GetID() const;
+
+		/**
 		* Returns the width of the framebuffer
 		*/
 		uint16_t GetWidth() const;
@@ -118,7 +134,7 @@ namespace OvRendering::HAL
 		*/
 		void BlitToBackBuffer(uint16_t p_backBufferWidth, uint16_t p_backBufferHeight) const;
 
-	private:
+	protected:
 		FramebufferContext m_context;
 	};
 }

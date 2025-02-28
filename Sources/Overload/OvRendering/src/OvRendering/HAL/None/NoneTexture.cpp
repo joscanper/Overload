@@ -70,3 +70,10 @@ void OvRendering::HAL::NoneTexture::GenerateMipMaps() const
 {
 	OVASSERT(IsValid(), "Cannot generate mipmaps for a non-allocated texture");
 }
+
+template<>
+void OvRendering::HAL::NoneTexture::SetBorderColor(const OvMaths::FVector4& p_color)
+{
+	OVASSERT(IsValid(), "Cannot set border color of a non-allocated texture");
+	OVASSERT(m_textureContext.desc.internalFormat == Settings::EInternalFormat::RGBA32F, "Cannot set border color of a non-RGBA32F texture");
+}

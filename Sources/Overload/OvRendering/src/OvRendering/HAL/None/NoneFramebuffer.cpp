@@ -23,12 +23,7 @@ void OvRendering::HAL::NoneFramebuffer::Attach(std::shared_ptr<NoneTexture> p_to
 }
 
 template<>
-OvRendering::HAL::NoneFramebuffer::TFramebuffer(uint16_t p_width, uint16_t p_height, bool p_depthOnly) :
-	m_context{
-		.width = p_width,
-		.height = p_height,
-		.depthOnly = p_depthOnly
-}
+OvRendering::HAL::NoneFramebuffer::TFramebuffer()
 {
 }
 
@@ -45,6 +40,17 @@ void OvRendering::HAL::NoneFramebuffer::Bind() const
 template<>
 void OvRendering::HAL::NoneFramebuffer::Unbind() const
 {
+}
+
+bool OvRendering::HAL::NoneFramebuffer::Validate()
+{
+	return m_context.valid = true;
+}
+
+template<>
+bool OvRendering::HAL::NoneFramebuffer::IsValid() const
+{
+	return m_context.valid;
 }
 
 template<>
@@ -66,8 +72,21 @@ OvTools::Utils::OptRef<OvRendering::HAL::NoneRenderbuffer> OvRendering::HAL::Non
 template<>
 void OvRendering::HAL::NoneFramebuffer::Resize(uint16_t p_width, uint16_t p_height, bool p_forceUpdate)
 {
+	OVASSERT(IsValid(), "Invalid framebuffer");
 	m_context.width = p_width;
 	m_context.height = p_height;
+}
+
+template<>
+void OvRendering::HAL::NoneFramebuffer::SetTargetDrawBuffer(std::optional<uint32_t> p_index)
+{
+	OVASSERT(IsValid(), "Invalid framebuffer");
+}
+
+template<>
+void OvRendering::HAL::NoneFramebuffer::SetTargetReadBuffer(std::optional<uint32_t> p_index)
+{
+	OVASSERT(IsValid(), "Invalid framebuffer");
 }
 
 template<>
@@ -79,16 +98,19 @@ uint32_t OvRendering::HAL::NoneFramebuffer::GetID() const
 template<>
 uint16_t OvRendering::HAL::NoneFramebuffer::GetWidth() const
 {
+	OVASSERT(IsValid(), "Invalid framebuffer");
 	return m_context.width;
 }
 
 template<>
 uint16_t OvRendering::HAL::NoneFramebuffer::GetHeight() const
 {
+	OVASSERT(IsValid(), "Invalid framebuffer");
 	return m_context.height;
 }
 
 template<>
 void OvRendering::HAL::NoneFramebuffer::BlitToBackBuffer(uint16_t p_backBufferWidth, uint16_t p_backBufferHeight) const
 {
+	OVASSERT(IsValid(), "Cannot blit an invalid framebuffer");
 }

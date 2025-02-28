@@ -6,14 +6,14 @@
 
 #pragma once
 
-
-#include <OvUI/Panels/PanelWindow.h>
-#include <OvUI/Widgets/Visual/Image.h>
+#include <OvCore/Rendering/RenderFramebuffer.h>
+#include <OvCore/Rendering/SceneRenderer.h>
 #include <OvRendering/HAL/UniformBuffer.h>
-#include <OvRendering/HAL/Framebuffer.h>
 #include <OvRendering/Entities/Camera.h>
 #include <OvRendering/Core/CompositeRenderer.h>
-#include <OvCore/Rendering/SceneRenderer.h>
+#include <OvRendering/HAL/Framebuffer.h>
+#include <OvUI/Panels/PanelWindow.h>
+#include <OvUI/Widgets/Visual/Image.h>
 
 namespace OvEditor::Panels
 {
@@ -90,7 +90,7 @@ namespace OvEditor::Panels
 
 		OvMaths::FVector3 m_gridColor = OvMaths::FVector3 { 0.176f, 0.176f, 0.176f };
 
-		OvRendering::HAL::Framebuffer m_fbo;
+		OvCore::Rendering::RenderFramebuffer m_fbo;
 		std::unique_ptr<OvCore::Rendering::SceneRenderer> m_renderer;
 	};
 }

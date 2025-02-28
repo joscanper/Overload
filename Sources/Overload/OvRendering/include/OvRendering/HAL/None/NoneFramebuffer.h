@@ -16,8 +16,7 @@ namespace OvRendering::HAL
 	{
 		uint16_t width = 0;
 		uint16_t height = 0;
-		bool depthOnly = false;
-		bool allocated = false;
+		bool valid = false;
 	};
 
 	using NoneFramebuffer = TFramebuffer<Settings::EGraphicsBackend::NONE, NoneFramebufferContext, NoneTextureContext, NoneTextureHandleContext, NoneRenderbufferContext>;

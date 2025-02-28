@@ -65,7 +65,7 @@ namespace OvEditor::Rendering
 		);
 
 	private:
-		OvRendering::HAL::Framebuffer m_actorPickingFramebuffer;
+		OvCore::Rendering::RenderFramebuffer m_actorPickingFramebuffer;  // TODO: Investigate using a custom layout for this framebuffer
 		OvCore::Resources::Material m_actorPickingMaterial;
 		OvCore::Resources::Material m_lightMaterial;
 		OvCore::Resources::Material m_gizmoPickingMaterial;
