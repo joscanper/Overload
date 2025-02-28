@@ -17,13 +17,4 @@ namespace OvRendering::HAL
 	};
 
 	using GLShaderStorageBuffer = TShaderStorageBuffer<Settings::EGraphicsBackend::OPENGL, GLShaderStorageBufferContext>;
-
-	template<>
-	template<class T>
-	void GLShaderStorageBuffer::Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage) const
-	{
-		Bind();
-		glBufferData(GL_SHADER_STORAGE_BUFFER, p_data.size_bytes(), p_data.data(), EnumToValue<GLenum>(p_usage));
-		Unbind();
-	}
 }

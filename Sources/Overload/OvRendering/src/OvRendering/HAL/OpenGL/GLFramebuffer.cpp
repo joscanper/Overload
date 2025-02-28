@@ -12,6 +12,23 @@
 #include <OvRendering/HAL/OpenGL/GLRenderbuffer.h>
 #include <OvRendering/HAL/OpenGL/GLTypes.h>
 
+namespace
+{
+	std::optional<bool> __IS_USING_NVIDIA_DRIVERS = std::nullopt;
+
+	bool IsUsingNvidiaDrivers()
+	{
+		// Cache the result for future calls
+		if (!__IS_USING_NVIDIA_DRIVERS.has_value())
+		{
+			const auto vendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+			__IS_USING_NVIDIA_DRIVERS = std::string(vendor).find("NVIDIA") != std::string::npos;
+		}
+
+		return __IS_USING_NVIDIA_DRIVERS.value();
+	}
+}
+
 template<>
 template<>
 void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLRenderbuffer> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index)
@@ -19,9 +36,7 @@ void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLRenderbuffer> p_t
 	OVASSERT(p_toAttach != nullptr, "Cannot attach a null renderbuffer");
 
 	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
-	Bind();
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachmentIndex, GL_RENDERBUFFER, p_toAttach->GetID());
-	Unbind();
+	glNamedFramebufferRenderbuffer(m_context.id, attachmentIndex, GL_RENDERBUFFER, p_toAttach->GetID());
 	m_context.attachments[attachmentIndex] = p_toAttach;
 }
 
@@ -31,10 +46,19 @@ void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLTexture> p_toAtta
 {
 	OVASSERT(p_toAttach != nullptr, "Cannot attach a null texture");
 
+	// Due to a bug in Nvidia drivers' implementation,
+	// the DSO function `glNamedFramebufferTexture`
+	// seem to fail until the framebuffer has been bound
+	// at least once. This is a workaround to fix the issue.
+	// https://forums.developer.nvidia.com/t/framebuffer-incomplete-when-attaching-color-buffers-of-different-sizes-with-dsa/211550
+	if (IsUsingNvidiaDrivers())
+	{
+		Bind(); 
+		Unbind();
+	}
+
 	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
-	Bind();
-	glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentIndex, GL_TEXTURE_2D, p_toAttach->GetID(), 0);
-	Unbind();
+	glNamedFramebufferTexture(m_context.id, attachmentIndex, p_toAttach->GetID(), 0);
 	m_context.attachments[attachmentIndex] = p_toAttach;
 }
 
@@ -148,18 +172,14 @@ void OvRendering::HAL::GLFramebuffer::SetTargetDrawBuffer(std::optional<uint32_t
 {
 	OVASSERT(IsValid(), "Invalid framebuffer");
 
-	Bind();
-
 	if (p_index.has_value())
 	{
-		glDrawBuffer(GL_COLOR_ATTACHMENT0 + p_index.value());
+		glNamedFramebufferDrawBuffer(m_context.id, GL_COLOR_ATTACHMENT0 + p_index.value());
 	}
 	else
 	{
-		glDrawBuffer(GL_NONE);
+		glNamedFramebufferDrawBuffer(m_context.id, GL_NONE);
 	}
-
-	Unbind();
 }
 
 template<>
@@ -167,18 +187,14 @@ void OvRendering::HAL::GLFramebuffer::SetTargetReadBuffer(std::optional<uint32_t
 {
 	OVASSERT(IsValid(), "Invalid framebuffer");
 
-	Bind();
-
 	if (p_index.has_value())
 	{
-		glReadBuffer(GL_COLOR_ATTACHMENT0 + p_index.value());
+		glNamedFramebufferReadBuffer(m_context.id, GL_COLOR_ATTACHMENT0 + p_index.value());
 	}
 	else
 	{
-		glReadBuffer(GL_NONE);
+		glNamedFramebufferReadBuffer(m_context.id, GL_NONE);
 	}
-
-	Unbind();
 }
 
 template<>

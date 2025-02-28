@@ -48,7 +48,9 @@ void OvRendering::Features::LightingRenderFeature::OnBeginFrame(const Data::Fram
 		}
 	}
 
-	m_lightBuffer->Upload<OvMaths::FMatrix4>(lightMatrices, Settings::EAccessSpecifier::STREAM_DRAW);
+	const auto lightMatricesView = std::span{ lightMatrices };
+
+	m_lightBuffer->Upload(lightMatricesView.data(), lightMatricesView.size_bytes(), Settings::EAccessSpecifier::STREAM_DRAW);
 	m_lightBuffer->Bind(m_bufferBindingPoint);
 }
 

@@ -17,5 +17,6 @@ namespace OvRendering::HAL
 		Settings::EInternalFormat format = Settings::EInternalFormat::RGBA;
 		bool allocated = false;
 	};
+
 	using NoneRenderbuffer = TRenderbuffer<Settings::EGraphicsBackend::NONE, NoneRenderbufferContext>;
 }

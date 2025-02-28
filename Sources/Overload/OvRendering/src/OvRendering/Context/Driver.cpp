@@ -34,6 +34,12 @@ OvRendering::Context::Driver::Driver(const OvRendering::Settings::DriverSettings
 	m_hardware = m_gfxBackend->GetHardware();
 	m_version = m_gfxBackend->GetVersion();
 	m_shadingLanguageVersion = m_gfxBackend->GetShadingLanguageVersion();
+
+	OVLOG_INFO("Graphics driver initialized:");
+	OVLOG_INFO("\tVendor => " + m_vendor);
+	OVLOG_INFO("\tHardware => " + m_hardware);
+	OVLOG_INFO("\tVersion => " + m_version);
+	OVLOG_INFO("\tShading Language => " + m_shadingLanguageVersion);
 }
 
 OvRendering::Context::Driver::~Driver()

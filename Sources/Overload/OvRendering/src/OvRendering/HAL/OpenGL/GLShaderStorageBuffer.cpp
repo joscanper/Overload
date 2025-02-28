@@ -39,3 +39,11 @@ void OvRendering::HAL::GLShaderStorageBuffer::Unbind() const
 {
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
+
+template<>
+void OvRendering::HAL::GLShaderStorageBuffer::Upload(void* p_data, size_t p_size, Settings::EAccessSpecifier p_usage) const
+{
+	Bind();
+	glBufferData(GL_SHADER_STORAGE_BUFFER, p_size, p_data, EnumToValue<GLenum>(p_usage));
+	Unbind();
+}

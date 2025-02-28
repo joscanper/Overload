@@ -44,11 +44,11 @@ namespace OvRendering::HAL
 
 		/**
 		* Sends the given shader storage buffer data to the GPU
-		* @param p_data
+		* @param p_data pointer to the first element of the data
+		* @param p_size in bytes
 		* @param p_usage
 		*/
-		template<class T>
-		void Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
+		void Upload(void* p_data, size_t p_size, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
 
 	private:
 		Context m_context;
