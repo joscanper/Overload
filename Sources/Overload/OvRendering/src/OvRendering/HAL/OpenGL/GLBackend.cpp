@@ -214,7 +214,7 @@ namespace OvRendering::HAL
 		{
 			std::string message = "Error Init GLEW: ";
 			std::string glewError = reinterpret_cast<const char*>(glewGetErrorString(error));
-			OVFLOG_ERROR(message + glewError);
+			OVLOG_ERROR(message + glewError);
 			return std::nullopt;
 		}
 

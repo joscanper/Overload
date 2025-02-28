@@ -68,7 +68,7 @@ bool OvRendering::HAL::GLFramebuffer::Validate()
 
 	if (status != GL_FRAMEBUFFER_COMPLETE)
 	{
-		OVFLOG_ERROR("Framebuffer validation failed with status: " + std::to_string(status));
+		OVLOG_ERROR("Framebuffer validation failed with status: " + std::to_string(status));
 		return m_context.valid = false;
 	}
 
