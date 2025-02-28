@@ -312,7 +312,14 @@ void OvEditor::Panels::AssetProperties::CreateTextureSettings()
 		m_metadata->Set(kMagFilter, p_choice);
 	};
 
-	OvCore::Helpers::GUIDrawer::DrawBoolean(*m_settingsColumns, kEnableMipmapping, [&]() { return m_metadata->Get<bool>("ENABLE_MIPMAPPING"); }, [&](bool value) { m_metadata->Set<bool>(kEnableMipmapping, value); });
+	OvCore::Helpers::GUIDrawer::DrawBoolean(*m_settingsColumns, kEnableMipmapping,
+		[this, kEnableMipmapping]() {
+			return m_metadata->Get<bool>(kEnableMipmapping);
+		},
+		[this, kEnableMipmapping](bool value) {
+			m_metadata->Set<bool>(kEnableMipmapping, value);
+		}
+	);
 }
 
 void OvEditor::Panels::AssetProperties::Apply()

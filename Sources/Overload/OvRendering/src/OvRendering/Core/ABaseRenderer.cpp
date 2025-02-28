@@ -101,19 +101,6 @@ bool OvRendering::Core::ABaseRenderer::IsDrawing() const
 	return m_isDrawing;
 }
 
-void OvRendering::Core::ABaseRenderer::ReadPixels(
-	uint32_t p_x,
-	uint32_t p_y,
-	uint32_t p_width,
-	uint32_t p_height,
-	Settings::EPixelDataFormat p_format,
-	Settings::EPixelDataType p_type,
-	void* p_data
-) const
-{
-	return m_driver.ReadPixels(p_x, p_y, p_width, p_height, p_format, p_type, p_data);
-}
-
 void OvRendering::Core::ABaseRenderer::SetViewport(uint32_t p_x, uint32_t p_y, uint32_t p_width, uint32_t p_height)
 {
 	m_driver.SetViewport(p_x, p_y, p_width, p_height);

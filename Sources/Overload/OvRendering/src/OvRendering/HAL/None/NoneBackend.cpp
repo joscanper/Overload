@@ -30,18 +30,6 @@ namespace OvRendering::HAL
 	{}
 
 	template<>
-	void NoneBackend::ReadPixels(
-		uint32_t p_x,
-		uint32_t p_y,
-		uint32_t p_width,
-		uint32_t p_height,
-		Settings::EPixelDataFormat p_format,
-		Settings::EPixelDataType p_type,
-		void* p_data
-	)
-	{}
-
-	template<>
 	void NoneBackend::DrawElements(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_indexCount)
 	{}
 

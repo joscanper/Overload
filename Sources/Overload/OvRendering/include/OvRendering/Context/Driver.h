@@ -75,26 +75,6 @@ namespace OvRendering::Context
 		);
 
 		/**
-		 * Read a block of pixels from the currently bound framebuffer (or backbuffer).
-		 * @param p_x
-		 * @param p_y
-		 * @param p_width
-		 * @param p_height
-		 * @param p_format
-		 * @param p_type
-		 * @param p_data
-		 */
-		void ReadPixels(
-			uint32_t p_x,
-			uint32_t p_y,
-			uint32_t p_width,
-			uint32_t p_height,
-			Settings::EPixelDataFormat p_format,
-			Settings::EPixelDataType p_type,
-			void* p_data
-		) const;
-
-		/**
 		* Draw a mesh
 		* @param p_pso
 		* @param p_mesh

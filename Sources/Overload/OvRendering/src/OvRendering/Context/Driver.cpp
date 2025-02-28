@@ -71,19 +71,6 @@ void OvRendering::Context::Driver::Clear(
 	m_gfxBackend->Clear(p_colorBuffer, p_depthBuffer, p_stencilBuffer);
 }
 
-void OvRendering::Context::Driver::ReadPixels(
-	uint32_t p_x,
-	uint32_t p_y,
-	uint32_t p_width,
-	uint32_t p_height,
-	OvRendering::Settings::EPixelDataFormat p_format,
-	OvRendering::Settings::EPixelDataType p_type,
-	void* p_data
-) const
-{
-	m_gfxBackend->ReadPixels(p_x, p_y, p_width, p_height, p_format, p_type, p_data);
-}
-
 void OvRendering::Context::Driver::Draw(
 	Data::PipelineState p_pso,
 	const Resources::IMesh& p_mesh,

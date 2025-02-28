@@ -134,6 +134,26 @@ namespace OvRendering::HAL
 		*/
 		void BlitToBackBuffer(uint16_t p_backBufferWidth, uint16_t p_backBufferHeight) const;
 
+		/**
+		* Reads pixels from the framebuffer.
+		* @param p_x The x-coordinate of the lower-left corner.
+		* @param p_y The y-coordinate of the lower-left corner.
+		* @param p_width The width of the pixel rectangle.
+		* @param p_height The height of the pixel rectangle.
+		* @param p_format The format of the pixel data.
+		* @param p_type The data type of the pixel data.
+		* @param p_data The destination buffer to store pixel data.
+		*/
+		void ReadPixels(
+			uint32_t p_x,
+			uint32_t p_y,
+			uint32_t p_width,
+			uint32_t p_height,
+			Settings::EPixelDataFormat p_format,
+			Settings::EPixelDataType p_type,
+			void* p_data
+		) const;
+
 	protected:
 		FramebufferContext m_context;
 	};

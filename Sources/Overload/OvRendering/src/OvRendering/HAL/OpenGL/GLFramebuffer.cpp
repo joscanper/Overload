@@ -213,3 +213,28 @@ void OvRendering::HAL::GLFramebuffer::BlitToBackBuffer(uint16_t p_backBufferWidt
 		GL_COLOR_BUFFER_BIT, GL_LINEAR
 	);
 }
+
+template<>
+void OvRendering::HAL::GLFramebuffer::ReadPixels(
+	uint32_t p_x,
+	uint32_t p_y,
+	uint32_t p_width,
+	uint32_t p_height,
+	Settings::EPixelDataFormat p_format,
+	Settings::EPixelDataType p_type,
+	void* p_data) const
+{
+	OVASSERT(IsValid(), "Cannot read pixels from an invalid framebuffer");
+	OVASSERT(p_width > 0 && p_height > 0, "Invalid read size");
+
+	Bind();
+	glReadPixels(
+		p_x, p_y,
+		p_width,
+		p_height,
+		EnumToValue<GLenum>(p_format),
+		EnumToValue<GLenum>(p_type),
+		p_data
+	);
+	Unbind();
+}

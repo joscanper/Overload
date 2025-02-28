@@ -114,3 +114,16 @@ void OvRendering::HAL::NoneFramebuffer::BlitToBackBuffer(uint16_t p_backBufferWi
 {
 	OVASSERT(IsValid(), "Cannot blit an invalid framebuffer");
 }
+
+template<>
+void OvRendering::HAL::NoneFramebuffer::ReadPixels(
+	uint32_t p_x,
+	uint32_t p_y,
+	uint32_t p_width,
+	uint32_t p_height,
+	Settings::EPixelDataFormat p_format,
+	Settings::EPixelDataType p_type,
+	void* p_data) const
+{
+	OVASSERT(IsValid(), "Cannot read pixels from an invalid framebuffer");
+}

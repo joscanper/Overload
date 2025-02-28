@@ -247,20 +247,6 @@ namespace OvRendering::HAL
 	}
 
 	template<>
-	void GLBackend::ReadPixels(
-		uint32_t p_x,
-		uint32_t p_y,
-		uint32_t p_width,
-		uint32_t p_height,
-		Settings::EPixelDataFormat p_format,
-		Settings::EPixelDataType p_type,
-		void* p_data
-	)
-	{
-		glReadPixels(p_x, p_y, p_width, p_height, EnumToValue<GLenum>(p_format), EnumToValue<GLenum>(p_type), p_data);
-	}
-
-	template<>
 	void GLBackend::DrawElements(Settings::EPrimitiveMode p_primitiveMode, uint32_t p_indexCount)
 	{
 		glDrawElements(EnumToValue<GLenum>(p_primitiveMode), p_indexCount, GL_UNSIGNED_INT, nullptr);
