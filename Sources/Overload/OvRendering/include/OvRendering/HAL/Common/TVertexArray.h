@@ -6,9 +6,13 @@
 
 #pragma once
 
+#include <span>
+
 #include <OvRendering/HAL/VertexBuffer.h>
+#include <OvRendering/HAL/IndexBuffer.h>
 #include <OvRendering/Settings/EDataType.h>
 #include <OvRendering/Settings/EGraphicsBackend.h>
+#include <OvRendering/Settings/VertexAttribute.h>
 
 namespace OvRendering::HAL
 {
@@ -30,22 +34,26 @@ namespace OvRendering::HAL
 		~TVertexArray();
 
 		/**
-		* Register a VBO into the VAO
-		* @param p_attribute
-		* @param p_vertexBuffer
-		* @param p_type
-		* @param p_count
-		* @param p_stride
-		* @param p_offset
+		* Returns true if the vertex array is valid (non-empty layout)
 		*/
-		void BindAttribute(
-			uint32_t p_attribute,
-			HAL::VertexBuffer& p_vertexBuffer,
-			Settings::EDataType p_type,
-			uint64_t p_count,
-			uint64_t p_stride,
-			intptr_t p_offset
-		) const;
+		bool IsValid() const;
+
+		/**
+		* Sets the vertex attribute layout
+		* @param p_attributes
+		* @param p_vertexBuffer
+		* @param p_indexBuffer
+		*/
+		void SetLayout(
+			std::span<const Settings::VertexAttribute> p_attributes,
+			VertexBuffer& p_vertexBuffer,
+			IndexBuffer& p_indexBuffer
+		);
+
+		/**
+		* Resets the vertex attribute layout
+		*/
+		void ResetLayout();
 
 		/**
 		* Bind the buffer

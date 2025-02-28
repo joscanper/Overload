@@ -7,12 +7,14 @@
 #pragma once
 
 #include <OvRendering/HAL/Common/TVertexArray.h>
+#include <OvTools/Utils/OptRef.h>
 
 namespace OvRendering::HAL
 {
 	struct GLVertexArrayContext
 	{
 		uint32_t id = 0;
+		uint32_t attributeCount = 0;
 	};
 
 	using GLVertexArray = TVertexArray<Settings::EGraphicsBackend::OPENGL, GLVertexArrayContext>;

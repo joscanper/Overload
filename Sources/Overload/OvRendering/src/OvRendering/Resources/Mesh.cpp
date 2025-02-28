@@ -5,6 +5,7 @@
 */
 
 #include <algorithm>
+#include <array>
 
 #include "OvRendering/Resources/Mesh.h"
 
@@ -53,20 +54,15 @@ const OvRendering::Geometry::BoundingSphere& OvRendering::Resources::Mesh::GetBo
 
 void OvRendering::Resources::Mesh::Upload(std::span<const Geometry::Vertex> p_vertices, std::span<const uint32_t> p_indices)
 {
-	m_vertexBuffer.Upload<Geometry::Vertex>(p_vertices);
-	m_indexBuffer.Upload(p_indices);
-
-	constexpr uint64_t vertexSize = sizeof(Geometry::Vertex);
-
-	m_vertexArray.Bind();
-	m_indexBuffer.Bind();
-	m_vertexArray.BindAttribute(0, m_vertexBuffer, Settings::EDataType::FLOAT, 3, vertexSize, 0);
-	m_vertexArray.BindAttribute(1, m_vertexBuffer, Settings::EDataType::FLOAT, 2, vertexSize, sizeof(float) * 3);
-	m_vertexArray.BindAttribute(2, m_vertexBuffer, Settings::EDataType::FLOAT, 3, vertexSize, sizeof(float) * 5);
-	m_vertexArray.BindAttribute(3, m_vertexBuffer, Settings::EDataType::FLOAT, 3, vertexSize, sizeof(float) * 8);
-	m_vertexArray.BindAttribute(4, m_vertexBuffer, Settings::EDataType::FLOAT, 3, vertexSize, sizeof(float) * 11);
-	m_vertexArray.Unbind();
-	m_indexBuffer.Unbind();
+	m_vertexBuffer.Upload(p_vertices.data(), p_vertices.size_bytes());
+	m_indexBuffer.Upload(p_indices.data(), p_indices.size_bytes());
+	m_vertexArray.SetLayout(std::to_array<Settings::VertexAttribute>({
+		{ Settings::EDataType::FLOAT, 3 }, // position
+		{ Settings::EDataType::FLOAT, 2 }, // texCoords
+		{ Settings::EDataType::FLOAT, 3 }, // normal
+		{ Settings::EDataType::FLOAT, 3 }, // tangent
+		{ Settings::EDataType::FLOAT, 3 }  // bitangent
+	}), m_vertexBuffer, m_indexBuffer);
 }
 
 void OvRendering::Resources::Mesh::ComputeBoundingSphere(std::span<const Geometry::Vertex> p_vertices)

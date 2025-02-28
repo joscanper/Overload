@@ -16,6 +16,12 @@ OvRendering::HAL::NoneVertexBuffer::~TVertexBuffer()
 {
 }
 
+
+template<>
+void OvRendering::HAL::NoneVertexBuffer::Upload(const void* p_data, size_t p_size, Settings::EAccessSpecifier p_usage)
+{
+}
+
 template<>
 void OvRendering::HAL::NoneVertexBuffer::Bind() const
 {

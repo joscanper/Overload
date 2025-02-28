@@ -10,6 +10,10 @@
 
 namespace OvRendering::HAL
 {
-	struct NoneVertexArrayContext {};
+	struct NoneVertexArrayContext
+	{
+		uint32_t attributeCount = 0;
+	};
+
 	using NoneVertexArray = TVertexArray<Settings::EGraphicsBackend::NONE, NoneVertexArrayContext>;
 }

@@ -28,7 +28,7 @@ void OvRendering::HAL::NoneIndexBuffer::Unbind() const
 }
 
 template<>
-void OvRendering::HAL::NoneIndexBuffer::Upload(std::span<const uint32_t> p_data, Settings::EAccessSpecifier p_usage) const
+void OvRendering::HAL::NoneIndexBuffer::Upload(const void* p_data, size_t p_size, Settings::EAccessSpecifier p_usage) const
 {
 }
 

@@ -6,8 +6,40 @@
 
 #include <gl/glew.h>
 
+#include <OvDebug/Assertion.h>
 #include <OvRendering/HAL/OpenGL/GLVertexArray.h>
 #include <OvRendering/HAL/OpenGL/GLTypes.h>
+
+namespace
+{
+	uint32_t GetDataTypeSizeInBytes(OvRendering::Settings::EDataType p_type)
+	{
+		switch (p_type)
+		{
+		case OvRendering::Settings::EDataType::BYTE: return sizeof(GLbyte);
+		case OvRendering::Settings::EDataType::UNSIGNED_BYTE: return sizeof(GLubyte);
+		case OvRendering::Settings::EDataType::SHORT: return sizeof(GLshort);
+		case OvRendering::Settings::EDataType::UNSIGNED_SHORT: return sizeof(GLushort);
+		case OvRendering::Settings::EDataType::INT: return sizeof(GLint);
+		case OvRendering::Settings::EDataType::UNSIGNED_INT: return sizeof(GLuint);
+		case OvRendering::Settings::EDataType::FLOAT: return sizeof(GLfloat);
+		case OvRendering::Settings::EDataType::DOUBLE: return sizeof(GLdouble);
+		default: return 0;
+		}
+	}
+
+	uint32_t CalculateTotalVertexSize(std::span<const OvRendering::Settings::VertexAttribute> p_attributes)
+	{
+		uint32_t result = 0;
+
+		for (const auto& attribute : p_attributes)
+		{
+			result += GetDataTypeSizeInBytes(attribute.type) * attribute.count;
+		}
+
+		return result;
+	}
+}
 
 template<>
 OvRendering::HAL::GLVertexArray::TVertexArray()
@@ -22,19 +54,68 @@ OvRendering::HAL::GLVertexArray::~TVertexArray()
 }
 
 template<>
-void OvRendering::HAL::GLVertexArray::BindAttribute(
-	uint32_t p_attribute,
-	HAL::VertexBuffer& p_vertexBuffer,
-	Settings::EDataType p_type,
-	uint64_t p_count,
-	uint64_t p_stride,
-	intptr_t p_offset
-) const
+bool OvRendering::HAL::GLVertexArray::IsValid() const
 {
+	return m_context.attributeCount > 0;
+}
+
+template<>
+void OvRendering::HAL::GLVertexArray::SetLayout(
+	std::span<const Settings::VertexAttribute> p_attributes,
+	VertexBuffer& p_vertexBuffer,
+	IndexBuffer& p_indexBuffer
+)
+{
+	OVASSERT(!IsValid(), "Vertex array layout already set");
+
 	Bind();
+	p_indexBuffer.Bind();
 	p_vertexBuffer.Bind();
-	glEnableVertexAttribArray(p_attribute);
-	glVertexAttribPointer(static_cast<GLenum>(p_attribute), static_cast<GLint>(p_count), EnumToValue<GLenum>(p_type), GL_FALSE, static_cast<GLsizei>(p_stride), reinterpret_cast<const GLvoid*>(p_offset));
+
+	uint32_t attributeIndex = 0;
+
+	const uint32_t totalSize = CalculateTotalVertexSize(p_attributes);
+	intptr_t currentOffset = 0;
+
+	for (const auto& attribute : p_attributes)
+	{
+		OVASSERT(attribute.count >= 1 && attribute.count <= 4, "Attribute count must be between 1 and 4");
+
+		glEnableVertexAttribArray(attributeIndex);
+
+		glVertexAttribPointer(
+			static_cast<GLuint>(attributeIndex),
+			static_cast<GLint>(attribute.count),
+			EnumToValue<GLenum>(attribute.type),
+			static_cast<GLboolean>(attribute.normalized),
+			static_cast<GLsizei>(totalSize),
+			reinterpret_cast<const GLvoid*>(currentOffset)
+		);
+
+		const uint64_t typeSize = GetDataTypeSizeInBytes(attribute.type);
+		const uint64_t attributeSize = typeSize * attribute.count;
+		currentOffset += attributeSize;
+		++attributeIndex;
+		++m_context.attributeCount;
+	}
+
+	Unbind();
+	p_indexBuffer.Unbind();
+	p_vertexBuffer.Unbind();
+}
+
+template<>
+void OvRendering::HAL::GLVertexArray::ResetLayout()
+{
+	OVASSERT(IsValid(), "Vertex array layout not already set");
+
+	Bind();
+	for (uint32_t i = 0; i < m_context.attributeCount; ++i)
+	{
+		glDisableVertexAttribArray(i);
+	}
+	m_context.attributeCount = 0;
+	Unbind();
 }
 
 template<>

@@ -42,10 +42,11 @@ namespace OvRendering::HAL
 
 		/**
 		* Upload data index data to the GPU
-		* @param p_data
+		* @param p_data pointer to the first element of the data
+		* @param p_size in bytes
 		* @param p_usage
 		*/
-		void Upload(std::span<const uint32_t> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
+		void Upload(const void* p_data, size_t p_size, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
 
 		/**
 		* Returns the ID of the IBO

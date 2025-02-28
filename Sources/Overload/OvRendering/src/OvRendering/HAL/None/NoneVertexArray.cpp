@@ -4,6 +4,7 @@
 * @licence: MIT
 */
 
+#include <OvDebug/Assertion.h>
 #include <OvRendering/HAL/None/NoneVertexArray.h>
 
 template<>
@@ -17,18 +18,6 @@ OvRendering::HAL::NoneVertexArray::~TVertexArray()
 }
 
 template<>
-void OvRendering::HAL::NoneVertexArray::BindAttribute(
-	uint32_t p_attribute,
-	VertexBuffer& p_vertexBuffer,
-	Settings::EDataType p_type,
-	uint64_t p_count,
-	uint64_t p_stride,
-	intptr_t p_offset
-) const
-{
-}
-
-template<>
 void OvRendering::HAL::NoneVertexArray::Bind() const
 {
 }
@@ -36,6 +25,35 @@ void OvRendering::HAL::NoneVertexArray::Bind() const
 template<>
 void OvRendering::HAL::NoneVertexArray::Unbind() const
 {
+}
+
+template<>
+bool OvRendering::HAL::NoneVertexArray::IsValid() const
+{
+	return m_context.attributeCount > 0;
+}
+
+template<>
+void OvRendering::HAL::NoneVertexArray::SetLayout(
+	std::span<const Settings::VertexAttribute> p_attributes,
+	VertexBuffer& p_vertexBuffer,
+	IndexBuffer& p_indexBuffer
+)
+{
+	OVASSERT(!IsValid(), "Vertex array layout already set");
+
+	for (const auto& attribute : p_attributes)
+	{
+		OVASSERT(attribute.count >= 1 && attribute.count <= 4, "Attribute count must be between 1 and 4");
+		++m_context.attributeCount;
+	}
+}
+
+template<>
+void OvRendering::HAL::NoneVertexArray::ResetLayout()
+{
+	OVASSERT(IsValid(), "Vertex array layout not already set");
+	m_context.attributeCount = 0;
 }
 
 template<>

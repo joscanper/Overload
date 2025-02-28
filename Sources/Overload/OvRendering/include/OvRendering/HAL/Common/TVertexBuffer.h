@@ -31,12 +31,12 @@ namespace OvRendering::HAL
 		~TVertexBuffer();
 
 		/**
-		* Upload vertex data from to the GPU
-		* @param p_data
+		* Upload vertex data to the GPU
+		* @param p_data pointer to the first element of the data
+		* @param p_size in bytes
 		* @parma p_usage
 		*/
-		template <class T>
-		void Upload(std::span<const T> p_data, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
+		void Upload(const void* p_data, size_t p_size, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW);
 
 		/**
 		* Bind the buffer
@@ -49,7 +49,7 @@ namespace OvRendering::HAL
 		void Unbind() const;
 
 		/**
-		* Returnd the ID of the VBO
+		* Returns the ID of the VBO
 		*/
 		uint32_t GetID() const;
 
