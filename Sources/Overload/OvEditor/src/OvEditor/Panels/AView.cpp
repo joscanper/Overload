@@ -15,15 +15,13 @@ OvEditor::Panels::AView::AView
 	const OvUI::Settings::PanelWindowSettings& p_windowSettings
 ) : PanelWindow(p_title, p_opened, p_windowSettings)
 {
-	m_image = &CreateWidget<OvUI::Widgets::Visual::Image>(m_fbo.GetTextureID(), OvMaths::FVector2{ 0.f, 0.f });
+	const auto tex = m_fbo.GetAttachment<OvRendering::HAL::Texture>(OvRendering::Settings::EFramebufferAttachment::COLOR);
+	m_image = &CreateWidget<OvUI::Widgets::Visual::Image>(tex->GetID(), OvMaths::FVector2{0.f, 0.f});
 	scrollable = false;
 }
 
 void OvEditor::Panels::AView::Update(float p_deltaTime)
 {
-	auto[winWidth, winHeight] = GetSafeSize();
-	m_image->size = OvMaths::FVector2(static_cast<float>(winWidth), static_cast<float>(winHeight));
-	m_fbo.Resize(winWidth, winHeight);
 }
 
 void OvEditor::Panels::AView::_Draw_Impl()
@@ -43,11 +41,15 @@ void OvEditor::Panels::AView::InitFrame()
 void OvEditor::Panels::AView::Render()
 {
 	auto [winWidth, winHeight] = GetSafeSize();
+	m_image->size = OvMaths::FVector2(static_cast<float>(winWidth), static_cast<float>(winHeight));
+
 	auto camera = GetCamera();
 	auto scene = GetScene();
 
 	if (winWidth > 0 && winHeight > 0 && camera && scene)
 	{
+		m_fbo.Resize(winWidth, winHeight);
+
 		InitFrame();
 
 		OvRendering::Data::FrameDescriptor frameDescriptor;

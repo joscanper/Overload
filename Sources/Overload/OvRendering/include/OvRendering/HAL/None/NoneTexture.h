@@ -11,6 +11,11 @@
 
 namespace OvRendering::HAL
 {
-	struct NoneTextureContext {};
+	struct NoneTextureContext
+	{
+		OvRendering::Settings::TextureDesc desc;
+		bool allocated = false;
+	};
+
 	using NoneTexture = TTexture<Settings::EGraphicsBackend::NONE, NoneTextureContext, NoneTextureHandleContext>;
 }

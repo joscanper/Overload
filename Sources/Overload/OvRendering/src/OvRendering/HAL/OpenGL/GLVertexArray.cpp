@@ -12,13 +12,13 @@
 template<>
 OvRendering::HAL::GLVertexArray::TVertexArray()
 {
-	glGenVertexArrays(1, &m_context.bufferID);
+	glGenVertexArrays(1, &m_context.id);
 }
 
 template<>
 OvRendering::HAL::GLVertexArray::~TVertexArray()
 {
-	glDeleteVertexArrays(1, &m_context.bufferID);
+	glDeleteVertexArrays(1, &m_context.id);
 }
 
 template<>
@@ -40,7 +40,7 @@ void OvRendering::HAL::GLVertexArray::BindAttribute(
 template<>
 void OvRendering::HAL::GLVertexArray::Bind() const
 {
-	glBindVertexArray(m_context.bufferID);
+	glBindVertexArray(m_context.id);
 }
 
 template<>
@@ -52,5 +52,5 @@ void OvRendering::HAL::GLVertexArray::Unbind() const
 template<>
 uint32_t OvRendering::HAL::GLVertexArray::GetID() const
 {
-	return m_context.bufferID;
+	return m_context.id;
 }

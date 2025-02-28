@@ -9,19 +9,19 @@
 template<>
 OvRendering::HAL::GLVertexBuffer::TVertexBuffer()
 {
-	glGenBuffers(1, &m_context.bufferID);
+	glGenBuffers(1, &m_context.id);
 }
 
 template<>
 OvRendering::HAL::GLVertexBuffer::~TVertexBuffer()
 {
-	glDeleteBuffers(1, &m_context.bufferID);
+	glDeleteBuffers(1, &m_context.id);
 }
 
 template<>
 void OvRendering::HAL::GLVertexBuffer::Bind() const
 {
-	glBindBuffer(GL_ARRAY_BUFFER, m_context.bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, m_context.id);
 }
 
 template<>
@@ -33,5 +33,5 @@ void OvRendering::HAL::GLVertexBuffer::Unbind() const
 template<>
 uint32_t OvRendering::HAL::GLVertexBuffer::GetID() const
 {
-	return m_context.bufferID;
+	return m_context.id;
 }

@@ -12,7 +12,7 @@ namespace OvRendering::HAL
 {
 	struct GLVertexArrayContext
 	{
-		uint32_t bufferID = 0;
+		uint32_t id = 0;
 	};
 
 	using GLVertexArray = TVertexArray<Settings::EGraphicsBackend::OPENGL, GLVertexArrayContext>;

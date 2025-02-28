@@ -7,8 +7,38 @@
 #include <GL/glew.h>
 
 #include <OvDebug/Assertion.h>
+#include <OvDebug/Logger.h>
 #include <OvRendering/HAL/OpenGL/GLFramebuffer.h>
-#include <OvRendering/HAL/OpenGL/GLTextureHandle.h>
+#include <OvRendering/HAL/OpenGL/GLRenderbuffer.h>
+#include <OvRendering/HAL/OpenGL/GLTypes.h>
+
+template<>
+template<>
+void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLRenderbuffer> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index)
+{
+	OVASSERT(IsValid(), "Cannot set an attachment on an invalid framebuffer");
+	OVASSERT(p_toAttach != nullptr, "Cannot attach a null renderbuffer");
+
+	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
+	Bind();
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachmentIndex, GL_RENDERBUFFER, p_toAttach->GetID());
+	Unbind();
+	m_context.attachments[attachmentIndex] = p_toAttach;
+}
+
+template<>
+template<>
+void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLTexture> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index)
+{
+	OVASSERT(IsValid(), "Cannot set an attachment on an invalid framebuffer");
+	OVASSERT(p_toAttach != nullptr, "Cannot attach a null texture");
+
+	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
+	Bind();
+	glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentIndex, GL_TEXTURE_2D, p_toAttach->GetID(), 0);
+	Unbind();
+	m_context.attachments[attachmentIndex] = p_toAttach;
+}
 
 template<>
 OvRendering::HAL::GLFramebuffer::TFramebuffer(uint16_t p_width, uint16_t p_height, bool p_depthOnly) :
@@ -18,57 +48,66 @@ OvRendering::HAL::GLFramebuffer::TFramebuffer(uint16_t p_width, uint16_t p_heigh
 		.depthOnly = p_depthOnly
 	}
 {
-	glGenFramebuffers(1, &m_context.bufferID);
+	glGenFramebuffers(1, &m_context.id);
+
+	m_context.width = std::max(static_cast<uint16_t>(1), m_context.width);
+	m_context.height = std::max(static_cast<uint16_t>(1), m_context.height);
+
+	std::shared_ptr<GLRenderbuffer> renderbuffer;
+	std::shared_ptr<GLTexture> renderTexture = std::make_shared<GLTexture>();
 
 	if (!m_context.depthOnly)
 	{
-		glGenRenderbuffers(1, &m_context.depthStencilBuffer);
+		renderbuffer = std::make_shared<GLRenderbuffer>();
 	}
-
-	// Setup texture
-	m_context.renderTexture.Bind();
 
 	Settings::TextureDesc renderTextureDesc{
 		.width = m_context.width,
 		.height = m_context.height,
-		.firstFilter = Settings::ETextureFilteringMode::NEAREST,
-		.secondFilter = Settings::ETextureFilteringMode::NEAREST,
-		.horizontalWrapMode = Settings::ETextureWrapMode::CLAMP_TO_BORDER,
-		.verticalWrapMode = Settings::ETextureWrapMode::CLAMP_TO_BORDER,
+		.minFilter = Settings::ETextureFilteringMode::LINEAR,
+		.magFilter = Settings::ETextureFilteringMode::LINEAR,
+		.horizontalWrap = Settings::ETextureWrapMode::CLAMP_TO_BORDER,
+		.verticalWrap = Settings::ETextureWrapMode::CLAMP_TO_BORDER,
 		.internalFormat = m_context.depthOnly ? Settings::EInternalFormat::DEPTH_COMPONENT : Settings::EInternalFormat::RGBA32F,
-		.format = m_context.depthOnly ? Settings::EFormat::DEPTH_COMPONENT : Settings::EFormat::RGBA,
-		.type = Settings::EPixelDataType::FLOAT
+		.useMipMaps = false,
+		.mutableDesc = Settings::MutableTextureDesc{
+			.format = m_context.depthOnly ? Settings::EFormat::DEPTH_COMPONENT : Settings::EFormat::RGBA,
+			.type = Settings::EPixelDataType::FLOAT
+		}
 	};
 
-	m_context.renderTexture.Upload(renderTextureDesc, nullptr);
+	renderTexture->Allocate(renderTextureDesc);
 
 	if (m_context.depthOnly)
 	{
 		float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+		renderTexture->Bind();
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor); // TODO: Move that to GLTexture
+		renderTexture->Unbind();
 	}
-
-	m_context.renderTexture.Unbind();
-
-	// Setup framebuffer
-	Bind();
 
 	if (m_context.depthOnly)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_context.renderTexture.GetID(), 0);
+		Attach<GLTexture>(renderTexture, Settings::EFramebufferAttachment::DEPTH);
+		Bind();
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
+		Unbind();
 	}
 	else
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_context.renderTexture.GetID(), 0);
+		Attach<GLTexture>(renderTexture, Settings::EFramebufferAttachment::COLOR);
 
-		// Setup depth-stencil buffer
-		glBindRenderbuffer(GL_RENDERBUFFER, m_context.depthStencilBuffer);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_STENCIL, m_context.width, m_context.height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_context.depthStencilBuffer);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_context.depthStencilBuffer);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		renderbuffer->Allocate(m_context.width, m_context.height, Settings::EInternalFormat::DEPTH_STENCIL);
+		Attach<GLRenderbuffer>(renderbuffer, Settings::EFramebufferAttachment::DEPTH);
+		Attach<GLRenderbuffer>(renderbuffer, Settings::EFramebufferAttachment::STENCIL);
+	}
+
+	Bind();
+	GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (fboStatus != GL_FRAMEBUFFER_COMPLETE)
+	{
+		OVLOG_ERROR("Framebuffer not complete!");
 	}
 
 	Unbind();
@@ -77,17 +116,13 @@ OvRendering::HAL::GLFramebuffer::TFramebuffer(uint16_t p_width, uint16_t p_heigh
 template<>
 OvRendering::HAL::GLFramebuffer::~TFramebuffer()
 {
-	glDeleteFramebuffers(1, &m_context.bufferID);
-	if (!m_context.depthOnly)
-	{
-		glDeleteRenderbuffers(1, &m_context.depthStencilBuffer);
-	}
+	glDeleteFramebuffers(1, &m_context.id);
 }
 
 template<>
 void OvRendering::HAL::GLFramebuffer::Bind() const
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_context.bufferID);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_context.id);
 }
 
 template<>
@@ -97,26 +132,73 @@ void OvRendering::HAL::GLFramebuffer::Unbind() const
 }
 
 template<>
+bool OvRendering::HAL::GLFramebuffer::IsValid() const
+{
+	return true;
+}
+
+template<>
+template<>
+OvTools::Utils::OptRef<OvRendering::HAL::GLTexture> OvRendering::HAL::GLFramebuffer::GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index) const
+{
+	OVASSERT(IsValid(), "Cannot get an attachment from an invalid framebuffer");
+
+	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
+
+	if (m_context.attachments.contains(attachmentIndex))
+	{
+		auto attachment = m_context.attachments.at(attachmentIndex);
+
+		if (auto pval = std::get_if<std::shared_ptr<GLTexture>>(&attachment); pval && *pval)
+		{
+			return **pval;
+		}
+	}
+
+	return std::nullopt;
+}
+
+template<>
+template<>
+OvTools::Utils::OptRef<OvRendering::HAL::GLRenderbuffer> OvRendering::HAL::GLFramebuffer::GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index) const
+{
+	OVASSERT(IsValid(), "Cannot get an attachment from an invalid framebuffer");
+
+	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
+
+	if (m_context.attachments.contains(attachmentIndex))
+	{
+		auto attachment = m_context.attachments.at(attachmentIndex);
+
+		if (auto pval = std::get_if<std::shared_ptr<GLRenderbuffer>>(&attachment); pval && *pval)
+		{
+			return **pval;
+		}
+	}
+
+	return std::nullopt;
+}
+
+template<>
 void OvRendering::HAL::GLFramebuffer::Resize(uint16_t p_width, uint16_t p_height, bool p_forceUpdate)
 {
+	OVASSERT(IsValid(), "Cannot resize an invalid framebuffer");
+
 	if (p_forceUpdate || p_width != m_context.width || p_height != m_context.height)
 	{
 		m_context.width = p_width;
 		m_context.height = p_height;
 
-		auto desc = m_context.renderTexture.GetDesc();
-		desc.width = m_context.width;
-		desc.height = m_context.height;
-		m_context.renderTexture.Bind();
-		m_context.renderTexture.Upload(desc, nullptr);
-		m_context.renderTexture.Unbind();
-
-		if (!m_context.depthOnly)
+		for (auto& attachment : m_context.attachments)
 		{
-			// Resize depth-stencil buffer
-			glBindRenderbuffer(GL_RENDERBUFFER, m_context.depthStencilBuffer);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_STENCIL, m_context.width, m_context.height);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+			if (const auto pval = std::get_if<std::shared_ptr<GLTexture>>(&attachment.second); pval && *pval)
+			{
+				(*pval)->Resize(m_context.width, m_context.height);
+			}
+			else if (const auto* pval = std::get_if<std::shared_ptr<GLRenderbuffer>>(&attachment.second); pval && *pval)
+			{
+				(*pval)->Resize(m_context.width, m_context.height);
+			}
 		}
 	}
 }
@@ -124,53 +206,32 @@ void OvRendering::HAL::GLFramebuffer::Resize(uint16_t p_width, uint16_t p_height
 template<>
 uint32_t OvRendering::HAL::GLFramebuffer::GetID() const
 {
-	return m_context.bufferID;
-}
-
-template<>
-uint32_t OvRendering::HAL::GLFramebuffer::GetTextureID() const
-{
-	return m_context.renderTexture.GetID();
-}
-
-template<>
-OvRendering::HAL::GLTextureHandle OvRendering::HAL::GLFramebuffer::GetTexture() const
-{
-	return HAL::GLTextureHandle{ m_context.renderTexture };
-}
-
-template<>
-uint32_t OvRendering::HAL::GLFramebuffer::GetRenderBufferID() const
-{
-	return m_context.depthStencilBuffer;
+	return m_context.id;
 }
 
 template<>
 uint16_t OvRendering::HAL::GLFramebuffer::GetWidth() const
 {
+	OVASSERT(IsValid(), "Cannot get width of an invalid framebuffer");
 	return m_context.width;
 }
 
 template<>
 uint16_t OvRendering::HAL::GLFramebuffer::GetHeight() const
 {
+	OVASSERT(IsValid(), "Cannot get height of an invalid framebuffer");
 	return m_context.height;
-}
-
-template<>
-void OvRendering::HAL::GLFramebuffer::GenerateMipMaps() const
-{
-	glBindTexture(GL_TEXTURE_2D, m_context.renderTexture.GetID());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 template<>
 void OvRendering::HAL::GLFramebuffer::BlitToBackBuffer(uint16_t p_backBufferWidth, uint16_t p_backBufferHeight) const
 {
-	glBlitNamedFramebuffer(m_context.bufferID, 0,
+	OVASSERT(IsValid(), "Cannot blit an invalid framebuffer");
+
+	glBlitNamedFramebuffer(
+		m_context.id, 0,
 		0, 0, m_context.width, m_context.height,
 		0, 0, p_backBufferWidth, p_backBufferHeight,
-		GL_COLOR_BUFFER_BIT, GL_LINEAR);
+		GL_COLOR_BUFFER_BIT, GL_LINEAR
+	);
 }

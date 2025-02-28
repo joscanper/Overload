@@ -56,7 +56,8 @@ void OvCore::Rendering::PostProcess::BloomEffect::Draw(
 	}
 
 	// Step 3: Combine bloom with original framebuffer
-	m_bloomMaterial.Set("_BloomTexture", m_bloomPingPong[0].GetTexture(), true);
+	const auto bloomTex = m_bloomPingPong[0].GetAttachment<OvRendering::HAL::Texture>(OvRendering::Settings::EFramebufferAttachment::COLOR);
+	m_bloomMaterial.Set("_BloomTexture", bloomTex, true);
 	m_bloomMaterial.Set("_BloomIntensity", bloomSettings.intensity, true);
 	m_renderer.Blit(p_pso, p_src, p_dst, m_bloomMaterial);
 }

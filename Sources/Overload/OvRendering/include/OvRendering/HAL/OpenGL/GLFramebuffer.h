@@ -6,20 +6,38 @@
 
 #pragma once
 
+#include <unordered_map>
+
 #include <OvRendering/HAL/Common/TFramebuffer.h>
-#include <OvRendering/HAL/OpenGL/GLTextureHandle.h>
+#include <OvRendering/HAL/OpenGL/GLTexture.h>
+#include <OvRendering/HAL/OpenGL/GLRenderbuffer.h>
 
 namespace OvRendering::HAL
 {
-	struct GLFramebufferContext
+	template<Settings::EGraphicsBackend Backend, class GLTextureContext, class GLTextureHandleContext, class GLRenderbufferContext>
+	struct TGLFramebufferContext
 	{
+		using Attachment = TFramebufferAttachment<Backend, GLTextureContext, GLTextureHandleContext, GLRenderbufferContext>;
+
+		std::unordered_map<uint32_t, Attachment> attachments;
 		uint16_t width = 0;
 		uint16_t height = 0;
 		bool depthOnly = false;
-		uint32_t bufferID = 0;
-		uint32_t depthStencilBuffer = 0;
-		GLTexture renderTexture;
+		uint32_t id = 0;
 	};
 
-	using GLFramebuffer = TFramebuffer<Settings::EGraphicsBackend::OPENGL, GLFramebufferContext, GLTextureHandleContext>;
+	using GLFramebufferContext = TGLFramebufferContext<
+		Settings::EGraphicsBackend::OPENGL,
+		GLTextureContext,
+		GLTextureHandleContext,
+		GLRenderbufferContext
+	>;
+
+	using GLFramebuffer = TFramebuffer<
+		Settings::EGraphicsBackend::OPENGL,
+		GLFramebufferContext,
+		GLTextureContext,
+		GLTextureHandleContext,
+		GLRenderbufferContext
+	>;
 }

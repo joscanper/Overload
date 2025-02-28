@@ -14,6 +14,7 @@ namespace OvRendering::HAL
 	struct GLTextureContext
 	{
 		Settings::TextureDesc desc;
+		bool allocated = false;
 	};
 
 	using GLTexture = TTexture<Settings::EGraphicsBackend::OPENGL, GLTextureContext, GLTextureHandleContext>;

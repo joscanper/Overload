@@ -51,8 +51,7 @@ void OvCore::Rendering::PostProcessRenderPass::Draw(OvRendering::Data::PipelineS
 		auto& framebuffer = m_renderer.GetFrameDescriptor().outputBuffer.value();
 
 		const uint64_t kPingPongBufferSize = m_pingPongBuffers.size();
-
-		m_blitMaterial.Set("_InputTexture", framebuffer.GetTexture(), true);
+		
 		m_renderer.Blit(p_pso, framebuffer, m_pingPongBuffers[0], m_blitMaterial);
 
 		for (auto& effect : m_effects)

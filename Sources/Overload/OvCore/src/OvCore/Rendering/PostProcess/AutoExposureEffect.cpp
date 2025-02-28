@@ -37,7 +37,8 @@ void OvCore::Rendering::PostProcess::AutoExposureEffect::Draw(
 	m_luminanceMaterial.Set("_CenterWeightBias", autoExposureSettings.centerWeightBias, true);
 	m_renderer.Blit(p_pso, p_src, m_luminanceBuffer, m_luminanceMaterial,
 		OvRendering::Settings::EBlitFlags::DEFAULT & ~OvRendering::Settings::EBlitFlags::RESIZE_DST_TO_MATCH_SRC);
-	m_luminanceBuffer.GenerateMipMaps();
+	const auto luminanceTex = m_luminanceBuffer.GetAttachment<OvRendering::HAL::Texture>(OvRendering::Settings::EFramebufferAttachment::COLOR);
+	luminanceTex->GenerateMipMaps();
 
 	float elapsedTime = 1.0f;
 	auto currentTime = std::chrono::high_resolution_clock::now();
@@ -54,7 +55,7 @@ void OvCore::Rendering::PostProcess::AutoExposureEffect::Draw(
 	m_exposurePingPongIndex = (m_exposurePingPongIndex + 1) % 2;
 
 	// Exposure adaptation
-	m_exposureMaterial.Set("_LuminanceTexture", m_luminanceBuffer.GetTexture(), true);
+	m_exposureMaterial.Set("_LuminanceTexture", luminanceTex, true);
 	m_exposureMaterial.Set("_MinLuminanceEV", autoExposureSettings.minLuminanceEV, true);
 	m_exposureMaterial.Set("_MaxLuminanceEV", autoExposureSettings.maxLuminanceEV, true);
 	m_exposureMaterial.Set("_ExposureCompensationEV", autoExposureSettings.exposureCompensationEV, true);
@@ -65,6 +66,7 @@ void OvCore::Rendering::PostProcess::AutoExposureEffect::Draw(
 	m_renderer.Blit(p_pso, previousExposure, currentExposure, m_exposureMaterial);
 
 	// Apply the exposure to the final image
-	m_compensationMaterial.Set("_ExposureTexture", currentExposure.GetTexture(), true);
+	const auto exposureTex = currentExposure.GetAttachment<OvRendering::HAL::Texture>(OvRendering::Settings::EFramebufferAttachment::COLOR);
+	m_compensationMaterial.Set("_ExposureTexture", exposureTex, true);
 	m_renderer.Blit(p_pso, p_src, p_dst, m_compensationMaterial);
 }

@@ -8,6 +8,7 @@
 #include "OvRendering/HAL/UniformBuffer.h"
 #include "OvRendering/HAL/TextureHandle.h"
 #include "OvRendering/Resources/Texture.h"
+#include <OvTools/Utils/OptRef.h>
 
 //TODO: Add constructor with a shader reference
 
@@ -78,6 +79,12 @@ void OvRendering::Data::Material::Bind(OvRendering::Resources::Texture* p_emptyT
 						tex.Bind(textureSlot);
 						m_shader->GetProgram().SetUniformInt(uniformData->name, textureSlot++);
 					}
+					else if (value.type() == typeid(HAL::Texture))
+					{
+						auto tex = std::any_cast<HAL::Texture>(value);
+						tex.Bind(textureSlot);
+						m_shader->GetProgram().SetUniformInt(uniformData->name, textureSlot++);
+					}
 					else if (value.type() == typeid(Resources::Texture*))
 					{
 						if (auto tex = std::any_cast<Resources::Texture*>(value); tex)
@@ -88,6 +95,14 @@ void OvRendering::Data::Material::Bind(OvRendering::Resources::Texture* p_emptyT
 						else if (p_emptyTexture)
 						{
 							p_emptyTexture->GetTexture().Bind(textureSlot);
+							m_shader->GetProgram().SetUniformInt(uniformData->name, textureSlot++);
+						}
+					}
+					else if (value.type() == typeid(OvTools::Utils::OptRef<HAL::Texture>))
+					{
+						if (const auto tex = std::any_cast<OvTools::Utils::OptRef<HAL::Texture>>(value); tex)
+						{
+							tex->Bind(textureSlot);
 							m_shader->GetProgram().SetUniformInt(uniformData->name, textureSlot++);
 						}
 					}

@@ -24,6 +24,7 @@
 #include <OvRendering/Settings/EAccessSpecifier.h>
 #include <OvRendering/Settings/EShaderType.h>
 #include <OvRendering/Settings/EUniformType.h>
+#include <OvRendering/Settings/EFramebufferAttachment.h>
 #include <OvTools/Utils/EnumMapper.h>
 
 namespace OvRendering::HAL
@@ -377,5 +378,17 @@ struct OvTools::Utils::MappingFor<OvRendering::Settings::EShaderType, GLenum>
 	using type = std::tuple <
 		EnumValuePair<EnumType::VERTEX, GL_VERTEX_SHADER>,
 		EnumValuePair<EnumType::FRAGMENT, GL_FRAGMENT_SHADER>
+	> ;
+};
+
+template <>
+struct OvTools::Utils::MappingFor<OvRendering::Settings::EFramebufferAttachment, GLenum>
+{
+	using EnumType = OvRendering::Settings::EFramebufferAttachment;
+	using type = std::tuple <
+		EnumValuePair<EnumType::COLOR, GL_COLOR_ATTACHMENT0>,
+		EnumValuePair<EnumType::DEPTH, GL_DEPTH_ATTACHMENT>,
+		EnumValuePair<EnumType::STENCIL, GL_STENCIL_ATTACHMENT>,
+		EnumValuePair<EnumType::DEPTH_STENCIL, GL_DEPTH_STENCIL_ATTACHMENT>
 	> ;
 };

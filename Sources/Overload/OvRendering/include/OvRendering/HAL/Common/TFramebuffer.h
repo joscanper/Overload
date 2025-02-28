@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <variant>
+
 #include <OvRendering/Settings/DriverSettings.h>
 #include <OvRendering/Settings/ERenderingCapability.h>
 #include <OvRendering/Settings/EPrimitiveMode.h>
@@ -17,19 +19,30 @@
 #include <OvRendering/Settings/EPixelDataFormat.h>
 #include <OvRendering/Settings/EPixelDataType.h>
 #include <OvRendering/Settings/EGraphicsBackend.h>
+#include <OvRendering/Settings/EFramebufferAttachment.h>
 #include <OvRendering/Data/PipelineState.h>
 #include <OvRendering/Resources/Texture.h>
-#include <OvRendering/HAL/Common/TTextureHandle.h>
+#include <OvRendering/HAL/Common/TTexture.h>
+#include <OvRendering/HAL/Common/TRenderbuffer.h>
+#include <OvTools/Utils/OptRef.h>
 
 namespace OvRendering::HAL
 {
+	template<Settings::EGraphicsBackend Backend, class TextureContext, class TextureHandleContext, class RenderBufferContext>
+	using TFramebufferAttachment = std::variant<
+		std::shared_ptr<TTexture<Backend, TextureContext, TextureHandleContext>>,
+		std::shared_ptr<TRenderbuffer<Backend, RenderBufferContext>>
+	>;
+
 	/**
 	* Represents a framebuffer, used to store render data
 	*/
-	template<Settings::EGraphicsBackend Backend, class FramebufferContext, class TextureHandleContext>
+	template<Settings::EGraphicsBackend Backend, class FramebufferContext, class TextureContext, class TextureHandleContext, class RenderBufferContext>
 	class TFramebuffer final
 	{
 	public:
+		using Attachment = TFramebufferAttachment<Backend, TextureContext, TextureHandleContext, RenderBufferContext>;
+
 		/**
 		* Create the framebuffer
 		* @param p_width
@@ -54,6 +67,11 @@ namespace OvRendering::HAL
 		void Unbind() const;
 
 		/**
+		* Returns true if the framebuffer is valid
+		*/
+		bool IsValid() const;
+
+		/**
 		* Defines a new size for the framebuffer
 		* @param p_width
 		* @param p_height
@@ -67,19 +85,21 @@ namespace OvRendering::HAL
 		uint32_t GetID() const;
 
 		/**
-		* Returns the ID of the OpenGL render texture
+		* Attach the given texture or render buffer to the framebuffer, at the given attachment point
+		* @param p_toAttach
+		* @param p_attachment
+		* @param p_index optional, useful when specifying multiple color attachments
 		*/
-		uint32_t GetTextureID() const;
+		template<class T>
+		void Attach(std::shared_ptr<T> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index = 0);
 
 		/**
-		* Returns the ID of the OpenGL render texture
+		* Return the texture or render buffer associated with the given attachment point
+		* @param p_attachment
+		* @param p_index optional, useful when specifying multiple color attachments
 		*/
-		TTextureHandle<Backend, TextureHandleContext> GetTexture() const;
-
-		/**
-		* Returns the ID of the OpenGL render buffer
-		*/
-		uint32_t GetRenderBufferID() const;
+		template<class T>
+		OvTools::Utils::OptRef<T> GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index = 0) const;
 
 		/**
 		* Returns the width of the framebuffer
@@ -90,11 +110,6 @@ namespace OvRendering::HAL
 		* Returns the width of the framebuffer
 		*/
 		uint16_t GetHeight() const;
-
-		/**
-		* Generate mip maps for the framebuffer's associated render texture
-		*/
-		void GenerateMipMaps() const;
 
 		/**
 		* Blit the framebuffer to the back buffer

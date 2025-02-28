@@ -12,19 +12,19 @@
 template<>
 OvRendering::HAL::GLIndexBuffer::TIndexBuffer()
 {
-	glGenBuffers(1, &m_context.bufferID);
+	glGenBuffers(1, &m_context.id);
 }
 
 template<>
 OvRendering::HAL::GLIndexBuffer::~TIndexBuffer()
 {
-	glDeleteBuffers(1, &m_context.bufferID);
+	glDeleteBuffers(1, &m_context.id);
 }
 
 template<>
 void OvRendering::HAL::GLIndexBuffer::Bind() const
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_context.bufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_context.id);
 }
 
 template<>
@@ -44,5 +44,5 @@ void OvRendering::HAL::GLIndexBuffer::Upload(std::span<const uint32_t> p_data, S
 template<>
 uint32_t OvRendering::HAL::GLIndexBuffer::GetID() const
 {
-	return m_context.bufferID;
+	return m_context.id;
 }

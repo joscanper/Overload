@@ -15,19 +15,28 @@
 namespace OvRendering::Settings
 {
 	/**
+	* Structure that holds additional data for mutable textures
+	*/
+	struct MutableTextureDesc
+	{
+		EFormat format = EFormat::RGBA;
+		EPixelDataType type = EPixelDataType::UNSIGNED_BYTE;
+		void* data = nullptr;
+	};
+
+	/**
 	* Structure that holds the description of a texture
 	*/
 	struct TextureDesc
 	{
-		uint32_t width = 1;
-		uint32_t height = 1;
-		ETextureFilteringMode firstFilter = ETextureFilteringMode::LINEAR;
-		ETextureFilteringMode secondFilter = ETextureFilteringMode::LINEAR;
-		ETextureWrapMode horizontalWrapMode = ETextureWrapMode::REPEAT;
-		ETextureWrapMode verticalWrapMode = ETextureWrapMode::REPEAT;
+		uint32_t width = 0;
+		uint32_t height = 0;
+		ETextureFilteringMode minFilter = ETextureFilteringMode::LINEAR_MIPMAP_LINEAR;
+		ETextureFilteringMode magFilter = ETextureFilteringMode::LINEAR;
+		ETextureWrapMode horizontalWrap = ETextureWrapMode::REPEAT;
+		ETextureWrapMode verticalWrap = ETextureWrapMode::REPEAT;
 		EInternalFormat internalFormat = EInternalFormat::RGBA;
-		EFormat format = EFormat::RGBA;
-		EPixelDataType type = EPixelDataType::UNSIGNED_BYTE;
-		bool generateMipmap = true;
+		bool useMipMaps = true;
+		std::optional<MutableTextureDesc> mutableDesc = std::nullopt;
 	};
 }

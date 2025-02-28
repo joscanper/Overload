@@ -8,6 +8,7 @@
 
 #include "OvRendering/Core/ABaseRenderer.h"
 #include "OvRendering/Resources/Loaders/TextureLoader.h"
+#include <OvRendering/HAL/TextureHandle.h>
 
 std::atomic_bool OvRendering::Core::ABaseRenderer::s_isDrawing{ false };
 
@@ -145,7 +146,9 @@ void OvRendering::Core::ABaseRenderer::Blit(
 
 	if (OvRendering::Settings::IsFlagSet(OvRendering::Settings::EBlitFlags::FILL_INPUT_TEXTURE, p_flags))
 	{
-		p_material.Set("_InputTexture", p_src.GetTexture());
+		const auto colorTex = p_src.GetAttachment<HAL::Texture>(Settings::EFramebufferAttachment::COLOR);
+		OVASSERT(colorTex.has_value(), "Invalid color attachment");
+		p_material.Set("_InputTexture", colorTex);
 	}
 
 	OvRendering::Entities::Drawable blit;

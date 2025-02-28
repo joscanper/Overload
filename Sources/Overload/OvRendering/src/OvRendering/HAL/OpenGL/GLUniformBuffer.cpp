@@ -18,8 +18,8 @@ OvRendering::HAL::GLUniformBuffer::TUniformBuffer(
 	OvRendering::Settings::EAccessSpecifier p_accessSpecifier
 ) : m_context{ .bindingPoint = p_bindingPoint }
 {
-	glGenBuffers(1, &m_context.bufferID);
-	glBindBuffer(GL_UNIFORM_BUFFER, m_context.bufferID);
+	glGenBuffers(1, &m_context.id);
+	glBindBuffer(GL_UNIFORM_BUFFER, m_context.id);
 	glBufferData(GL_UNIFORM_BUFFER, p_size, nullptr, EnumToValue<GLenum>(p_accessSpecifier));
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
@@ -27,13 +27,13 @@ OvRendering::HAL::GLUniformBuffer::TUniformBuffer(
 template<>
 OvRendering::HAL::GLUniformBuffer::~TUniformBuffer()
 {
-	glDeleteBuffers(1, &m_context.bufferID);
+	glDeleteBuffers(1, &m_context.id);
 }
 
 template<>
 void OvRendering::HAL::GLUniformBuffer::Bind(uint32_t p_bindingPoint)
 {
-	glBindBufferBase(GL_UNIFORM_BUFFER, p_bindingPoint, m_context.bufferID);
+	glBindBufferBase(GL_UNIFORM_BUFFER, p_bindingPoint, m_context.id);
 }
 
 template<>
@@ -45,7 +45,7 @@ void OvRendering::HAL::GLUniformBuffer::Unbind()
 template<>
 GLuint OvRendering::HAL::GLUniformBuffer::GetID() const
 {
-	return m_context.bufferID;
+	return m_context.id;
 }
 
 template<>

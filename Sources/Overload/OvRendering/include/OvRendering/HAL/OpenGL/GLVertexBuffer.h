@@ -15,7 +15,7 @@ namespace OvRendering::HAL
 {
 	struct GLVertexBufferContext
 	{
-		uint32_t bufferID = 0;
+		uint32_t id = 0;
 	};
 
 	using GLVertexBuffer = TVertexBuffer<Settings::EGraphicsBackend::OPENGL, GLVertexBufferContext>;
