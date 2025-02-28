@@ -54,18 +54,11 @@ namespace OvRendering::HAL
 		/**
 		* Set the data in the UBO located at p_offset to p_data
 		* @param p_data
+		* @param p_size
 		* @param p_offset
+		* @return The new offset
 		*/
-		template<typename T>
-		void SetSubData(const T& p_data, size_t p_offset);
-
-		/**
-		* Set the data in the UBO located at p_offset to p_data
-		* @param p_data
-		* @param p_offsetInOut (Will keep track of the current stride of the data layout)
-		*/
-		template<typename T>
-		void SetSubData(const T& p_data, std::reference_wrapper<size_t> p_offsetInOut);
+		size_t Upload(const void* p_data, size_t p_size, size_t p_offset);
 
 		/**
 		* Return the ID of the UBO

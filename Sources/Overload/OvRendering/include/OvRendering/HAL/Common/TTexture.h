@@ -48,11 +48,11 @@ namespace OvRendering::HAL
 
 		/**
 		* Uploads data to the GPU
-		* @param p_data
-		* @param p_format
-		* @param p_type
+		* @param p_data Pointer to the data to upload
+		* @param p_format Format of the data
+		* @param p_type Type of the pixel data
 		*/
-		void Upload(void* p_data, Settings::EFormat p_format, Settings::EPixelDataType p_type);
+		void Upload(const void* p_data, Settings::EFormat p_format, Settings::EPixelDataType p_type);
 
 		/**
 		* Resizes the texture

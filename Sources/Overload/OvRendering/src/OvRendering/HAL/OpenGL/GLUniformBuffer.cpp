@@ -43,6 +43,16 @@ void OvRendering::HAL::GLUniformBuffer::Unbind()
 }
 
 template<>
+size_t OvRendering::HAL::GLUniformBuffer::Upload(const void* p_data, size_t p_size, size_t p_offset)
+{
+	// TODO: Maybe we could find a way to set sub data without having to use bind/unbind, would be more efficient
+	glBindBuffer(GL_UNIFORM_BUFFER, m_context.id);
+	glBufferSubData(GL_UNIFORM_BUFFER, p_offset, p_size, p_data);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	return p_offset + p_size;
+}
+
+template<>
 GLuint OvRendering::HAL::GLUniformBuffer::GetID() const
 {
 	return m_context.id;

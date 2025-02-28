@@ -7,7 +7,6 @@
 #pragma once
 
 #include <OvRendering/HAL/Common/TShaderStorageBuffer.h>
-#include <OvRendering/HAL/OpenGL/GLTypes.h>
 
 namespace OvRendering::HAL
 {

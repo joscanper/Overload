@@ -105,7 +105,7 @@ bool OvRendering::HAL::GLTexture::IsMutable() const
 }
 
 template<>
-void OvRendering::HAL::GLTexture::Upload(void* p_data, Settings::EFormat p_format, Settings::EPixelDataType p_type)
+void OvRendering::HAL::GLTexture::Upload(const void* p_data, Settings::EFormat p_format, Settings::EPixelDataType p_type)
 {
 	OVASSERT(IsValid(), "Cannot upload data to a non-allocated texture");
 	OVASSERT(p_data, "Cannot upload texture data from a null pointer");

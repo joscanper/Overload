@@ -38,6 +38,12 @@ uint32_t OvRendering::HAL::NoneUniformBuffer::GetID() const
 }
 
 template<>
+size_t OvRendering::HAL::NoneUniformBuffer::Upload(const void* p_data, size_t p_size, size_t p_offset)
+{
+	return p_offset + p_size;
+}
+
+template<>
 void OvRendering::HAL::NoneUniformBuffer::BindBlockToShader(OvRendering::Resources::Shader& p_shader, uint32_t p_uniformBlockLocation, uint32_t p_bindingPoint)
 {
 }

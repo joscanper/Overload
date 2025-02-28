@@ -48,7 +48,7 @@ namespace OvRendering::HAL
 		* @param p_size in bytes
 		* @param p_usage
 		*/
-		void Upload(void* p_data, size_t p_size, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
+		void Upload(const void* p_data, size_t p_size, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
 
 	private:
 		Context m_context;
