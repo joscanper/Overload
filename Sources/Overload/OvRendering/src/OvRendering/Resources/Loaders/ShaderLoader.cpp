@@ -100,7 +100,7 @@ namespace
 	std::unique_ptr<OvRendering::HAL::ShaderProgram> CreateDefaultProgram()
 	{
 		const std::string vertex =R"(
-#version 330 core
+#version 450 core
 
 layout(location = 0) in vec3 geo_Pos;
 
@@ -111,7 +111,7 @@ void main()
 )";
 
 		const std::string fragment = R"(
-#version 330 core
+#version 450 core
 
 out vec4 FragColor;
 

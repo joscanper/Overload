@@ -38,7 +38,7 @@ OvRendering::Features::DebugShapeRenderFeature::DebugShapeRenderFeature(Core::Co
 
 	// TODO: Move these out of here, maybe we could have proper source files for these.
 	std::string vertexShader = R"(
-#version 430 core
+#version 450 core
 
 uniform vec3 start;
 uniform vec3 end;
@@ -53,7 +53,7 @@ void main()
 )";
 
 	std::string fragmentShader = R"(
-#version 430 core
+#version 450 core
 
 uniform vec3 color;
 
