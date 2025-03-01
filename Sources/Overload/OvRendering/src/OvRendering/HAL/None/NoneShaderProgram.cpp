@@ -57,71 +57,34 @@ OvRendering::Settings::ShaderLinkingResult OvRendering::HAL::NoneShaderProgram::
 	};
 }
 
-template<>
-void OvRendering::HAL::NoneShaderProgram::SetUniformInt(const std::string& p_name, int p_value)
-{
+#define DECLARE_SET_UNIFORM_FUNCTION(type) \
+template<> \
+template<> \
+void OvRendering::HAL::NoneShaderProgram::SetUniform<type>(std::string_view p_name, const type& p_value) \
+{ \
 }
 
-template<>
-void OvRendering::HAL::NoneShaderProgram::SetUniformFloat(const std::string& p_name, float p_value)
-{
+#define DECLARE_GET_UNIFORM_FUNCTION(type) \
+template<> \
+template<> \
+type OvRendering::HAL::NoneShaderProgram::GetUniform<type>(std::string_view p_name) \
+{ \
+	return type{}; \
 }
 
-template<>
-void OvRendering::HAL::NoneShaderProgram::SetUniformVec2(const std::string& p_name, const OvMaths::FVector2& p_vec2)
-{
-}
+DECLARE_SET_UNIFORM_FUNCTION(int);
+DECLARE_SET_UNIFORM_FUNCTION(float);
+DECLARE_SET_UNIFORM_FUNCTION(OvMaths::FVector2);
+DECLARE_SET_UNIFORM_FUNCTION(OvMaths::FVector3);
+DECLARE_SET_UNIFORM_FUNCTION(OvMaths::FVector4);
+DECLARE_SET_UNIFORM_FUNCTION(OvMaths::FMatrix4);
 
-template<>
-void OvRendering::HAL::NoneShaderProgram::SetUniformVec3(const std::string& p_name, const OvMaths::FVector3& p_vec3)
-{
-}
-
-template<>
-void OvRendering::HAL::NoneShaderProgram::SetUniformVec4(const std::string& p_name, const OvMaths::FVector4& p_vec4)
-{
-}
-
-template<>
-void OvRendering::HAL::NoneShaderProgram::SetUniformMat4(const std::string& p_name, const OvMaths::FMatrix4& p_mat4)
-{
-}
-
-template<>
-int OvRendering::HAL::NoneShaderProgram::GetUniformInt(const std::string& p_name)
-{
-	return {};
-}
-
-template<>
-float OvRendering::HAL::NoneShaderProgram::GetUniformFloat(const std::string& p_name)
-{
-	return {};
-}
-
-template<>
-OvMaths::FVector2 OvRendering::HAL::NoneShaderProgram::GetUniformVec2(const std::string& p_name)
-{
-	return {};
-}
-
-template<>
-OvMaths::FVector3 OvRendering::HAL::NoneShaderProgram::GetUniformVec3(const std::string& p_name)
-{
-	return {};
-}
-
-template<>
-OvMaths::FVector4 OvRendering::HAL::NoneShaderProgram::GetUniformVec4(const std::string& p_name)
-{
-	return {};
-}
-
-template<>
-OvMaths::FMatrix4 OvRendering::HAL::NoneShaderProgram::GetUniformMat4(const std::string& p_name)
-{
-	return {};
-}
+DECLARE_GET_UNIFORM_FUNCTION(int);
+DECLARE_GET_UNIFORM_FUNCTION(float);
+DECLARE_GET_UNIFORM_FUNCTION(OvMaths::FVector2);
+DECLARE_GET_UNIFORM_FUNCTION(OvMaths::FVector3);
+DECLARE_GET_UNIFORM_FUNCTION(OvMaths::FVector4);
+DECLARE_GET_UNIFORM_FUNCTION(OvMaths::FMatrix4);
 
 template<>
 void OvRendering::HAL::NoneShaderProgram::QueryUniforms()
@@ -129,9 +92,9 @@ void OvRendering::HAL::NoneShaderProgram::QueryUniforms()
 }
 
 template<>
-const OvRendering::Settings::UniformInfo* OvRendering::HAL::NoneShaderProgram::GetUniformInfo(const std::string& p_name) const
+OvTools::Utils::OptRef<const OvRendering::Settings::UniformInfo> OvRendering::HAL::NoneShaderProgram::GetUniformInfo(std::string_view p_name) const
 {
-	return nullptr;
+	return std::nullopt;
 }
 
 template<>

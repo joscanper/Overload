@@ -18,7 +18,7 @@ namespace OvRendering::HAL
 		std::vector<std::reference_wrapper<const GLShaderStage>> attachedShaders;
 		std::unordered_map<std::string, int> uniformLocationCache;
 
-		uint32_t GetUniformLocation(const std::string& name);
+		uint32_t GetUniformLocation(std::string_view p_name);
 	};
 
 	using GLShaderProgram = TShaderProgram<Settings::EGraphicsBackend::OPENGL, GLShaderProgramContext, GLShaderStageContext>;

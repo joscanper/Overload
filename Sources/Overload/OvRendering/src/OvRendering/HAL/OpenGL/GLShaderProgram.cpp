@@ -4,6 +4,8 @@
 * @licence: MIT
 */
 
+#include <array>
+
 #include <GL/glew.h>
 
 #include <OvDebug/Logger.h>
@@ -11,6 +13,14 @@
 #include <OvRendering/HAL/OpenGL/GLTexture.h>
 #include <OvRendering/HAL/OpenGL/GLTypes.h>
 #include <OvRendering/Resources/Texture.h>
+
+namespace
+{
+	constexpr bool IsEngineUBOMember(std::string_view p_name)
+	{
+		return p_name.starts_with("ubo_");
+	}
+}
 
 template<>
 OvRendering::HAL::GLShaderProgram::TShaderProgram() : m_context{
@@ -103,106 +113,60 @@ OvRendering::Settings::ShaderLinkingResult OvRendering::HAL::GLShaderProgram::Li
 	};
 }
 
-template<>
-void OvRendering::HAL::GLShaderProgram::SetUniformInt(const std::string& p_name, int p_value)
-{
-	glUniform1i(m_context.GetUniformLocation(p_name), p_value);
+
+#define DECLARE_GET_UNIFORM_FUNCTION(type, glType, func) \
+template<> \
+template<> \
+type OvRendering::HAL::GLShaderProgram::GetUniform<type>(std::string_view p_name) \
+{ \
+	type result; \
+	if (const uint32_t location = m_context.GetUniformLocation(p_name); location != -1) \
+	{ \
+		func(m_context.id, location, reinterpret_cast<glType*>(&result)); \
+	} \
+	return result; \
 }
 
-template<>
-void OvRendering::HAL::GLShaderProgram::SetUniformFloat(const std::string& p_name, float p_value)
-{
-	glUniform1f(m_context.GetUniformLocation(p_name), p_value);
+DECLARE_GET_UNIFORM_FUNCTION(int, GLint, glGetUniformiv);
+DECLARE_GET_UNIFORM_FUNCTION(float, GLfloat, glGetUniformfv);
+DECLARE_GET_UNIFORM_FUNCTION(OvMaths::FVector2, GLfloat, glGetUniformfv);
+DECLARE_GET_UNIFORM_FUNCTION(OvMaths::FVector3, GLfloat, glGetUniformfv);
+DECLARE_GET_UNIFORM_FUNCTION(OvMaths::FVector4, GLfloat, glGetUniformfv);
+DECLARE_GET_UNIFORM_FUNCTION(OvMaths::FMatrix4, GLfloat, glGetUniformfv);
+
+#define DECLARE_SET_UNIFORM_FUNCTION(type, func, ...) \
+template<> \
+template<> \
+void OvRendering::HAL::GLShaderProgram::SetUniform<type>(std::string_view p_name, const type& value) \
+{ \
+	if (const uint32_t location = m_context.GetUniformLocation(p_name); location != -1) \
+	{ \
+		func(location, __VA_ARGS__); \
+	} \
 }
 
-template<>
-void OvRendering::HAL::GLShaderProgram::SetUniformVec2(const std::string& p_name, const OvMaths::FVector2& p_vec2)
-{
-	glUniform2f(m_context.GetUniformLocation(p_name), p_vec2.x, p_vec2.y);
-}
+DECLARE_SET_UNIFORM_FUNCTION(int, glUniform1i, value);
+DECLARE_SET_UNIFORM_FUNCTION(float, glUniform1f, value);
+DECLARE_SET_UNIFORM_FUNCTION(OvMaths::FVector2, glUniform2f, value.x, value.y);
+DECLARE_SET_UNIFORM_FUNCTION(OvMaths::FVector3, glUniform3f, value.x, value.y, value.z);
+DECLARE_SET_UNIFORM_FUNCTION(OvMaths::FVector4, glUniform4f, value.x, value.y, value.z, value.w);
+DECLARE_SET_UNIFORM_FUNCTION(OvMaths::FMatrix4, glUniformMatrix4fv, 1, GL_TRUE, &value.data[0]);
 
-template<>
-void OvRendering::HAL::GLShaderProgram::SetUniformVec3(const std::string& p_name, const OvMaths::FVector3& p_vec3)
+uint32_t OvRendering::HAL::GLShaderProgramContext::GetUniformLocation(std::string_view p_name)
 {
-	glUniform3f(m_context.GetUniformLocation(p_name), p_vec3.x, p_vec3.y, p_vec3.z);
-}
+	if (uniformLocationCache.find(p_name.data()) != uniformLocationCache.end())
+	{
+		return uniformLocationCache.at(p_name.data());
+	}
 
-template<>
-void OvRendering::HAL::GLShaderProgram::SetUniformVec4(const std::string& p_name, const OvMaths::FVector4& p_vec4)
-{
-	glUniform4f(m_context.GetUniformLocation(p_name), p_vec4.x, p_vec4.y, p_vec4.z, p_vec4.w);
-}
-
-template<>
-void OvRendering::HAL::GLShaderProgram::SetUniformMat4(const std::string& p_name, const OvMaths::FMatrix4& p_mat4)
-{
-	glUniformMatrix4fv(m_context.GetUniformLocation(p_name), 1, GL_TRUE, &p_mat4.data[0]);
-}
-
-template<>
-int OvRendering::HAL::GLShaderProgram::GetUniformInt(const std::string& p_name)
-{
-	int value;
-	glGetUniformiv(m_context.id, m_context.GetUniformLocation(p_name), &value);
-	return value;
-}
-
-template<>
-float OvRendering::HAL::GLShaderProgram::GetUniformFloat(const std::string& p_name)
-{
-	float value;
-	glGetUniformfv(m_context.id, m_context.GetUniformLocation(p_name), &value);
-	return value;
-}
-
-template<>
-OvMaths::FVector2 OvRendering::HAL::GLShaderProgram::GetUniformVec2(const std::string& p_name)
-{
-	GLfloat values[2];
-	glGetUniformfv(m_context.id, m_context.GetUniformLocation(p_name), values);
-	return reinterpret_cast<OvMaths::FVector2&>(values);
-}
-
-template<>
-OvMaths::FVector3 OvRendering::HAL::GLShaderProgram::GetUniformVec3(const std::string& p_name)
-{
-	GLfloat values[3];
-	glGetUniformfv(m_context.id, m_context.GetUniformLocation(p_name), values);
-	return reinterpret_cast<OvMaths::FVector3&>(values);
-}
-
-template<>
-OvMaths::FVector4 OvRendering::HAL::GLShaderProgram::GetUniformVec4(const std::string& p_name)
-{
-	GLfloat values[4];
-	glGetUniformfv(m_context.id, m_context.GetUniformLocation(p_name), values);
-	return reinterpret_cast<OvMaths::FVector4&>(values);
-}
-
-template<>
-OvMaths::FMatrix4 OvRendering::HAL::GLShaderProgram::GetUniformMat4(const std::string& p_name)
-{
-	GLfloat values[16];
-	glGetUniformfv(m_context.id, m_context.GetUniformLocation(p_name), values);
-	return reinterpret_cast<OvMaths::FMatrix4&>(values);
-}
-
-bool IsEngineUBOMember(const std::string& p_uniformName)
-{
-	return p_uniformName.rfind("ubo_", 0) == 0;
-}
-
-uint32_t OvRendering::HAL::GLShaderProgramContext::GetUniformLocation(const std::string& name)
-{
-	if (uniformLocationCache.find(name) != uniformLocationCache.end())
-		return uniformLocationCache.at(name);
-
-	const int location = glGetUniformLocation(id, name.c_str());
+	const GLint location = glGetUniformLocation(id, p_name.data());
 
 	if (location == -1)
-		OVLOG_WARNING("Uniform: '" + name + "' doesn't exist");
+	{
+		OVLOG_WARNING("Uniform: '" + std::string{ p_name } + "' doesn't exist");
+	}
 
-	uniformLocationCache[name] = location;
+	uniformLocationCache[p_name.data()] = location;
 
 	return location;
 }
@@ -210,17 +174,22 @@ uint32_t OvRendering::HAL::GLShaderProgramContext::GetUniformLocation(const std:
 template<>
 void OvRendering::HAL::GLShaderProgram::QueryUniforms()
 {
-	GLint numActiveUniforms = 0;
 	m_context.uniforms.clear();
-	glGetProgramiv(m_context.id, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
-	std::vector<GLchar> nameData(256);
-	for (int unif = 0; unif < numActiveUniforms; ++unif)
+
+	std::array<GLchar, 256> nameBuffer;
+
+	GLint activeUniformCount = 0;
+	glGetProgramiv(m_context.id, GL_ACTIVE_UNIFORMS, &activeUniformCount);
+
+	for (GLint i = 0; i < activeUniformCount; ++i)
 	{
 		GLint arraySize = 0;
 		GLenum type = 0;
 		GLsizei actualLength = 0;
-		glGetActiveUniform(m_context.id, unif, static_cast<GLsizei>(nameData.size()), &actualLength, &arraySize, &type, &nameData[0]);
-		std::string name(static_cast<char*>(nameData.data()), actualLength);
+
+		glGetActiveUniform(m_context.id, i, static_cast<GLsizei>(nameBuffer.size()), &actualLength, &arraySize, &type, nameBuffer.data());
+
+		const auto name = std::string{ nameBuffer.data(), static_cast<size_t>(actualLength) };
 		const auto uniformType = ValueToEnum<Settings::EUniformType>(type);
 
 		if (!IsEngineUBOMember(name))
@@ -229,23 +198,23 @@ void OvRendering::HAL::GLShaderProgram::QueryUniforms()
 
 			switch (uniformType)
 			{
-			case Settings::EUniformType::BOOL: defaultValue = std::make_any<bool>(GetUniformInt(name)); break;
-			case Settings::EUniformType::INT: defaultValue = std::make_any<int>(GetUniformInt(name)); break;
-			case Settings::EUniformType::FLOAT: defaultValue = std::make_any<float>(GetUniformFloat(name)); break;
-			case Settings::EUniformType::FLOAT_VEC2:	defaultValue = std::make_any<OvMaths::FVector2>(GetUniformVec2(name)); break;
-			case Settings::EUniformType::FLOAT_VEC3:	defaultValue = std::make_any<OvMaths::FVector3>(GetUniformVec3(name)); break;
-			case Settings::EUniformType::FLOAT_VEC4:	defaultValue = std::make_any<OvMaths::FVector4>(GetUniformVec4(name)); break;
-			case Settings::EUniformType::FLOAT_MAT4:	defaultValue = std::make_any<OvMaths::FMatrix4>(GetUniformMat4(name)); break;
-			case Settings::EUniformType::SAMPLER_2D:	defaultValue = std::make_any<Resources::Texture*>(nullptr); break;
+			case Settings::EUniformType::BOOL: defaultValue = GetUniform<int>(name); break;
+			case Settings::EUniformType::INT: defaultValue = GetUniform<int>(name); break;
+			case Settings::EUniformType::FLOAT: defaultValue = GetUniform<float>(name); break;
+			case Settings::EUniformType::FLOAT_VEC2: defaultValue = GetUniform<OvMaths::FVector2>(name); break;
+			case Settings::EUniformType::FLOAT_VEC3: defaultValue = GetUniform<OvMaths::FVector3>(name); break;
+			case Settings::EUniformType::FLOAT_VEC4: defaultValue = GetUniform<OvMaths::FVector4>(name); break;
+			case Settings::EUniformType::FLOAT_MAT4: defaultValue = GetUniform<OvMaths::FMatrix4>(name); break;
+			case Settings::EUniformType::SAMPLER_2D: defaultValue = std::make_any<Resources::Texture*>(nullptr); break;
 			}
 
 			if (defaultValue.has_value())
 			{
-				m_context.uniforms.push_back({
-					uniformType,
-					name,
-					m_context.GetUniformLocation(nameData.data()),
-					defaultValue
+				m_context.uniforms.push_back(Settings::UniformInfo{
+					.type = uniformType,
+					.name = name,
+					.location = m_context.GetUniformLocation(name),
+					.defaultValue = defaultValue
 				});
 			}
 		}
@@ -253,17 +222,16 @@ void OvRendering::HAL::GLShaderProgram::QueryUniforms()
 }
 
 template<>
-const OvRendering::Settings::UniformInfo* OvRendering::HAL::GLShaderProgram::GetUniformInfo(const std::string& p_name) const
+OvTools::Utils::OptRef<const OvRendering::Settings::UniformInfo> OvRendering::HAL::GLShaderProgram::GetUniformInfo(std::string_view p_name) const
 {
-	auto found = std::find_if(m_context.uniforms.begin(), m_context.uniforms.end(), [&p_name](const Settings::UniformInfo& p_element)
-		{
-			return p_name == p_element.name;
-		});
+	if (const auto found = std::ranges::find_if(m_context.uniforms, [p_name](const auto& e) {
+		return p_name.compare(e.name) == 0;
+	}); found != m_context.uniforms.end())
+	{
+		return *found;
+	}
 
-	if (found != m_context.uniforms.end())
-		return &*found;
-	else
-		return nullptr;
+	return std::nullopt;
 }
 
 template<>

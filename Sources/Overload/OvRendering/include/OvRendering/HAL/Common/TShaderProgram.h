@@ -19,8 +19,19 @@
 #include <OvRendering/Settings/ShaderLinkingResult.h>
 #include <OvRendering/HAL/ShaderStage.h>
 
+#include <OvTools/Utils/OptRef.h>
+
 namespace OvRendering::HAL
 {
+	template<typename T>
+	concept SupportedUniformType =
+		std::same_as<T, float> ||
+		std::same_as<T, int> ||
+		std::same_as<T, OvMaths::FVector2> ||
+		std::same_as<T, OvMaths::FVector3> ||
+		std::same_as<T, OvMaths::FVector4> ||
+		std::same_as<T, OvMaths::FMatrix4>;
+
 	/**
 	* Represents a shader program, used to link shader stages together
 	*/
@@ -77,88 +88,26 @@ namespace OvRendering::HAL
 		uint32_t GetID() const;
 
 		/**
-		* Send a int to the GPU via a shader uniform
+		* Sends a uniform value associated with the given name to the GPU
 		* @param p_name
 		* @param p_value
 		*/
-		void SetUniformInt(const std::string& p_name, int p_value);
+		template<SupportedUniformType T>
+		void SetUniform(std::string_view p_name, const T& p_value);
 
 		/**
-		* Send a float to the GPU via a shader uniform
+		* Returns the value of a uniform associated with the given name
 		* @param p_name
 		* @param p_value
 		*/
-		void SetUniformFloat(const std::string& p_name, float p_value);
+		template<SupportedUniformType T>
+		T GetUniform(std::string_view p_name);
 
 		/**
-		* Send a vec2 to the GPU via a shader uniform
-		* @param p_name
-		* @param p_vec2
-		*/
-		void SetUniformVec2(const std::string& p_name, const OvMaths::FVector2& p_vec2);
-
-		/**
-		* Send a vec3 to the GPU via a shader uniform
-		* @param p_name
-		* @param p_vec3
-		*/
-		void SetUniformVec3(const std::string& p_name, const OvMaths::FVector3& p_vec3);
-
-		/**
-		* Send a vec4 to the GPU via a shader uniform
-		* @param p_name
-		* @param p_vec4
-		*/
-		void SetUniformVec4(const std::string& p_name, const OvMaths::FVector4& p_vec4);
-
-		/**
-		* Send a mat4 to the GPU via a shader uniform
-		* @param p_name
-		* @param p_mat4
-		*/
-		void SetUniformMat4(const std::string& p_name, const OvMaths::FMatrix4& p_mat4);
-
-		/**
-		* Returns the int uniform value identified by the given name
+		* Returns information about the uniform identified by the given name or std::nullopt if not found
 		* @param p_name
 		*/
-		int GetUniformInt(const std::string& p_name);
-
-		/**
-		* Returns the float uniform value identified by the given name
-		* @param p_name
-		*/
-		float GetUniformFloat(const std::string& p_name);
-
-		/**
-		* Returns the vec2 uniform value identified by the given name
-		* @param p_name
-		*/
-		OvMaths::FVector2 GetUniformVec2(const std::string& p_name);
-
-		/**
-		* Returns the vec3 uniform value identified by the given name
-		* @param p_name
-		*/
-		OvMaths::FVector3 GetUniformVec3(const std::string& p_name);
-
-		/**
-		* Returns the vec4 uniform value identified by the given name
-		* @param p_name
-		*/
-		OvMaths::FVector4 GetUniformVec4(const std::string& p_name);
-
-		/**
-		* Returns the mat4 uniform value identified by the given name
-		* @param p_name
-		*/
-		OvMaths::FMatrix4 GetUniformMat4(const std::string& p_name);
-
-		/**
-		* Returns information about the uniform identified by the given name or nullptr if not found
-		* @param p_name
-		*/
-		const Settings::UniformInfo* GetUniformInfo(const std::string& p_name) const;
+		OvTools::Utils::OptRef<const Settings::UniformInfo> GetUniformInfo(std::string_view p_name) const;
 
 		/**
 		* Query the uniforms from the program and store them in the uniform vector
