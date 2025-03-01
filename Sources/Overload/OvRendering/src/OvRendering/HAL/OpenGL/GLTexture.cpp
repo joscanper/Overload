@@ -43,10 +43,9 @@ OvRendering::HAL::GLTexture::~TTexture()
 template<>
 void OvRendering::HAL::GLTexture::Allocate(const Settings::TextureDesc& p_desc)
 {
-	m_textureContext.desc = p_desc;
-
 	auto& desc = m_textureContext.desc;
 
+	desc = p_desc;
 	desc.width = std::max(1u, desc.width);
 	desc.height = std::max(1u, desc.height);
 
@@ -79,10 +78,14 @@ void OvRendering::HAL::GLTexture::Allocate(const Settings::TextureDesc& p_desc)
 		);
 	}
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, EnumToValue<GLenum>(p_desc.horizontalWrap));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, EnumToValue<GLenum>(p_desc.verticalWrap));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, EnumToValue<GLenum>(p_desc.minFilter));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, EnumToValue<GLenum>(p_desc.magFilter));
+	// Once the texture is allocated, we don't need to set the parameters again
+	if (!m_textureContext.allocated)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, EnumToValue<GLenum>(p_desc.horizontalWrap));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, EnumToValue<GLenum>(p_desc.verticalWrap));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, EnumToValue<GLenum>(p_desc.minFilter));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, EnumToValue<GLenum>(p_desc.magFilter));
+	}
 
 	Unbind();
 
@@ -112,21 +115,8 @@ void OvRendering::HAL::GLTexture::Upload(const void* p_data, Settings::EFormat p
 
 	if (IsMutable())
 	{
-		auto& mutableDesc = m_textureContext.desc.mutableDesc.value();
-		mutableDesc.format = p_format;
-		mutableDesc.type = p_type;
-
-		glTexImage2D(
-			GL_TEXTURE_2D,
-			0,
-			EnumToValue<GLenum>(m_textureContext.desc.internalFormat),
-			m_textureContext.desc.width,
-			m_textureContext.desc.height,
-			0,
-			EnumToValue<GLenum>(mutableDesc.format),
-			EnumToValue<GLenum>(mutableDesc.type),
-			p_data
-		);
+		m_textureContext.desc.mutableDesc.value().data = p_data;
+		Allocate(m_textureContext.desc);
 	}
 	else
 	{
@@ -152,10 +142,6 @@ void OvRendering::HAL::GLTexture::Resize(uint32_t p_width, uint32_t p_height)
 	OVASSERT(IsValid(), "Cannot resize non-allocated texture");
 	OVASSERT(IsMutable(), "Cannot resize an immutable texture");
 
-	// Prevents from allocating a texture with a size of 0
-	p_width = std::max(1u, p_width);
-	p_height = std::max(1u, p_height);
-
 	auto& desc = m_textureContext.desc;
 
 	if (p_width != desc.width || p_height != desc.width)
@@ -163,36 +149,7 @@ void OvRendering::HAL::GLTexture::Resize(uint32_t p_width, uint32_t p_height)
 		desc.width = p_width;
 		desc.height = p_height;
 
-		Bind();
-
-		if (IsMutable())
-		{
-			auto& mutableDesc = m_textureContext.desc.mutableDesc.value();
-
-			glTexImage2D(
-				GL_TEXTURE_2D,
-				0,
-				EnumToValue<GLenum>(m_textureContext.desc.internalFormat),
-				m_textureContext.desc.width,
-				m_textureContext.desc.height,
-				0,
-				EnumToValue<GLenum>(mutableDesc.format),
-				EnumToValue<GLenum>(mutableDesc.type),
-				nullptr
-			);
-		}
-		else
-		{
-			glTexStorage2D(
-				GL_TEXTURE_2D,
-				CalculateMipMapLevels(desc.width, desc.height),
-				EnumToValue<GLenum>(desc.internalFormat),
-				desc.width,
-				desc.height
-			);
-		}
-
-		Unbind();
+		Allocate(desc);
 	}
 }
 
@@ -207,16 +164,10 @@ template<>
 void OvRendering::HAL::GLTexture::GenerateMipMaps() const
 {
 	OVASSERT(IsValid(), "Cannot generate mipmaps for a non-allocated texture");
-	
+	OVASSERT(m_textureContext.desc.useMipMaps, "Cannot generate mipmaps for a texture that doesn't use them");
+	OVASSERT(IsValidMipMapFilter(m_textureContext.desc.minFilter), "Cannot generate mipmaps with the current min filter");
+
 	Bind();
-
-	// TODO: Enable these assertions
-	// OVASSERT(m_textureContext.desc.useMipMaps, "Cannot generate mipmaps for a texture that doesn't use them");
-	// OVASSERT(IsValidMipMapFilter(m_textureContext.desc.minFilter), "Cannot generate mipmaps with the current min filter");
-	// TODO: Remove this line. The texture should be properly setup when the framebuffer is created.
-	// Right now it's not possible to set settings for the render texture when it's created, as it's handled by the framebuffer.
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
 	glGenerateMipmap(GL_TEXTURE_2D);
 	Unbind();
 }

@@ -20,7 +20,7 @@ OvCore::Rendering::RenderFramebuffer::RenderFramebuffer(uint32_t p_width, uint32
 	TextureDesc renderTextureDesc{
 		.width = m_context.width,
 		.height = m_context.height,
-		.minFilter = ETextureFilteringMode::LINEAR,
+		.minFilter = p_useMipMaps ? ETextureFilteringMode::LINEAR_MIPMAP_LINEAR : ETextureFilteringMode::LINEAR,
 		.magFilter = ETextureFilteringMode::LINEAR,
 		.horizontalWrap = ETextureWrapMode::CLAMP_TO_BORDER,
 		.verticalWrap = ETextureWrapMode::CLAMP_TO_BORDER,

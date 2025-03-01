@@ -96,8 +96,6 @@ OvRendering::Settings::ShaderLinkingResult OvRendering::HAL::GLShaderProgram::Li
 		};
 	}
 
-	glValidateProgram(m_context.id); // TODO: Check if we can get data out of this
-
 	QueryUniforms();
 
 	return {

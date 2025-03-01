@@ -56,9 +56,19 @@ namespace OvRendering::HAL
 		void Upload(const void* p_data, std::optional<BufferMemoryRange> p_range = std::nullopt);
 
 		/**
-		* Returns true if the buffer is valid (non-empty, properly allocated)
+		* Returns true if the buffer is valid (properly allocated)
 		*/
 		bool IsValid() const;
+
+		/**
+		* Returns true if the buffer is empty
+		*/
+		bool IsEmpty() const;
+
+		/**
+		* Returns the size of the allocated buffer in bytes
+		*/
+		uint64_t GetSize() const;
 
 		/**
 		* Bind the buffer

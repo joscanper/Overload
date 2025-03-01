@@ -21,7 +21,7 @@ namespace OvRendering::Settings
 	{
 		EFormat format = EFormat::RGBA;
 		EPixelDataType type = EPixelDataType::UNSIGNED_BYTE;
-		void* data = nullptr;
+		const void* data = nullptr;
 	};
 
 	/**
