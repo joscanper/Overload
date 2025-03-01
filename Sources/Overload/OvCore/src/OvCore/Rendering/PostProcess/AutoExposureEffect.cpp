@@ -4,21 +4,36 @@
 * @licence: MIT
 */
 
-#include "OvCore/Rendering/PostProcess/AutoExposureEffect.h"
 #include <OvCore/Global/ServiceLocator.h>
+#include <OvCore/Rendering/PostProcess/AutoExposureEffect.h>
+#include <OvCore/Rendering/FramebufferUtil.h>
 #include <OvCore/ResourceManagement/ShaderManager.h>
 
 constexpr uint32_t kLuminanceBufferResolution = 1024;
 constexpr uint32_t kExposureBufferResolution = 1;
 
-OvCore::Rendering::PostProcess::AutoExposureEffect::AutoExposureEffect(OvRendering::Core::CompositeRenderer& p_renderer) :
-	AEffect(p_renderer),
-	m_exposurePingPongBuffer {
-		RenderFramebuffer(kExposureBufferResolution, kExposureBufferResolution),
-		RenderFramebuffer(kExposureBufferResolution, kExposureBufferResolution)
-	},
-	m_luminanceBuffer{ kLuminanceBufferResolution, kLuminanceBufferResolution, true }
+OvCore::Rendering::PostProcess::AutoExposureEffect::AutoExposureEffect(
+	OvRendering::Core::CompositeRenderer& p_renderer
+) :	AEffect(p_renderer)
 {
+	for (auto& buffer : m_exposurePingPongBuffer)
+	{
+		FramebufferUtil::SetupFramebuffer(
+			buffer,
+			kExposureBufferResolution,
+			kExposureBufferResolution,
+			false, false, false
+		);
+	}
+
+	FramebufferUtil::SetupFramebuffer(
+		m_luminanceBuffer,
+		kLuminanceBufferResolution,
+		kLuminanceBufferResolution,
+		false, false,
+		true // <-- use mipmaps
+	);
+
 	m_luminanceMaterial.SetShader(OVSERVICE(OvCore::ResourceManagement::ShaderManager)[":Shaders\\PostProcess\\Luminance.ovfx"]);
 	m_exposureMaterial.SetShader(OVSERVICE(OvCore::ResourceManagement::ShaderManager)[":Shaders\\PostProcess\\AutoExposure.ovfx"]);
 	m_compensationMaterial.SetShader(OVSERVICE(OvCore::ResourceManagement::ShaderManager)[":Shaders\\PostProcess\\ApplyExposure.ovfx"]);

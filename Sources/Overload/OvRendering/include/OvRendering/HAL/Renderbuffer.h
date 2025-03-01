@@ -15,8 +15,8 @@
 namespace OvRendering::HAL
 {
 #if defined(GRAPHICS_API_OPENGL)
-	using RenderBuffer = GLRenderbuffer;
+	using Renderbuffer = GLRenderbuffer;
 #else
-	using RenderBuffer = NoneRenderbuffer;
+	using Renderbuffer = NoneRenderbuffer;
 #endif // defined(GRAPHICS_API_OPENGL)
 }

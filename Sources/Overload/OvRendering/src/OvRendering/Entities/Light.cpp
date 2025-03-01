@@ -9,43 +9,39 @@
 
 namespace
 {
-	class ShadowFramebuffer : public OvRendering::HAL::Framebuffer
+	void SetupFramebufferForShadowMapping(
+		OvRendering::HAL::Framebuffer& p_framebuffer,
+		uint32_t p_resolution
+	)
 	{
-	public:
-		ShadowFramebuffer(uint32_t p_resolution)
-		{
-			using namespace OvRendering::HAL;
-			using namespace OvRendering::Settings;
+		using namespace OvRendering::HAL;
+		using namespace OvRendering::Settings;
 
-			m_context.width = std::max(static_cast<uint16_t>(1), m_context.width);
-			m_context.height = std::max(static_cast<uint16_t>(1), m_context.height);
+		std::shared_ptr<GLRenderbuffer> renderbuffer;
+		std::shared_ptr<GLTexture> renderTexture = std::make_shared<GLTexture>();
 
-			std::shared_ptr<GLRenderbuffer> renderbuffer;
-			std::shared_ptr<GLTexture> renderTexture = std::make_shared<GLTexture>();
+		TextureDesc renderTextureDesc{
+			.width = p_resolution,
+			.height = p_resolution,
+			.minFilter = ETextureFilteringMode::LINEAR,
+			.magFilter = ETextureFilteringMode::LINEAR,
+			.horizontalWrap = ETextureWrapMode::CLAMP_TO_BORDER,
+			.verticalWrap = ETextureWrapMode::CLAMP_TO_BORDER,
+			.internalFormat = EInternalFormat::DEPTH_COMPONENT,
+			.useMipMaps = false,
+			.mutableDesc = MutableTextureDesc{
+				.format = EFormat::DEPTH_COMPONENT,
+				.type = EPixelDataType::FLOAT
+			}
+		};
 
-			TextureDesc renderTextureDesc{
-				.width = m_context.width,
-				.height = m_context.height,
-				.minFilter = ETextureFilteringMode::LINEAR,
-				.magFilter = ETextureFilteringMode::LINEAR,
-				.horizontalWrap = ETextureWrapMode::CLAMP_TO_BORDER,
-				.verticalWrap = ETextureWrapMode::CLAMP_TO_BORDER,
-				.internalFormat = EInternalFormat::DEPTH_COMPONENT,
-				.useMipMaps = false,
-				.mutableDesc = MutableTextureDesc{
-					.format = EFormat::DEPTH_COMPONENT,
-					.type = EPixelDataType::FLOAT
-				}
-			};
-
-			renderTexture->Allocate(renderTextureDesc);
-			renderTexture->SetBorderColor(OvMaths::FVector4::One);
-			Attach<GLTexture>(renderTexture, EFramebufferAttachment::DEPTH);
-			Validate();
-			SetTargetDrawBuffer(std::nullopt);
-			SetTargetReadBuffer(std::nullopt);
-		}
-	};
+		renderTexture->Allocate(renderTextureDesc);
+		renderTexture->SetBorderColor(OvMaths::FVector4::One);
+		p_framebuffer.Attach<GLTexture>(renderTexture, EFramebufferAttachment::DEPTH);
+		p_framebuffer.Validate();
+		p_framebuffer.SetTargetDrawBuffer(std::nullopt);
+		p_framebuffer.SetTargetReadBuffer(std::nullopt);
+	}
 
 	uint32_t Pack(uint8_t c0, uint8_t c1, uint8_t c2, uint8_t c3)
 	{
@@ -64,7 +60,8 @@ void OvRendering::Entities::Light::UpdateShadowData(const OvRendering::Entities:
 	{
 		if (!shadowBuffer)
 		{
-			shadowBuffer = std::make_unique<ShadowFramebuffer>(static_cast<uint32_t>(shadowMapResolution));
+			shadowBuffer = std::make_unique<OvRendering::HAL::Framebuffer>();
+			SetupFramebufferForShadowMapping(*shadowBuffer, static_cast<uint32_t>(shadowMapResolution));
 		}
 		else
 		{

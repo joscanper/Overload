@@ -47,9 +47,7 @@ void OvRendering::HAL::GLRenderbuffer::Allocate(uint16_t p_width, uint16_t p_hei
 	m_context.height = p_height;
 	m_context.format = p_format;
 
-	Bind();
-	glRenderbufferStorage(GL_RENDERBUFFER, EnumToValue<GLenum>(m_context.format), m_context.width, m_context.height);
-	Unbind();
+	glNamedRenderbufferStorageEXT(m_context.id, EnumToValue<GLenum>(m_context.format), m_context.width, m_context.height);
 
 	m_context.allocated = true;
 }
@@ -64,13 +62,7 @@ template<>
 void OvRendering::HAL::GLRenderbuffer::Resize(uint16_t p_width, uint16_t p_height)
 {
 	OVASSERT(IsValid(), "Cannot resize a renderbuffer that has not been allocated");
-
-	m_context.width = p_width;
-	m_context.height = p_height;
-
-	Bind();
-	glRenderbufferStorage(GL_RENDERBUFFER, EnumToValue<GLenum>(m_context.format), m_context.width, m_context.height);
-	Unbind();
+	Allocate(p_width, p_height, m_context.format);
 }
 
 

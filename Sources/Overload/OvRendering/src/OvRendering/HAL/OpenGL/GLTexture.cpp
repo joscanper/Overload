@@ -49,12 +49,14 @@ void OvRendering::HAL::GLTexture::Allocate(const Settings::TextureDesc& p_desc)
 	desc.width = std::max(1u, desc.width);
 	desc.height = std::max(1u, desc.height);
 
-	Bind();
 
 	if (desc.mutableDesc.has_value())
 	{
 		const auto& mutableDesc = desc.mutableDesc.value();
 
+		// No DSA version for glTexImage2D (mutable texture),
+		// so we need to Bind/Unbind the texture.
+		Bind(); 
 		glTexImage2D(
 			GL_TEXTURE_2D,
 			0,
@@ -66,10 +68,12 @@ void OvRendering::HAL::GLTexture::Allocate(const Settings::TextureDesc& p_desc)
 			EnumToValue<GLenum>(mutableDesc.type),
 			mutableDesc.data
 		);
+		Unbind();
 	}
 	else
 	{
-		glTexStorage2D(
+		glTextureStorage2DEXT(
+			m_context.id,
 			GL_TEXTURE_2D,
 			desc.useMipMaps ? CalculateMipMapLevels(desc.width, desc.height) : 1,
 			EnumToValue<GLenum>(desc.internalFormat),
@@ -81,13 +85,11 @@ void OvRendering::HAL::GLTexture::Allocate(const Settings::TextureDesc& p_desc)
 	// Once the texture is allocated, we don't need to set the parameters again
 	if (!m_textureContext.allocated)
 	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, EnumToValue<GLenum>(p_desc.horizontalWrap));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, EnumToValue<GLenum>(p_desc.verticalWrap));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, EnumToValue<GLenum>(p_desc.minFilter));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, EnumToValue<GLenum>(p_desc.magFilter));
+		glTextureParameteriEXT(m_context.id, GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, EnumToValue<GLenum>(p_desc.horizontalWrap));
+		glTextureParameteriEXT(m_context.id, GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, EnumToValue<GLenum>(p_desc.verticalWrap));
+		glTextureParameteriEXT(m_context.id, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, EnumToValue<GLenum>(p_desc.minFilter));
+		glTextureParameteriEXT(m_context.id, GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, EnumToValue<GLenum>(p_desc.magFilter));
 	}
-
-	Unbind();
 
 	m_textureContext.allocated = true;
 }
@@ -111,8 +113,6 @@ void OvRendering::HAL::GLTexture::Upload(const void* p_data, Settings::EFormat p
 	OVASSERT(IsValid(), "Cannot upload data to a non-allocated texture");
 	OVASSERT(p_data, "Cannot upload texture data from a null pointer");
 
-	Bind();
-
 	if (IsMutable())
 	{
 		m_textureContext.desc.mutableDesc.value().data = p_data;
@@ -120,7 +120,8 @@ void OvRendering::HAL::GLTexture::Upload(const void* p_data, Settings::EFormat p
 	}
 	else
 	{
-		glTexSubImage2D(
+		glTextureSubImage2DEXT(
+			m_context.id,
 			GL_TEXTURE_2D,
 			0,
 			0,
@@ -132,8 +133,6 @@ void OvRendering::HAL::GLTexture::Upload(const void* p_data, Settings::EFormat p
 			p_data
 		);
 	}
-
-	Unbind();
 }
 
 template<>
@@ -166,18 +165,12 @@ void OvRendering::HAL::GLTexture::GenerateMipMaps() const
 	OVASSERT(IsValid(), "Cannot generate mipmaps for a non-allocated texture");
 	OVASSERT(m_textureContext.desc.useMipMaps, "Cannot generate mipmaps for a texture that doesn't use them");
 	OVASSERT(IsValidMipMapFilter(m_textureContext.desc.minFilter), "Cannot generate mipmaps with the current min filter");
-
-	Bind();
-	glGenerateMipmap(GL_TEXTURE_2D);
-	Unbind();
+	glGenerateTextureMipmapEXT(m_context.id, GL_TEXTURE_2D);
 }
 
 template<>
 void OvRendering::HAL::GLTexture::SetBorderColor(const OvMaths::FVector4& p_color)
 {
 	OVASSERT(IsValid(), "Cannot set border color of a non-allocated texture");
-
-	Bind();
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &p_color.x);
-	Unbind();
+	glTextureParameterfvEXT(m_context.id, GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &p_color.x);
 }

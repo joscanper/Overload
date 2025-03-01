@@ -43,6 +43,11 @@ namespace OvRendering::HAL
 	public:
 		using Attachment = TFramebufferAttachment<Backend, TextureContext, TextureHandleContext, RenderBufferContext>;
 
+		template<typename T>
+		static constexpr bool IsSupportedAttachmentType =
+			std::same_as<T, TTexture<Backend, TextureContext, TextureHandleContext>> ||
+			std::same_as<T, TRenderbuffer<Backend, RenderBufferContext>>;
+
 		/**
 		* Create the framebuffer
 		*/
@@ -76,12 +81,11 @@ namespace OvRendering::HAL
 		bool IsValid() const;
 
 		/**
-		* Defines a new size for the framebuffer
+		* Resize all attachments
 		* @param p_width
 		* @param p_height
-		* @param p_forceUpdate Force the resizing operation even if the width and height didn't change
 		*/
-		void Resize(uint16_t p_width, uint16_t p_height, bool p_forceUpdate = false);
+		void Resize(uint16_t p_width, uint16_t p_height);
 
 		/**
 		* Attach the given texture or render buffer to the framebuffer, at the given attachment point
@@ -90,7 +94,11 @@ namespace OvRendering::HAL
 		* @param p_index optional, useful when specifying multiple color attachments
 		*/
 		template<class T>
-		void Attach(std::shared_ptr<T> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index = 0);
+			requires IsSupportedAttachmentType<T>
+		void Attach(std::shared_ptr<T> p_toAttach,
+			Settings::EFramebufferAttachment p_attachment,
+			uint32_t p_index = 0
+		);
 
 		/**
 		* Return the texture or render buffer associated with the given attachment point
@@ -98,7 +106,11 @@ namespace OvRendering::HAL
 		* @param p_index optional, useful when specifying multiple color attachments
 		*/
 		template<class T>
-		OvTools::Utils::OptRef<T> GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index = 0) const;
+			requires IsSupportedAttachmentType<T>
+		OvTools::Utils::OptRef<T> GetAttachment(
+			OvRendering::Settings::EFramebufferAttachment p_attachment,
+			uint32_t p_index = 0
+		) const;
 
 		/**
 		* Selects which color attachment to draw to
@@ -118,14 +130,12 @@ namespace OvRendering::HAL
 		uint32_t GetID() const;
 
 		/**
-		* Returns the width of the framebuffer
+		* Returns the size of the given attachment
+		* @param p_attachment
 		*/
-		uint16_t GetWidth() const;
-
-		/**
-		* Returns the width of the framebuffer
-		*/
-		uint16_t GetHeight() const;
+		std::pair<uint16_t, uint16_t> GetSize(
+			Settings::EFramebufferAttachment p_attachment = Settings::EFramebufferAttachment::COLOR
+		) const;
 
 		/**
 		* Blit the framebuffer to the back buffer

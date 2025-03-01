@@ -4,13 +4,21 @@
 * @licence: MIT
 */
 
-#include <OvCore/Rendering/PostProcess/BloomEffect.h>
 #include <OvCore/Global/ServiceLocator.h>
+#include <OvCore/Rendering/FramebufferUtil.h>
+#include <OvCore/Rendering/PostProcess/BloomEffect.h>
 #include <OvCore/ResourceManagement/ShaderManager.h>
 
 OvCore::Rendering::PostProcess::BloomEffect::BloomEffect(OvRendering::Core::CompositeRenderer& p_renderer) :
 	AEffect(p_renderer)
 {
+	for (auto& buffer : m_bloomPingPong)
+	{
+		FramebufferUtil::SetupFramebuffer(
+			buffer, 1, 1, false, false, false
+		);
+	}
+
 	auto& shaderManager = OVSERVICE(OvCore::ResourceManagement::ShaderManager);
 
 	m_brightnessMaterial.SetShader(shaderManager[":Shaders\\PostProcess\\Brightness.ovfx"]);

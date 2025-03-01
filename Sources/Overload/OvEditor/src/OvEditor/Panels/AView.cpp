@@ -4,19 +4,26 @@
 * @licence: MIT
 */
 
-#include "OvEditor/Panels/AView.h"
-#include "OvEditor/Core/EditorActions.h"
-#include "OvEditor/Settings/EditorSettings.h"
+#include <OvCore/Rendering/FramebufferUtil.h>
+#include <OvEditor/Core/EditorActions.h>
+#include <OvEditor/Panels/AView.h>
+#include <OvEditor/Settings/EditorSettings.h>
 
 OvEditor::Panels::AView::AView
 (
 	const std::string& p_title,
 	bool p_opened,
 	const OvUI::Settings::PanelWindowSettings& p_windowSettings
-) : PanelWindow(p_title, p_opened, p_windowSettings),
-	m_fbo{ static_cast<uint16_t>(GetSize().x), static_cast<uint16_t>(GetSize().y) }
+) : PanelWindow(p_title, p_opened, p_windowSettings)
 {
-	const auto tex = m_fbo.GetAttachment<OvRendering::HAL::Texture>(OvRendering::Settings::EFramebufferAttachment::COLOR);
+	OvCore::Rendering::FramebufferUtil::SetupFramebuffer(
+		m_framebuffer,
+		static_cast<uint32_t>(GetSize().x),
+		static_cast<uint32_t>(GetSize().y),
+		true, true, false
+	);
+
+	const auto tex = m_framebuffer.GetAttachment<OvRendering::HAL::Texture>(OvRendering::Settings::EFramebufferAttachment::COLOR);
 	m_image = &CreateWidget<OvUI::Widgets::Visual::Image>(tex->GetID(), OvMaths::FVector2{0.f, 0.f});
 	scrollable = false;
 }
@@ -49,7 +56,7 @@ void OvEditor::Panels::AView::Render()
 
 	if (winWidth > 0 && winHeight > 0 && camera && scene)
 	{
-		m_fbo.Resize(winWidth, winHeight);
+		m_framebuffer.Resize(winWidth, winHeight);
 
 		InitFrame();
 
@@ -57,7 +64,7 @@ void OvEditor::Panels::AView::Render()
 		frameDescriptor.renderWidth = winWidth;
 		frameDescriptor.renderHeight = winHeight;
 		frameDescriptor.camera = camera;
-		frameDescriptor.outputBuffer = m_fbo;
+		frameDescriptor.outputBuffer = m_framebuffer;
 
 		m_renderer->BeginFrame(frameDescriptor);
 		DrawFrame();

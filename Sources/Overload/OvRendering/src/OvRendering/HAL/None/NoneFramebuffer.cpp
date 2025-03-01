@@ -70,11 +70,9 @@ OvTools::Utils::OptRef<OvRendering::HAL::NoneRenderbuffer> OvRendering::HAL::Non
 }
 
 template<>
-void OvRendering::HAL::NoneFramebuffer::Resize(uint16_t p_width, uint16_t p_height, bool p_forceUpdate)
+void OvRendering::HAL::NoneFramebuffer::Resize(uint16_t p_width, uint16_t p_height)
 {
 	OVASSERT(IsValid(), "Invalid framebuffer");
-	m_context.width = p_width;
-	m_context.height = p_height;
 }
 
 template<>
@@ -96,17 +94,9 @@ uint32_t OvRendering::HAL::NoneFramebuffer::GetID() const
 }
 
 template<>
-uint16_t OvRendering::HAL::NoneFramebuffer::GetWidth() const
+std::pair<uint16_t, uint16_t> OvRendering::HAL::NoneFramebuffer::GetSize(Settings::EFramebufferAttachment p_attachment) const
 {
-	OVASSERT(IsValid(), "Invalid framebuffer");
-	return m_context.width;
-}
-
-template<>
-uint16_t OvRendering::HAL::NoneFramebuffer::GetHeight() const
-{
-	OVASSERT(IsValid(), "Invalid framebuffer");
-	return m_context.height;
+	return { {}, {} }; // <-- I swear it's not an emoji
 }
 
 template<>

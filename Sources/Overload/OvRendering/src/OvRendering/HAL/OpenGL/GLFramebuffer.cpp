@@ -14,18 +14,26 @@
 
 template<>
 template<>
-void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLRenderbuffer> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index)
+void OvRendering::HAL::GLFramebuffer::Attach(
+	std::shared_ptr<GLRenderbuffer> p_toAttach,
+	Settings::EFramebufferAttachment p_attachment,
+	uint32_t p_index
+)
 {
 	OVASSERT(p_toAttach != nullptr, "Cannot attach a null renderbuffer");
 
 	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
-	glNamedFramebufferRenderbuffer(m_context.id, attachmentIndex, GL_RENDERBUFFER, p_toAttach->GetID());
+	glNamedFramebufferRenderbufferEXT(m_context.id, attachmentIndex, GL_RENDERBUFFER, p_toAttach->GetID());
 	m_context.attachments[attachmentIndex] = p_toAttach;
 }
 
 template<>
 template<>
-void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLTexture> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index)
+void OvRendering::HAL::GLFramebuffer::Attach(
+	std::shared_ptr<GLTexture> p_toAttach,
+	Settings::EFramebufferAttachment p_attachment,
+	uint32_t p_index
+)
 {
 	OVASSERT(p_toAttach != nullptr, "Cannot attach a null texture");
 
@@ -79,7 +87,10 @@ bool OvRendering::HAL::GLFramebuffer::IsValid() const
 
 template<>
 template<>
-OvTools::Utils::OptRef<OvRendering::HAL::GLTexture> OvRendering::HAL::GLFramebuffer::GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index) const
+OvTools::Utils::OptRef<OvRendering::HAL::GLTexture> OvRendering::HAL::GLFramebuffer::GetAttachment(
+	OvRendering::Settings::EFramebufferAttachment p_attachment,
+	uint32_t p_index
+) const
 {
 	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
 
@@ -98,7 +109,10 @@ OvTools::Utils::OptRef<OvRendering::HAL::GLTexture> OvRendering::HAL::GLFramebuf
 
 template<>
 template<>
-OvTools::Utils::OptRef<OvRendering::HAL::GLRenderbuffer> OvRendering::HAL::GLFramebuffer::GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index) const
+OvTools::Utils::OptRef<OvRendering::HAL::GLRenderbuffer> OvRendering::HAL::GLFramebuffer::GetAttachment(
+	OvRendering::Settings::EFramebufferAttachment p_attachment,
+	uint32_t p_index
+) const
 {
 	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
 
@@ -116,25 +130,19 @@ OvTools::Utils::OptRef<OvRendering::HAL::GLRenderbuffer> OvRendering::HAL::GLFra
 }
 
 template<>
-void OvRendering::HAL::GLFramebuffer::Resize(uint16_t p_width, uint16_t p_height, bool p_forceUpdate)
+void OvRendering::HAL::GLFramebuffer::Resize(uint16_t p_width, uint16_t p_height)
 {
 	OVASSERT(IsValid(), "Cannot resize an invalid framebuffer");
 
-	if (p_forceUpdate || p_width != m_context.width || p_height != m_context.height)
+	for (auto& attachment : m_context.attachments)
 	{
-		m_context.width = p_width;
-		m_context.height = p_height;
-
-		for (auto& attachment : m_context.attachments)
+		if (const auto pval = std::get_if<std::shared_ptr<GLTexture>>(&attachment.second); pval && *pval)
 		{
-			if (const auto pval = std::get_if<std::shared_ptr<GLTexture>>(&attachment.second); pval && *pval)
-			{
-				(*pval)->Resize(m_context.width, m_context.height);
-			}
-			else if (const auto* pval = std::get_if<std::shared_ptr<GLRenderbuffer>>(&attachment.second); pval && *pval)
-			{
-				(*pval)->Resize(m_context.width, m_context.height);
-			}
+			(*pval)->Resize(p_width, p_height);
+		}
+		else if (const auto* pval = std::get_if<std::shared_ptr<GLRenderbuffer>>(&attachment.second); pval && *pval)
+		{
+			(*pval)->Resize(p_width, p_height);
 		}
 	}
 }
@@ -176,17 +184,31 @@ uint32_t OvRendering::HAL::GLFramebuffer::GetID() const
 }
 
 template<>
-uint16_t OvRendering::HAL::GLFramebuffer::GetWidth() const
+std::pair<uint16_t, uint16_t> OvRendering::HAL::GLFramebuffer::GetSize(
+	Settings::EFramebufferAttachment p_attachment
+) const
 {
 	OVASSERT(IsValid(), "Cannot get width of an invalid framebuffer");
-	return m_context.width;
-}
 
-template<>
-uint16_t OvRendering::HAL::GLFramebuffer::GetHeight() const
-{
-	OVASSERT(IsValid(), "Cannot get height of an invalid framebuffer");
-	return m_context.height;
+	for (auto& attachment : m_context.attachments)
+	{
+		if (const auto pval = std::get_if<std::shared_ptr<GLTexture>>(&attachment.second); pval && *pval)
+		{
+			return {
+				(*pval)->GetDesc().width,
+				(*pval)->GetDesc().height
+			};
+		}
+		else if (const auto* pval = std::get_if<std::shared_ptr<GLRenderbuffer>>(&attachment.second); pval && *pval)
+		{
+			return {
+				(*pval)->GetWidth(),
+				(*pval)->GetHeight()
+			};
+		}
+	}
+
+	return { {}, {} }; // <-- not an emoji
 }
 
 template<>
@@ -194,9 +216,11 @@ void OvRendering::HAL::GLFramebuffer::BlitToBackBuffer(uint16_t p_backBufferWidt
 {
 	OVASSERT(IsValid(), "Cannot blit an invalid framebuffer");
 
+	auto [width, height] = GetSize(Settings::EFramebufferAttachment::COLOR);
+
 	glBlitNamedFramebuffer(
 		m_context.id, 0,
-		0, 0, m_context.width, m_context.height,
+		0, 0, width, height,
 		0, 0, p_backBufferWidth, p_backBufferHeight,
 		GL_COLOR_BUFFER_BIT, GL_LINEAR
 	);

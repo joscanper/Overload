@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <OvCore/Rendering/RenderFramebuffer.h>
 #include <OvCore/Rendering/SceneRenderer.h>
 #include <OvRendering/HAL/UniformBuffer.h>
 #include <OvRendering/Entities/Camera.h>
@@ -90,7 +89,7 @@ namespace OvEditor::Panels
 
 		OvMaths::FVector3 m_gridColor = OvMaths::FVector3 { 0.176f, 0.176f, 0.176f };
 
-		OvCore::Rendering::RenderFramebuffer m_fbo;
+		OvRendering::HAL::Framebuffer m_framebuffer;
 		std::unique_ptr<OvCore::Rendering::SceneRenderer> m_renderer;
 	};
 }

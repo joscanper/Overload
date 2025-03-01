@@ -9,11 +9,13 @@
 #include <chrono>
 
 #include <OvCore/Rendering/PostProcess/AEffect.h>
-#include <OvCore/Rendering/RenderFramebuffer.h>
 #include <OvRendering/Data/Material.h>
 
 namespace OvCore::Rendering::PostProcess
 {
+	/**
+	* Settings for the AutoExposure effect
+	*/
 	struct AutoExposureSettings : public EffectSettings
 	{
 		float centerWeightBias = 0.5f;
@@ -54,8 +56,8 @@ namespace OvCore::Rendering::PostProcess
 
 	private:
 		std::optional<std::chrono::high_resolution_clock::time_point> m_previousTime;
-		RenderFramebuffer m_luminanceBuffer;
-		std::array<RenderFramebuffer, 2> m_exposurePingPongBuffer;
+		OvRendering::HAL::Framebuffer m_luminanceBuffer;
+		std::array<OvRendering::HAL::Framebuffer, 2> m_exposurePingPongBuffer;
 		uint8_t m_exposurePingPongIndex = 0;
 		OvRendering::Data::Material m_luminanceMaterial;
 		OvRendering::Data::Material m_exposureMaterial;

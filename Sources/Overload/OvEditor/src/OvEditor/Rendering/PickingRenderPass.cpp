@@ -4,18 +4,23 @@
 * @licence: MIT
 */
 
-#include "OvEditor/Rendering/DebugModelRenderFeature.h"
-#include "OvEditor/Rendering/PickingRenderPass.h"
-#include "OvEditor/Core/EditorActions.h"
-#include "OvEditor/Settings/EditorSettings.h"
-#include "OvEditor/Rendering/DebugSceneRenderer.h"
+#include <OvEditor/Core/EditorActions.h>
+#include <OvEditor/Rendering/DebugModelRenderFeature.h>
+#include <OvEditor/Rendering/PickingRenderPass.h>
+#include <OvEditor/Rendering/DebugSceneRenderer.h>
+#include <OvEditor/Settings/EditorSettings.h>
 
 #include <OvCore/ECS/Components/CMaterialRenderer.h>
 #include <OvCore/Rendering/EngineDrawableDescriptor.h>
+#include <OvCore/Rendering/FramebufferUtil.h>
 
 OvEditor::Rendering::PickingRenderPass::PickingRenderPass(OvRendering::Core::CompositeRenderer& p_renderer) :
 	OvRendering::Core::ARenderPass(p_renderer)
 {
+	OvCore::Rendering::FramebufferUtil::SetupFramebuffer(
+		m_actorPickingFramebuffer, 1, 1, true, false, false
+	);
+
 	/* Light Material */
 	m_lightMaterial.SetShader(EDITOR_CONTEXT(editorResources)->GetShader("Billboard"));
 	m_lightMaterial.SetDepthTest(true);

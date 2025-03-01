@@ -13,6 +13,9 @@
 
 namespace OvCore::Rendering::PostProcess
 {
+	/**
+	* Enum of available tonemapping modes
+	*/
 	enum class ETonemappingMode
 	{
 		NEUTRAL = 0,
@@ -23,6 +26,9 @@ namespace OvCore::Rendering::PostProcess
 		ACES = 5
 	};
 
+	/**
+	* Tonemapping effect settings
+	*/
 	struct TonemappingSettings : public EffectSettings
 	{
 		float exposure = 1.0f;

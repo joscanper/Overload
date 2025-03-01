@@ -126,9 +126,11 @@ void OvRendering::Core::ABaseRenderer::Blit(
 {
 	OVASSERT(m_unitQuad != nullptr, "Invalid unit quad mesh, cannot blit!");
 
+	auto [srcWidth, srcHeight] = p_src.GetSize();
+
 	if (OvRendering::Settings::IsFlagSet(OvRendering::Settings::EBlitFlags::RESIZE_DST_TO_MATCH_SRC, p_flags))
 	{
-		p_dst.Resize(p_src.GetWidth(), p_src.GetHeight());
+		p_dst.Resize(srcWidth, srcHeight);
 	}
 
 	if (OvRendering::Settings::IsFlagSet(OvRendering::Settings::EBlitFlags::FILL_INPUT_TEXTURE, p_flags))
@@ -160,7 +162,7 @@ void OvRendering::Core::ABaseRenderer::Blit(
 
 	if (OvRendering::Settings::IsFlagSet(OvRendering::Settings::EBlitFlags::UPDATE_VIEWPORT_SIZE, p_flags))
 	{
-		SetViewport(0, 0, p_dst.GetWidth(), p_dst.GetHeight());
+		SetViewport(0, 0, srcWidth, srcHeight);
 	}
 
 	DrawEntity(p_pso, blit);
