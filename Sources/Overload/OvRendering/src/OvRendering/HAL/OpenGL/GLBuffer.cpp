@@ -25,11 +25,11 @@ OvRendering::HAL::GLBuffer::~TBuffer()
 }
 
 template<>
-void OvRendering::HAL::GLBuffer::Allocate(uint64_t p_size, Settings::EAccessSpecifier p_usage)
+uint64_t OvRendering::HAL::GLBuffer::Allocate(uint64_t p_size, Settings::EAccessSpecifier p_usage)
 {
 	OVASSERT(IsValid(), "Cannot allocate memory for an invalid buffer");
 	glNamedBufferDataEXT(m_buffer.id, p_size, nullptr, EnumToValue<GLenum>(p_usage));
-	m_buffer.allocatedBytes = p_size;
+	return m_buffer.allocatedBytes = p_size;
 }
 
 template<>

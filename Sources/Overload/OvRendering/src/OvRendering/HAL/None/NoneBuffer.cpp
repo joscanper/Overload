@@ -18,9 +18,9 @@ OvRendering::HAL::NoneBuffer::~TBuffer()
 }
 
 template<>
-void OvRendering::HAL::NoneBuffer::Allocate(size_t p_size, Settings::EAccessSpecifier p_usage)
+uint64_t OvRendering::HAL::NoneBuffer::Allocate(size_t p_size, Settings::EAccessSpecifier p_usage)
 {
-	m_buffer.allocatedBytes = p_size;
+	return m_buffer.allocatedBytes = p_size;
 }
 
 template<>

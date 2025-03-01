@@ -45,8 +45,9 @@ namespace OvRendering::HAL
 		* Allocate memory for the buffer
 		* @param p_size
 		* @param p_usage
+		* @return The size of the allocated memory in bytes
 		*/
-		void Allocate(uint64_t p_size, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW);
+		uint64_t Allocate(uint64_t p_size, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW);
 
 		/**
 		* Upload data to the buffer

@@ -4,10 +4,10 @@
 * @licence: MIT
 */
 
-#include <algorithm>
 #include <array>
 
-#include "OvRendering/Resources/Mesh.h"
+#include <OvDebug/Logger.h>
+#include <OvRendering/Resources/Mesh.h>
 
 OvRendering::Resources::Mesh::Mesh(
 	std::span<const Geometry::Vertex> p_vertices,
@@ -54,19 +54,31 @@ const OvRendering::Geometry::BoundingSphere& OvRendering::Resources::Mesh::GetBo
 
 void OvRendering::Resources::Mesh::Upload(std::span<const Geometry::Vertex> p_vertices, std::span<const uint32_t> p_indices)
 {
-	m_vertexBuffer.Allocate(p_vertices.size_bytes());
-	m_indexBuffer.Allocate(p_indices.size_bytes());
+	if (m_vertexBuffer.Allocate(p_vertices.size_bytes()))
+	{
+		m_vertexBuffer.Upload(p_vertices.data());
 
-	m_vertexBuffer.Upload(p_vertices.data());
-	m_indexBuffer.Upload(p_indices.data());
+		if (m_indexBuffer.Allocate(p_indices.size_bytes()))
+		{
+			m_indexBuffer.Upload(p_indices.data());
 
-	m_vertexArray.SetLayout(std::to_array<Settings::VertexAttribute>({
-		{ Settings::EDataType::FLOAT, 3 }, // position
-		{ Settings::EDataType::FLOAT, 2 }, // texCoords
-		{ Settings::EDataType::FLOAT, 3 }, // normal
-		{ Settings::EDataType::FLOAT, 3 }, // tangent
-		{ Settings::EDataType::FLOAT, 3 }  // bitangent
-	}), m_vertexBuffer, m_indexBuffer);
+			m_vertexArray.SetLayout(std::to_array<Settings::VertexAttribute>({
+				{ Settings::EDataType::FLOAT, 3 }, // position
+				{ Settings::EDataType::FLOAT, 2 }, // texCoords
+				{ Settings::EDataType::FLOAT, 3 }, // normal
+				{ Settings::EDataType::FLOAT, 3 }, // tangent
+				{ Settings::EDataType::FLOAT, 3 }  // bitangent
+			}), m_vertexBuffer, m_indexBuffer);
+		}
+		else
+		{
+			OVLOG_WARNING("Empty index buffer!");
+		}
+	}
+	else
+	{
+		OVLOG_WARNING("Empty vertex buffer!");
+	}
 }
 
 void OvRendering::Resources::Mesh::ComputeBoundingSphere(std::span<const Geometry::Vertex> p_vertices)
