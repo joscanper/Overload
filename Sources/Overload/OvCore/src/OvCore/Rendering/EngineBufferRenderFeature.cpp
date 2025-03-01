@@ -9,20 +9,23 @@
 #include "OvCore/Rendering/EngineBufferRenderFeature.h"
 #include "OvCore/Rendering/EngineDrawableDescriptor.h"
 
+namespace
+{
+	constexpr size_t kUBOSize =
+		sizeof(OvMaths::FMatrix4) +	// Model matrix
+		sizeof(OvMaths::FMatrix4) +	// View matrix
+		sizeof(OvMaths::FMatrix4) +	// Projection matrix
+		sizeof(OvMaths::FVector3) +	// Camera position
+		sizeof(float) +				// Elapsed time
+		sizeof(OvMaths::FMatrix4);	// User matrix
+}
+
 OvCore::Rendering::EngineBufferRenderFeature::EngineBufferRenderFeature(OvRendering::Core::CompositeRenderer& p_renderer)
 	: ARenderFeature(p_renderer)
 {
-	m_engineBuffer = std::make_unique<OvRendering::HAL::UniformBuffer>(
-		/* UBO Data Layout */
-		sizeof(OvMaths::FMatrix4) +
-		sizeof(OvMaths::FMatrix4) +
-		sizeof(OvMaths::FMatrix4) +
-		sizeof(OvMaths::FVector3) +
-		sizeof(float) +
-		sizeof(OvMaths::FMatrix4),
-		0, 0,
-		OvRendering::Settings::EAccessSpecifier::STREAM_DRAW
-	);
+	m_engineBuffer = std::make_unique<OvRendering::HAL::UniformBuffer>();
+
+	m_engineBuffer->Allocate(kUBOSize, OvRendering::Settings::EAccessSpecifier::STREAM_DRAW);
 
 	m_startTime = std::chrono::high_resolution_clock::now();
 }
@@ -47,8 +50,11 @@ void OvCore::Rendering::EngineBufferRenderFeature::OnBeginFrame(const OvRenderin
 		.elapsedTime = elapsedTime.count()
 	};
 
-	constexpr size_t offset = sizeof(OvMaths::FMatrix4); // Skip uploading the first matrix (Model matrix)
-	m_engineBuffer->Upload(&uboDataPage, sizeof(uboDataPage), offset);
+	m_engineBuffer->Upload(&uboDataPage, OvRendering::HAL::BufferMemoryRange{
+		.offset = sizeof(OvMaths::FMatrix4), // Skip uploading the first matrix (Model matrix)
+		.size = sizeof(uboDataPage)
+	});
+
 	m_engineBuffer->Bind(0);
 }
 
@@ -64,18 +70,17 @@ void OvCore::Rendering::EngineBufferRenderFeature::OnBeforeDraw(OvRendering::Dat
 	if (p_drawable.TryGetDescriptor<EngineDrawableDescriptor>(descriptor))
 	{
 		const auto modelMatrix = OvMaths::FMatrix4::Transpose(descriptor->modelMatrix);
-		m_engineBuffer->Upload(&modelMatrix, sizeof(modelMatrix), 0);
-		m_engineBuffer->Upload
-		(
-			&descriptor->userMatrix,
-			sizeof(OvMaths::FMatrix4),
 
-			// UBO layout offset
-			sizeof(OvMaths::FMatrix4) +
-			sizeof(OvMaths::FMatrix4) +
-			sizeof(OvMaths::FMatrix4) +
-			sizeof(OvMaths::FVector3) +
-			sizeof(float)
-		);
+		// Upload model matrix (First matrix in the UBO)
+		m_engineBuffer->Upload(&modelMatrix, OvRendering::HAL::BufferMemoryRange{
+			.offset = 0,
+			.size = sizeof(modelMatrix)
+		});
+
+		// Upload user matrix (Last matrix in the UBO)
+		m_engineBuffer->Upload(&descriptor->userMatrix, OvRendering::HAL::BufferMemoryRange{
+			.offset = kUBOSize - sizeof(modelMatrix),
+			.size = sizeof(modelMatrix)
+		});
 	}
 }

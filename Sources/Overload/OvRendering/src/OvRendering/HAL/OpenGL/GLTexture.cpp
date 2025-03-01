@@ -40,8 +40,6 @@ OvRendering::HAL::GLTexture::~TTexture()
 	glDeleteTextures(1, &m_context.id);
 }
 
-#include <iostream>
-
 template<>
 void OvRendering::HAL::GLTexture::Allocate(const Settings::TextureDesc& p_desc)
 {

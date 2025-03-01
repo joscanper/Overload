@@ -7,13 +7,10 @@
 #pragma once
 
 #include <OvRendering/HAL/Common/TIndexBuffer.h>
+#include <OvRendering/HAL/OpenGL/GLBuffer.h>
 
 namespace OvRendering::HAL
 {
-	struct GLIndexBufferContext
-	{
-		uint32_t id = 0;
-	};
-
-	using GLIndexBuffer = TIndexBuffer<Settings::EGraphicsBackend::OPENGL, GLIndexBufferContext>;
+	struct GLIndexBufferContext {};
+	using GLIndexBuffer = TIndexBuffer<Settings::EGraphicsBackend::OPENGL, GLIndexBufferContext, GLBufferContext>;
 }

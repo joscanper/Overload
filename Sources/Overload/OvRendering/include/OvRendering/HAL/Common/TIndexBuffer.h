@@ -6,18 +6,15 @@
 
 #pragma once
 
-#include <span>
-
-#include <OvRendering/Settings/EGraphicsBackend.h>
-#include <OvRendering/Settings/EAccessSpecifier.h>
+#include <OvRendering/HAL/Common/TBuffer.h>
 
 namespace OvRendering::HAL
 {
 	/**
 	* Represents an index buffer, used to store index data on the GPU
 	*/
-	template<Settings::EGraphicsBackend Backend, class Context>
-	class TIndexBuffer final
+	template<Settings::EGraphicsBackend Backend, class IndexBufferContext, class BufferContext>
+	class TIndexBuffer : public TBuffer<Backend, BufferContext>
 	{
 	public:
 		/**
@@ -25,35 +22,7 @@ namespace OvRendering::HAL
 		*/
 		TIndexBuffer();
 
-		/**
-		* Destructor
-		*/
-		~TIndexBuffer();
-
-		/**
-		* Bind the buffer
-		*/
-		void Bind() const;
-
-		/**
-		* Unbind the buffer
-		*/
-		void Unbind() const;
-
-		/**
-		* Upload data index data to the GPU
-		* @param p_data pointer to the first element of the data
-		* @param p_size in bytes
-		* @param p_usage
-		*/
-		void Upload(const void* p_data, size_t p_size, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW) const;
-
-		/**
-		* Returns the ID of the IBO
-		*/
-		uint32_t GetID() const;
-
 	private:
-		Context m_context;
+		IndexBufferContext m_context;
 	};
 }

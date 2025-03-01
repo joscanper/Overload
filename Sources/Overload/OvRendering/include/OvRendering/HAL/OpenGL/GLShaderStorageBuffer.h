@@ -7,6 +7,7 @@
 #pragma once
 
 #include <OvRendering/HAL/Common/TShaderStorageBuffer.h>
+#include <OvRendering/HAL/OpenGL/GLBuffer.h>
 
 namespace OvRendering::HAL
 {
@@ -15,5 +16,5 @@ namespace OvRendering::HAL
 		uint32_t id = 0;
 	};
 
-	using GLShaderStorageBuffer = TShaderStorageBuffer<Settings::EGraphicsBackend::OPENGL, GLShaderStorageBufferContext>;
+	using GLShaderStorageBuffer = TShaderStorageBuffer<Settings::EGraphicsBackend::OPENGL, GLShaderStorageBufferContext, GLBufferContext>;
 }

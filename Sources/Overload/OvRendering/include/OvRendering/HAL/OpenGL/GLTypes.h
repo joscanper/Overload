@@ -25,6 +25,7 @@
 #include <OvRendering/Settings/EShaderType.h>
 #include <OvRendering/Settings/EUniformType.h>
 #include <OvRendering/Settings/EFramebufferAttachment.h>
+#include <OvRendering/Settings/EBufferType.h>
 #include <OvTools/Utils/EnumMapper.h>
 
 namespace OvRendering::HAL
@@ -207,7 +208,7 @@ template <>
 struct OvTools::Utils::MappingFor<OvRendering::Settings::EPixelDataType, GLenum>
 {
 	using EnumType = OvRendering::Settings::EPixelDataType;
-	using type = std::tuple <
+	using type = std::tuple<
 		EnumValuePair<EnumType::BYTE, GL_BYTE>,
 		EnumValuePair<EnumType::UNSIGNED_BYTE, GL_UNSIGNED_BYTE>,
 		EnumValuePair<EnumType::BITMAP, GL_BITMAP>,
@@ -228,7 +229,7 @@ struct OvTools::Utils::MappingFor<OvRendering::Settings::EPixelDataType, GLenum>
 		EnumValuePair<EnumType::UNSIGNED_INT_8_8_8_8_REV, GL_UNSIGNED_INT_8_8_8_8_REV>,
 		EnumValuePair<EnumType::UNSIGNED_INT_10_10_10_2, GL_UNSIGNED_INT_10_10_10_2>,
 		EnumValuePair<EnumType::UNSIGNED_INT_2_10_10_10_REV, GL_UNSIGNED_INT_2_10_10_10_REV>
-	> ;
+	>;
 };
 
 template <>
@@ -286,7 +287,7 @@ template <>
 struct OvTools::Utils::MappingFor<OvRendering::Settings::EInternalFormat, GLenum>
 {
 	using EnumType = OvRendering::Settings::EInternalFormat;
-	using type = std::tuple <
+	using type = std::tuple<
 		EnumValuePair<EnumType::DEPTH_COMPONENT, GL_DEPTH_COMPONENT>,
 		EnumValuePair<EnumType::DEPTH_STENCIL, GL_DEPTH_STENCIL>,
 		EnumValuePair<EnumType::RED, GL_RED>,
@@ -368,27 +369,39 @@ struct OvTools::Utils::MappingFor<OvRendering::Settings::EInternalFormat, GLenum
 		EnumValuePair<EnumType::COMPRESSED_SRGB_ALPHA_BPTC_UNORM, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM>,
 		EnumValuePair<EnumType::COMPRESSED_RGB_BPTC_SIGNED_FLOAT, GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT>,
 		EnumValuePair<EnumType::COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT>
-	> ;
+	>;
 };
 
 template <>
 struct OvTools::Utils::MappingFor<OvRendering::Settings::EShaderType, GLenum>
 {
 	using EnumType = OvRendering::Settings::EShaderType;
-	using type = std::tuple <
+	using type = std::tuple<
 		EnumValuePair<EnumType::VERTEX, GL_VERTEX_SHADER>,
 		EnumValuePair<EnumType::FRAGMENT, GL_FRAGMENT_SHADER>
-	> ;
+	>;
 };
 
 template <>
 struct OvTools::Utils::MappingFor<OvRendering::Settings::EFramebufferAttachment, GLenum>
 {
 	using EnumType = OvRendering::Settings::EFramebufferAttachment;
-	using type = std::tuple <
+	using type = std::tuple<
 		EnumValuePair<EnumType::COLOR, GL_COLOR_ATTACHMENT0>,
 		EnumValuePair<EnumType::DEPTH, GL_DEPTH_ATTACHMENT>,
 		EnumValuePair<EnumType::STENCIL, GL_STENCIL_ATTACHMENT>,
 		EnumValuePair<EnumType::DEPTH_STENCIL, GL_DEPTH_STENCIL_ATTACHMENT>
 	> ;
+};
+
+template <>
+struct OvTools::Utils::MappingFor<OvRendering::Settings::EBufferType, GLenum>
+{
+	using EnumType = OvRendering::Settings::EBufferType;
+	using type = std::tuple<
+		EnumValuePair<EnumType::VERTEX, GL_ARRAY_BUFFER>,
+		EnumValuePair<EnumType::INDEX, GL_ELEMENT_ARRAY_BUFFER>,
+		EnumValuePair<EnumType::UNIFORM, GL_UNIFORM_BUFFER>,
+		EnumValuePair<EnumType::SHADER_STORAGE, GL_SHADER_STORAGE_BUFFER>
+	>;
 };

@@ -7,71 +7,8 @@
 #include <GL/glew.h>
 
 #include <OvRendering/HAL/OpenGL/GLUniformBuffer.h>
-#include <OvRendering/HAL/OpenGL/GLTypes.h>
-#include <OvRendering/Resources/Shader.h>
 
 template<>
-OvRendering::HAL::GLUniformBuffer::TUniformBuffer(
-	size_t p_size,
-	uint32_t p_bindingPoint,
-	uint32_t p_offset,
-	OvRendering::Settings::EAccessSpecifier p_accessSpecifier
-) : m_context{ .bindingPoint = p_bindingPoint }
+OvRendering::HAL::GLUniformBuffer::TUniformBuffer() : GLBuffer(Settings::EBufferType::UNIFORM)
 {
-	glGenBuffers(1, &m_context.id);
-	glBindBuffer(GL_UNIFORM_BUFFER, m_context.id);
-	glBufferData(GL_UNIFORM_BUFFER, p_size, nullptr, EnumToValue<GLenum>(p_accessSpecifier));
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-}
-
-template<>
-OvRendering::HAL::GLUniformBuffer::~TUniformBuffer()
-{
-	glDeleteBuffers(1, &m_context.id);
-}
-
-template<>
-void OvRendering::HAL::GLUniformBuffer::Bind(uint32_t p_bindingPoint)
-{
-	glBindBufferBase(GL_UNIFORM_BUFFER, p_bindingPoint, m_context.id);
-}
-
-template<>
-void OvRendering::HAL::GLUniformBuffer::Unbind()
-{
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-}
-
-template<>
-size_t OvRendering::HAL::GLUniformBuffer::Upload(const void* p_data, size_t p_size, size_t p_offset)
-{
-	// TODO: Maybe we could find a way to set sub data without having to use bind/unbind, would be more efficient
-	glBindBuffer(GL_UNIFORM_BUFFER, m_context.id);
-	glBufferSubData(GL_UNIFORM_BUFFER, p_offset, p_size, p_data);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	return p_offset + p_size;
-}
-
-template<>
-GLuint OvRendering::HAL::GLUniformBuffer::GetID() const
-{
-	return m_context.id;
-}
-
-template<>
-void OvRendering::HAL::GLUniformBuffer::BindBlockToShader(OvRendering::Resources::Shader& p_shader, uint32_t p_uniformBlockLocation, uint32_t p_bindingPoint)
-{
-	glUniformBlockBinding(p_shader.GetProgram().GetID(), p_uniformBlockLocation, p_bindingPoint);
-}
-
-template<>
-void OvRendering::HAL::GLUniformBuffer::BindBlockToShader(OvRendering::Resources::Shader& p_shader, const std::string& p_name, uint32_t p_bindingPoint)
-{
-	glUniformBlockBinding(p_shader.GetProgram().GetID(), GetBlockLocation(p_shader, p_name), p_bindingPoint);
-}
-
-template<>
-uint32_t OvRendering::HAL::GLUniformBuffer::GetBlockLocation(OvRendering::Resources::Shader& p_shader, const std::string& p_name)
-{
-	return glGetUniformBlockIndex(p_shader.GetProgram().GetID(), p_name.c_str());
 }

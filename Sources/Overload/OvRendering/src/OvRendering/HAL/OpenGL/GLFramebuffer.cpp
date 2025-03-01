@@ -12,23 +12,6 @@
 #include <OvRendering/HAL/OpenGL/GLRenderbuffer.h>
 #include <OvRendering/HAL/OpenGL/GLTypes.h>
 
-namespace
-{
-	std::optional<bool> __IS_USING_NVIDIA_DRIVERS = std::nullopt;
-
-	bool IsUsingNvidiaDrivers()
-	{
-		// Cache the result for future calls
-		if (!__IS_USING_NVIDIA_DRIVERS.has_value())
-		{
-			const auto vendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
-			__IS_USING_NVIDIA_DRIVERS = std::string(vendor).find("NVIDIA") != std::string::npos;
-		}
-
-		return __IS_USING_NVIDIA_DRIVERS.value();
-	}
-}
-
 template<>
 template<>
 void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLRenderbuffer> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index)
@@ -46,19 +29,8 @@ void OvRendering::HAL::GLFramebuffer::Attach(std::shared_ptr<GLTexture> p_toAtta
 {
 	OVASSERT(p_toAttach != nullptr, "Cannot attach a null texture");
 
-	// Due to a bug in Nvidia drivers' implementation,
-	// the DSO function `glNamedFramebufferTexture`
-	// seem to fail until the framebuffer has been bound
-	// at least once. This is a workaround to fix the issue.
-	// https://forums.developer.nvidia.com/t/framebuffer-incomplete-when-attaching-color-buffers-of-different-sizes-with-dsa/211550
-	if (IsUsingNvidiaDrivers())
-	{
-		Bind(); 
-		Unbind();
-	}
-
 	const auto attachmentIndex = EnumToValue<GLenum>(p_attachment) + static_cast<GLenum>(p_index);
-	glNamedFramebufferTexture(m_context.id, attachmentIndex, p_toAttach->GetID(), 0);
+	glNamedFramebufferTextureEXT(m_context.id, attachmentIndex, p_toAttach->GetID(), 0);
 	m_context.attachments[attachmentIndex] = p_toAttach;
 }
 

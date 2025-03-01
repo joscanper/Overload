@@ -54,8 +54,12 @@ const OvRendering::Geometry::BoundingSphere& OvRendering::Resources::Mesh::GetBo
 
 void OvRendering::Resources::Mesh::Upload(std::span<const Geometry::Vertex> p_vertices, std::span<const uint32_t> p_indices)
 {
-	m_vertexBuffer.Upload(p_vertices.data(), p_vertices.size_bytes());
-	m_indexBuffer.Upload(p_indices.data(), p_indices.size_bytes());
+	m_vertexBuffer.Allocate(p_vertices.size_bytes());
+	m_indexBuffer.Allocate(p_indices.size_bytes());
+
+	m_vertexBuffer.Upload(p_vertices.data());
+	m_indexBuffer.Upload(p_indices.data());
+
 	m_vertexArray.SetLayout(std::to_array<Settings::VertexAttribute>({
 		{ Settings::EDataType::FLOAT, 3 }, // position
 		{ Settings::EDataType::FLOAT, 2 }, // texCoords
