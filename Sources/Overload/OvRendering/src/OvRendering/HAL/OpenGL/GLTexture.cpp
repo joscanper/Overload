@@ -9,6 +9,7 @@
 #include <OvRendering/HAL/OpenGL/GLTexture.h>
 #include <OvRendering/HAL/OpenGL/GLTypes.h>
 #include <OvDebug/Assertion.h>
+#include <OvDebug/Logger.h>
 
 namespace
 {
@@ -164,8 +165,16 @@ void OvRendering::HAL::GLTexture::GenerateMipMaps() const
 {
 	OVASSERT(IsValid(), "Cannot generate mipmaps for a non-allocated texture");
 	OVASSERT(m_textureContext.desc.useMipMaps, "Cannot generate mipmaps for a texture that doesn't use them");
-	OVASSERT(IsValidMipMapFilter(m_textureContext.desc.minFilter), "Cannot generate mipmaps with the current min filter");
-	glGenerateTextureMipmapEXT(m_context.id, GL_TEXTURE_2D);
+	
+	if (IsValidMipMapFilter(m_textureContext.desc.minFilter))
+	{
+		glGenerateTextureMipmapEXT(m_context.id, GL_TEXTURE_2D);
+	}
+	else
+	{
+		// In the event a user tries to generate mipmaps for a texture that doesn't use a valid mip map filter
+		OVLOG_ERROR("Cannot generate mipmaps for a texture that doesn't use a valid mip map filter");
+	}
 }
 
 template<>
