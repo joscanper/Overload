@@ -9,7 +9,7 @@
 #include <OvRendering/HAL/None//NoneTexture.h>
 
 template<>
-OvRendering::HAL::NoneTexture::TTexture()
+OvRendering::HAL::NoneTexture::TTexture() : TTextureHandle{ 0 }
 {
 }
 
@@ -34,14 +34,14 @@ bool OvRendering::HAL::NoneTexture::IsValid() const
 template<>
 bool OvRendering::HAL::NoneTexture::IsMutable() const
 {
-	OVASSERT(IsValid(), "Cannot check if a texture is mutable before it's allocated");
+	OVASSERT(IsValid(), "Cannot check if a texture is mutable before it has been allocated");
 	return m_textureContext.desc.mutableDesc.has_value();
 }
 
 template<>
 void OvRendering::HAL::NoneTexture::Upload(const void* p_data, Settings::EFormat p_format, Settings::EPixelDataType p_type)
 {
-	OVASSERT(IsValid(), "Cannot upload data to a non-allocated texture");
+	OVASSERT(IsValid(), "Cannot upload data to a texture before it has been allocated");
 
 	if (IsMutable())
 	{
@@ -54,26 +54,26 @@ void OvRendering::HAL::NoneTexture::Upload(const void* p_data, Settings::EFormat
 template<>
 void OvRendering::HAL::NoneTexture::Resize(uint32_t p_width, uint32_t p_height)
 {
-	OVASSERT(IsValid(), "Cannot resize non-allocated texture");
-	OVASSERT(!IsMutable(), "Cannot resize a mutable texture");
+	OVASSERT(IsValid(), "Cannot resize a texture before it has been allocated");
+	OVASSERT(IsMutable(), "Cannot resize an immutable texture");
 }
 
 template<>
 const OvRendering::Settings::TextureDesc& OvRendering::HAL::NoneTexture::GetDesc() const
 {
-	OVASSERT(IsValid(), "Cannot get desc of non-allocated texture");
+	OVASSERT(IsValid(), "Cannot get the descriptor of a texture before it has been allocated");
 	return m_textureContext.desc;
 }
 
 template<>
-void OvRendering::HAL::NoneTexture::GenerateMipMaps() const
+void OvRendering::HAL::NoneTexture::GenerateMipmaps() const
 {
-	OVASSERT(IsValid(), "Cannot generate mipmaps for a non-allocated texture");
+	OVASSERT(IsValid(), "Cannot generate mipmaps for a texture before it has been allocated");
+	OVASSERT(m_textureContext.desc.useMipMaps, "Cannot generate mipmaps for a texture that doesn't use them");
 }
 
 template<>
 void OvRendering::HAL::NoneTexture::SetBorderColor(const OvMaths::FVector4& p_color)
 {
-	OVASSERT(IsValid(), "Cannot set border color of a non-allocated texture");
-	OVASSERT(m_textureContext.desc.internalFormat == Settings::EInternalFormat::RGBA32F, "Cannot set border color of a non-RGBA32F texture");
+	OVASSERT(IsValid(), "Cannot set border color for a texture before it has been allocated");
 }

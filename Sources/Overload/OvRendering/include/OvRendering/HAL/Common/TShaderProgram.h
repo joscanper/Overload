@@ -6,18 +6,17 @@
 
 #pragma once
 
-#include <unordered_map>
 #include <span>
 
+#include <OvMaths/FMatrix4.h>
 #include <OvMaths/FVector2.h>
 #include <OvMaths/FVector3.h>
 #include <OvMaths/FVector4.h>
-#include <OvMaths/FMatrix4.h>
 
-#include <OvRendering/Settings/UniformInfo.h>
-#include <OvRendering/Settings/EGraphicsBackend.h>
-#include <OvRendering/Settings/ShaderLinkingResult.h>
 #include <OvRendering/HAL/ShaderStage.h>
+#include <OvRendering/Settings/EGraphicsBackend.h>
+#include <OvRendering/Settings/UniformInfo.h>
+#include <OvRendering/Settings/ShaderLinkingResult.h>
 
 #include <OvTools/Utils/OptRef.h>
 
@@ -33,62 +32,62 @@ namespace OvRendering::HAL
 		std::same_as<T, OvMaths::FMatrix4>;
 
 	/**
-	* Represents a shader program, used to link shader stages together
+	* Represents a shader program, used to link shader stages together.
 	*/
 	template<Settings::EGraphicsBackend Backend, class ProgramContext, class StageContext>
 	class TShaderProgram final
 	{
 	public:
 		/**
-		* Constructor
+		* Creates a shader program.
 		*/
 		TShaderProgram();
 
 		/**
-		* Destructor
+		* Destroys a shader program.
 		*/
 		~TShaderProgram();
 
 		/**
-		* Attach a shader stage to the program
+		* Attaches a shader stage to the program.
 		* @param p_shader
 		*/
 		void Attach(const TShaderStage<Backend, StageContext>& p_shader);
 
 		/**
-		* Detach a shader stage to the program
+		* Detaches a shader stage to the program.
 		* @param p_shader
 		*/
 		void Detach(const TShaderStage<Backend, StageContext>& p_shader);
 
 		/**
-		* Detach all shader stages from the program
+		* Detaches all shader stages from the program.
 		*/
 		void DetachAll();
 
 		/**
-		* Link the shader stages together
+		* Links the shader stages together.
 		* @return The linking result
 		*/
 		Settings::ShaderLinkingResult Link();
 
 		/**
-		* Bind the program
+		* Binds the program.
 		*/
 		void Bind() const;
 
 		/**
-		* Unbind the program
+		* Unbinds the program.
 		*/
 		void Unbind() const;
 
 		/**
-		* Returns the ID of the program
+		* Returns the ID of the program.
 		*/
 		uint32_t GetID() const;
 
 		/**
-		* Sends a uniform value associated with the given name to the GPU
+		* Sends a uniform value associated with the given name to the GPU.
 		* @param p_name
 		* @param p_value
 		*/
@@ -96,7 +95,7 @@ namespace OvRendering::HAL
 		void SetUniform(std::string_view p_name, const T& p_value);
 
 		/**
-		* Returns the value of a uniform associated with the given name
+		* Returns the value of a uniform associated with the given name.
 		* @param p_name
 		* @param p_value
 		*/
@@ -104,18 +103,18 @@ namespace OvRendering::HAL
 		T GetUniform(std::string_view p_name);
 
 		/**
-		* Returns information about the uniform identified by the given name or std::nullopt if not found
+		* Returns information about the uniform identified by the given name or std::nullopt if not found.
 		* @param p_name
 		*/
 		OvTools::Utils::OptRef<const Settings::UniformInfo> GetUniformInfo(std::string_view p_name) const;
 
 		/**
-		* Query the uniforms from the program and store them in the uniform vector
+		* Queries the uniforms from the program and caches them in memory.
 		*/
 		void QueryUniforms();
 
 		/**
-		* Returns the uniforms of the program
+		* Returns the uniforms associated with this program.
 		*/
 		std::span<const Settings::UniformInfo> GetUniforms() const;
 

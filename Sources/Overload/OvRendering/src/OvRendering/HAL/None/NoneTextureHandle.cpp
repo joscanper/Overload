@@ -7,6 +7,11 @@
 #include <OvRendering/HAL/None/NoneTextureHandle.h>
 
 template<>
+OvRendering::HAL::NoneTextureHandle::TTextureHandle()
+{
+}
+
+template<>
 OvRendering::HAL::NoneTextureHandle::TTextureHandle(uint32_t p_id)
 {
 }

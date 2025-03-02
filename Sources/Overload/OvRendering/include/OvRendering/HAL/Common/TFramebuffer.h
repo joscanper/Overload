@@ -35,7 +35,7 @@ namespace OvRendering::HAL
 	>;
 
 	/**
-	* Represents a framebuffer, used to store render data
+	* Represents a framebuffer, used to store render data for the graphics backend to use.
 	*/
 	template<Settings::EGraphicsBackend Backend, class FramebufferContext, class TextureContext, class TextureHandleContext, class RenderBufferContext>
 	class TFramebuffer
@@ -49,49 +49,49 @@ namespace OvRendering::HAL
 			std::same_as<T, TRenderbuffer<Backend, RenderBufferContext>>;
 
 		/**
-		* Create the framebuffer
+		* Creates a framebuffer.
 		*/
 		TFramebuffer();
 
 		/**
-		* Destructor
+		* Destroys the framebuffer.
 		*/
 		~TFramebuffer();
 
 		/**
-		* Bind the framebuffer
+		* Binds the framebuffer.
 		*/
 		void Bind() const;
 
 		/**
-		* Unbind the framebuffer
+		* Unbinds the framebuffer.
 		*/
 		void Unbind() const;
 
 		/**
 		* Validate the framebuffer. Must be executed at least once after the framebuffer creation.
 		* @note It's recommended to call this method after each attachment change.
-		* @return Returns true if the framebuffer has been validated successfully
+		* @return Returns true if the framebuffer has been validated successfully.
 		*/
 		bool Validate();
 
 		/**
-		* Returns true if the framebuffer is valid
+		* Returns true if the framebuffer is valid.
 		*/
 		bool IsValid() const;
 
 		/**
-		* Resize all attachments
+		* Resizes all attachments to match the given width and height.
 		* @param p_width
 		* @param p_height
 		*/
 		void Resize(uint16_t p_width, uint16_t p_height);
 
 		/**
-		* Attach the given texture or render buffer to the framebuffer, at the given attachment point
-		* @param p_toAttach
+		* Attaches the given texture or render buffer to the framebuffer, at the given attachment point
+		* @param p_toAttach must be a texture or a render buffer.
 		* @param p_attachment
-		* @param p_index optional, useful when specifying multiple color attachments
+		* @param p_index (optional) useful when specifying multiple color attachments.
 		*/
 		template<class T>
 			requires IsSupportedAttachmentType<T>
@@ -101,9 +101,9 @@ namespace OvRendering::HAL
 		);
 
 		/**
-		* Return the texture or render buffer associated with the given attachment point
+		* Returns the texture or render buffer associated with the given attachment point.
 		* @param p_attachment
-		* @param p_index optional, useful when specifying multiple color attachments
+		* @param p_index (optional) useful when specifying multiple color attachments.
 		*/
 		template<class T>
 			requires IsSupportedAttachmentType<T>
@@ -113,24 +113,24 @@ namespace OvRendering::HAL
 		) const;
 
 		/**
-		* Selects which color attachment to draw to
-		* @param p_index index of the color attachment, if set to std::nullopt, no color will be drawn
+		* Selects which color attachment to draw to.
+		* @param p_index index of the color attachment, if set to std::nullopt, no color will be drawn.
 		*/
 		void SetTargetDrawBuffer(std::optional<uint32_t> p_index);
 
 		/**
-		* Selects which color attachment to read from
-		* @param p_index index of the color attachment, if set to std::nullopt, no color attachment will be available for read
+		* Selects which color attachment to read from.
+		* @param p_index index of the color attachment, if set to std::nullopt, no color attachment will be available for read.
 		*/
 		void SetTargetReadBuffer(std::optional<uint32_t> p_index);
 
 		/**
-		* Returns the ID of the OpenGL framebuffer
+		* Returns the ID the buffer.
 		*/
 		uint32_t GetID() const;
 
 		/**
-		* Returns the size of the given attachment
+		* Returns the size of the given attachment.
 		* @param p_attachment
 		*/
 		std::pair<uint16_t, uint16_t> GetSize(
@@ -138,7 +138,7 @@ namespace OvRendering::HAL
 		) const;
 
 		/**
-		* Blit the framebuffer to the back buffer
+		* Blits the framebuffer to the back buffer.
 		* @param p_backBufferWidth
 		* @param p_backBufferHeight
 		*/

@@ -68,7 +68,7 @@ namespace
 
 		if (p_generateMipmap)
 		{
-			p_texture.GenerateMipMaps();
+			p_texture.GenerateMipmaps();
 		}
 	}
 }

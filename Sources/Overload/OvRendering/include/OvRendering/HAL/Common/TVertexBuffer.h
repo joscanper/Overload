@@ -6,21 +6,19 @@
 
 #pragma once
 
-#include <span>
-
 #include <OvRendering/HAL/Common/TBuffer.h>
 
 namespace OvRendering::HAL
 {
 	/**
-	* Represents a vertex buffer, used to store vertex data on the GPU
+	* Represents a vertex buffer, used to store vertex data for the graphics backend to use.
 	*/
 	template<Settings::EGraphicsBackend Backend, class VertexBufferContext, class BufferContext>
 	class TVertexBuffer final : public TBuffer<Backend, BufferContext>
 	{
 	public:
 		/**
-		* Constructor
+		* Creates a vertex buffer.
 		*/
 		TVertexBuffer();
 

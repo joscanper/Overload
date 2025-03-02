@@ -6,14 +6,14 @@
 
 #pragma once
 
-#include <span>
 #include <memory>
 
-#include "OvRendering/HAL/VertexArray.h"
-#include "OvRendering/HAL/IndexBuffer.h"
-#include "OvRendering/Resources/IMesh.h"
-#include "OvRendering/Geometry/Vertex.h"
-#include "OvRendering/Geometry/BoundingSphere.h"
+#include <OvRendering/HAL/IndexBuffer.h>
+#include <OvRendering/HAL/VertexArray.h>
+#include <OvRendering/HAL/VertexBuffer.h>
+#include <OvRendering/Geometry/Vertex.h>
+#include <OvRendering/Geometry/BoundingSphere.h>
+#include <OvRendering/Resources/IMesh.h>
 
 namespace OvRendering::Resources
 {

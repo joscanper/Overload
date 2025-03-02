@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include <vector>
+#include <unordered_map>
+
 #include <OvRendering/HAL/Common/TShaderProgram.h>
 #include <OvRendering/HAL/OpenGL/GLShaderStage.h>
 

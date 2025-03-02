@@ -11,14 +11,14 @@
 namespace OvRendering::HAL
 {
 	/**
-	* Represents an index buffer, used to store index data on the GPU
+	* Represents an index buffer, used to store index data for the graphics backend to use.
 	*/
 	template<Settings::EGraphicsBackend Backend, class IndexBufferContext, class BufferContext>
 	class TIndexBuffer : public TBuffer<Backend, BufferContext>
 	{
 	public:
 		/**
-		* Create an index buffer
+		* Creates an index buffer.
 		*/
 		TIndexBuffer();
 

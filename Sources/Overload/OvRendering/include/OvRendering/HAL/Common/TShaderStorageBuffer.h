@@ -12,14 +12,14 @@
 namespace OvRendering::HAL
 {
 	/**
-	* Shader storage buffer object, used to store data of variable size that can be accessed by shaders
+	* Represents a shader storage buffer, used to store data of variable size that can be accessed by shaders.
 	*/
 	template<Settings::EGraphicsBackend Backend, class ShaderStorageBufferContext, class BufferContext>
 	class TShaderStorageBuffer : public TBuffer<Backend, BufferContext>
 	{
 	public:
 		/**
-		* Create a SSBO
+		* Creates a shader storage buffer.
 		*/
 		TShaderStorageBuffer();
 

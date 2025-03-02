@@ -35,7 +35,7 @@ bool OvRendering::HAL::NoneVertexArray::IsValid() const
 
 template<>
 void OvRendering::HAL::NoneVertexArray::SetLayout(
-	std::span<const Settings::VertexAttribute> p_attributes,
+	Settings::VertexAttributeLayout p_attributes,
 	VertexBuffer& p_vertexBuffer,
 	IndexBuffer& p_indexBuffer
 )

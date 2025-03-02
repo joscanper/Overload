@@ -12,7 +12,7 @@
 namespace OvRendering::HAL
 {
 	/**
-	* Represents a renderbuffer, used to store render data
+	* Represents a renderbuffer, used to store render data for the graphics backend to use.
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
 	class TRenderbuffer final

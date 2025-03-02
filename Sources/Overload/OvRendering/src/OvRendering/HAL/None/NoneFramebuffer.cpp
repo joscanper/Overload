@@ -72,19 +72,19 @@ OvTools::Utils::OptRef<OvRendering::HAL::NoneRenderbuffer> OvRendering::HAL::Non
 template<>
 void OvRendering::HAL::NoneFramebuffer::Resize(uint16_t p_width, uint16_t p_height)
 {
-	OVASSERT(IsValid(), "Invalid framebuffer");
+	OVASSERT(IsValid(), "Cannot resize an invalid framebuffer");
 }
 
 template<>
 void OvRendering::HAL::NoneFramebuffer::SetTargetDrawBuffer(std::optional<uint32_t> p_index)
 {
-	OVASSERT(IsValid(), "Invalid framebuffer");
+	OVASSERT(IsValid(), "Cannot set target draw buffer on an invalid framebuffer");
 }
 
 template<>
 void OvRendering::HAL::NoneFramebuffer::SetTargetReadBuffer(std::optional<uint32_t> p_index)
 {
-	OVASSERT(IsValid(), "Invalid framebuffer");
+	OVASSERT(IsValid(), "Cannot set target read buffer on an invalid framebuffer");
 }
 
 template<>
@@ -102,7 +102,7 @@ std::pair<uint16_t, uint16_t> OvRendering::HAL::NoneFramebuffer::GetSize(Setting
 template<>
 void OvRendering::HAL::NoneFramebuffer::BlitToBackBuffer(uint16_t p_backBufferWidth, uint16_t p_backBufferHeight) const
 {
-	OVASSERT(IsValid(), "Cannot blit an invalid framebuffer");
+	OVASSERT(IsValid(), "Cannot blit an invalid framebuffer to the back buffer");
 }
 
 template<>

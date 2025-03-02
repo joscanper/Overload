@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <string>
-
 #include <OvRendering/Settings/EGraphicsBackend.h>
 #include <OvRendering/Settings/EShaderType.h>
 #include <OvRendering/Settings/ShaderCompilationResult.h>
@@ -15,37 +13,38 @@
 namespace OvRendering::HAL
 {
 	/**
-	* Part of a shader program that is responsible of a specific stage (Vertex, Fragment, Geometry, etc.)
+	* Represents a part of a shader program that is responsible for a specific stage (vertex, fragment, geometry, etc.).
 	*/
 	template<Settings::EGraphicsBackend Backend, class Context>
 	class TShaderStage final
 	{
 	public:
 		/**
-		* Create a shader stage of the given type
+		* Creates a shader stage of the given type.
 		* @param p_type
 		*/
 		TShaderStage(Settings::EShaderType p_type);
 
 		/**
-		* Destructor of the shader stage
+		* Destructor of the shader stage.
 		*/
 		~TShaderStage();
 
 		/**
-		* Upload shader source from the CPU to the GPU
+		* Uploads the shader source to the graphics backend memory.
 		* @param p_source
 		*/
 		void Upload(const std::string& p_source) const;
 
 		/**
-		* Compile the uploaded shader source
-		* @return The compilation result
+		* Compiles the uploaded shader source.
+		* @note Use this method after uploading the shader source.
+		* @return The compilation result.
 		*/
 		Settings::ShaderCompilationResult Compile() const;
 
 		/**
-		* @return The ID of the shader stage
+		* Returns the ID of the shader stage.
 		*/
 		uint32_t GetID() const;
 

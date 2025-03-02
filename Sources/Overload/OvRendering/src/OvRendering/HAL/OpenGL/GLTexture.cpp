@@ -50,7 +50,6 @@ void OvRendering::HAL::GLTexture::Allocate(const Settings::TextureDesc& p_desc)
 	desc.width = std::max(1u, desc.width);
 	desc.height = std::max(1u, desc.height);
 
-
 	if (desc.mutableDesc.has_value())
 	{
 		const auto& mutableDesc = desc.mutableDesc.value();
@@ -104,14 +103,14 @@ bool OvRendering::HAL::GLTexture::IsValid() const
 template<>
 bool OvRendering::HAL::GLTexture::IsMutable() const
 {
-	OVASSERT(IsValid(), "Cannot check if a texture is mutable before it's allocated");
+	OVASSERT(IsValid(), "Cannot check if a texture is mutable before it has been allocated");
 	return m_textureContext.desc.mutableDesc.has_value();
 }
 
 template<>
 void OvRendering::HAL::GLTexture::Upload(const void* p_data, Settings::EFormat p_format, Settings::EPixelDataType p_type)
 {
-	OVASSERT(IsValid(), "Cannot upload data to a non-allocated texture");
+	OVASSERT(IsValid(), "Cannot upload data to a texture before it has been allocated");
 	OVASSERT(p_data, "Cannot upload texture data from a null pointer");
 
 	if (IsMutable())
@@ -139,7 +138,7 @@ void OvRendering::HAL::GLTexture::Upload(const void* p_data, Settings::EFormat p
 template<>
 void OvRendering::HAL::GLTexture::Resize(uint32_t p_width, uint32_t p_height)
 {
-	OVASSERT(IsValid(), "Cannot resize non-allocated texture");
+	OVASSERT(IsValid(), "Cannot resize a texture before it has been allocated");
 	OVASSERT(IsMutable(), "Cannot resize an immutable texture");
 
 	auto& desc = m_textureContext.desc;
@@ -156,14 +155,14 @@ void OvRendering::HAL::GLTexture::Resize(uint32_t p_width, uint32_t p_height)
 template<>
 const OvRendering::Settings::TextureDesc& OvRendering::HAL::GLTexture::GetDesc() const
 {
-	OVASSERT(IsValid(), "Cannot get desc of non-allocated texture");
+	OVASSERT(IsValid(), "Cannot get the descriptor of a texture before it has been allocated");
 	return m_textureContext.desc;
 }
 
 template<>
-void OvRendering::HAL::GLTexture::GenerateMipMaps() const
+void OvRendering::HAL::GLTexture::GenerateMipmaps() const
 {
-	OVASSERT(IsValid(), "Cannot generate mipmaps for a non-allocated texture");
+	OVASSERT(IsValid(), "Cannot generate mipmaps for a texture before it has been allocated");
 	OVASSERT(m_textureContext.desc.useMipMaps, "Cannot generate mipmaps for a texture that doesn't use them");
 	
 	if (IsValidMipMapFilter(m_textureContext.desc.minFilter))
@@ -172,14 +171,14 @@ void OvRendering::HAL::GLTexture::GenerateMipMaps() const
 	}
 	else
 	{
-		// In the event a user tries to generate mipmaps for a texture that doesn't use a valid mip map filter
-		OVLOG_ERROR("Cannot generate mipmaps for a texture that doesn't use a valid mip map filter");
+		// In the event a user tries to generate mipmaps for a texture that doesn't use a valid mipmap filter
+		OVLOG_ERROR("Cannot generate mipmaps for a texture that doesn't use a valid mipmap filter");
 	}
 }
 
 template<>
 void OvRendering::HAL::GLTexture::SetBorderColor(const OvMaths::FVector4& p_color)
 {
-	OVASSERT(IsValid(), "Cannot set border color of a non-allocated texture");
+	OVASSERT(IsValid(), "Cannot set border color for a texture before it has been allocated");
 	glTextureParameterfvEXT(m_context.id, GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &p_color.x);
 }

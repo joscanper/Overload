@@ -6,10 +6,8 @@
 
 #pragma once
 
-#include <span>
-
-#include <OvRendering/HAL/VertexBuffer.h>
-#include <OvRendering/HAL/IndexBuffer.h>
+#include <OvRendering/HAL/Common/TVertexBuffer.h>
+#include <OvRendering/HAL/Common/TIndexBuffer.h>
 #include <OvRendering/Settings/EDataType.h>
 #include <OvRendering/Settings/EGraphicsBackend.h>
 #include <OvRendering/Settings/VertexAttribute.h>
@@ -17,60 +15,63 @@
 namespace OvRendering::HAL
 {
 	/**
-	* Represents a vertex array, used to layout vertex data on the GPU
+	* Represents a vertex array, used to descript the vertex layout to the graphics backend.
 	*/
-	template<Settings::EGraphicsBackend Backend, class Context>
+	template<Settings::EGraphicsBackend Backend, class VertexArrayContext, class VertexBufferContext, class IndexBufferContext, class BufferContext>
 	class TVertexArray final
 	{
 	public:
+		using IndexBuffer = TIndexBuffer<Backend, IndexBufferContext, BufferContext>;
+		using VertexBuffer = TVertexBuffer<Backend, VertexBufferContext, BufferContext>;
+
 		/**
-		* Create the vertex array
+		* Creates the vertex array.
 		*/
 		TVertexArray();
 
 		/**
-		* Destroy the vertex array
+		* Destroys the vertex array.
 		*/
 		~TVertexArray();
 
 		/**
-		* Returns true if the vertex array is valid (non-empty layout)
+		* Returns true if the vertex array is valid (non-empty layout).
 		*/
 		bool IsValid() const;
 
 		/**
-		* Sets the vertex attribute layout
+		* Sets the vertex attribute layout.
 		* @param p_attributes
 		* @param p_vertexBuffer
 		* @param p_indexBuffer
 		*/
 		void SetLayout(
-			std::span<const Settings::VertexAttribute> p_attributes,
+			Settings::VertexAttributeLayout p_attributes,
 			VertexBuffer& p_vertexBuffer,
 			IndexBuffer& p_indexBuffer
 		);
 
 		/**
-		* Resets the vertex attribute layout
+		* Resets the vertex attribute layout.
 		*/
 		void ResetLayout();
 
 		/**
-		* Bind the buffer
+		* Binds the vertex array.
 		*/
 		void Bind() const;
 
 		/**
-		* Unbind the buffer
+		* Unbinds the vertex array.
 		*/
 		void Unbind() const;
 
 		/**
-		* Return the VAO OpenGL ID
+		* Returns the vertex array ID.
 		*/
 		uint32_t GetID() const;
 
 	private:
-		Context m_context;
+		VertexArrayContext m_context;
 	};
 }

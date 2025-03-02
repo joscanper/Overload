@@ -27,6 +27,7 @@ template<>
 void OvRendering::HAL::NoneBuffer::Upload(const void* p_data, std::optional<BufferMemoryRange> p_range)
 {
 	OVASSERT(IsValid(), "Trying to upload data to an invalid buffer");
+	OVASSERT(!IsEmpty(), "Trying to upload data to an empty buffer");
 }
 
 template<>
@@ -50,7 +51,21 @@ bool OvRendering::HAL::NoneBuffer::IsValid() const
 }
 
 template<>
+bool OvRendering::HAL::NoneBuffer::IsEmpty() const
+{
+	return GetSize() == 0;
+}
+
+template<>
+uint64_t OvRendering::HAL::NoneBuffer::GetSize() const
+{
+	OVASSERT(IsValid(), "Cannot get size of an invalid buffer");
+	return m_buffer.allocatedBytes;
+}
+
+template<>
 uint32_t OvRendering::HAL::NoneBuffer::GetID() const
 {
+	OVASSERT(IsValid(), "Cannot get ID of an invalid buffer");
 	return 0;
 }

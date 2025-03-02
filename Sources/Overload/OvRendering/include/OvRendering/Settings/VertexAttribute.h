@@ -6,8 +6,7 @@
 
 #pragma once
 
-#include <string>
-#include <any>
+#include <span>
 
 #include <OvRendering/Settings/EDataType.h>
 
@@ -22,4 +21,6 @@ namespace OvRendering::Settings
 		uint8_t count = 4;
 		bool normalized = false;
 	};
+
+	using VertexAttributeLayout = std::span<const Settings::VertexAttribute>;
 }

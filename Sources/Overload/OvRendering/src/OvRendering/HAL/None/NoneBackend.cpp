@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <OvRendering/HAL/None/NoneBackend.h>
-
 /**
 * Although this is intended as a Null implementation, certain components of the engine rely on OpenGL,
 * such as resource creation, binding, and the user interface. Consequently, GLEW must be initialized to
@@ -15,6 +13,8 @@
 * additional calls.
 */
 #include <GL/glew.h>
+
+#include <OvRendering/HAL/None/NoneBackend.h>
 
 namespace OvRendering::HAL
 {

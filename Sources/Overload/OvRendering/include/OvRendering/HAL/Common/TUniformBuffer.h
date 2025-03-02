@@ -15,14 +15,14 @@ namespace OvRendering::Resources { class Shader; }
 namespace OvRendering::HAL
 {
 	/**
-	* Represents a uniform buffer object, used to store uniform data that can be accessed by shaders
+	* Represents a uniform buffer, used to store uniform data that can be accessed by shaders
 	*/
 	template<Settings::EGraphicsBackend Backend, class UniformBufferContext, class BufferContext>
 	class TUniformBuffer : public TBuffer<Backend, BufferContext>
 	{
 	public:
 		/**
-		* Create a UniformBuffer
+		* Creates a UniformBuffer
 		*/
 		TUniformBuffer();
 

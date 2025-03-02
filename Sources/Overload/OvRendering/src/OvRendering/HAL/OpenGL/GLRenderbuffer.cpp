@@ -69,13 +69,13 @@ void OvRendering::HAL::GLRenderbuffer::Resize(uint16_t p_width, uint16_t p_heigh
 template<>
 uint16_t OvRendering::HAL::GLRenderbuffer::GetWidth() const
 {
-	OVASSERT(IsValid(), "Cannot get width of an invalid framebuffer");
+	OVASSERT(IsValid(), "Cannot get width of an invalid renderbuffer");
 	return m_context.width;
 }
 
 template<>
 uint16_t OvRendering::HAL::GLRenderbuffer::GetHeight() const
 {
-	OVASSERT(IsValid(), "Cannot get height of an invalid framebuffer");
+	OVASSERT(IsValid(), "Cannot get height of an invalid renderbuffer");
 	return m_context.height;
 }

@@ -31,18 +31,18 @@ namespace OvRendering::HAL
 	{
 	public:
 		/**
-		* Constructor
+		* Creates a buffer
 		* @param p_type
 		*/
 		TBuffer(Settings::EBufferType p_type);
 
 		/**
-		* Destructor
+		* Destroys the buffer
 		*/
 		~TBuffer();
 
 		/**
-		* Allocate memory for the buffer
+		* Allocates memory for the buffer
 		* @param p_size
 		* @param p_usage
 		* @return The size of the allocated memory in bytes
@@ -50,7 +50,7 @@ namespace OvRendering::HAL
 		uint64_t Allocate(uint64_t p_size, Settings::EAccessSpecifier p_usage = Settings::EAccessSpecifier::STATIC_DRAW);
 
 		/**
-		* Upload data to the buffer
+		* Uploads data to the buffer
 		* @param p_data
 		* @param p_range
 		*/
@@ -72,13 +72,13 @@ namespace OvRendering::HAL
 		uint64_t GetSize() const;
 
 		/**
-		* Bind the buffer
+		* Binds the buffer
 		* @param p_index (Optional) Index to bind the buffer to
 		*/
 		void Bind(std::optional<uint32_t> p_index = std::nullopt) const;
 
 		/**
-		* Unbind the buffer
+		* Unbinds the buffer
 		*/
 		void Unbind() const;
 

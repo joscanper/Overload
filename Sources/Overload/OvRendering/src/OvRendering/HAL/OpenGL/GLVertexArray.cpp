@@ -61,7 +61,7 @@ bool OvRendering::HAL::GLVertexArray::IsValid() const
 
 template<>
 void OvRendering::HAL::GLVertexArray::SetLayout(
-	std::span<const Settings::VertexAttribute> p_attributes,
+	Settings::VertexAttributeLayout p_attributes,
 	VertexBuffer& p_vertexBuffer,
 	IndexBuffer& p_indexBuffer
 )

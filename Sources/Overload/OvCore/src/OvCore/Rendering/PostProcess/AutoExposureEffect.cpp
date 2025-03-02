@@ -54,7 +54,7 @@ void OvCore::Rendering::PostProcess::AutoExposureEffect::Draw(
 	m_renderer.Blit(p_pso, p_src, m_luminanceBuffer, m_luminanceMaterial,
 		OvRendering::Settings::EBlitFlags::DEFAULT & ~OvRendering::Settings::EBlitFlags::RESIZE_DST_TO_MATCH_SRC);
 	const auto luminanceTex = m_luminanceBuffer.GetAttachment<OvRendering::HAL::Texture>(OvRendering::Settings::EFramebufferAttachment::COLOR);
-	luminanceTex->GenerateMipMaps();
+	luminanceTex->GenerateMipmaps();
 
 	float elapsedTime = 1.0f;
 	auto currentTime = std::chrono::high_resolution_clock::now();

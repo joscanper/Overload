@@ -9,9 +9,12 @@
 #include <OvRendering/HAL/OpenGL/GLTextureHandle.h>
 
 template<>
-OvRendering::HAL::GLTextureHandle::TTextureHandle(uint32_t p_id) : m_context{
-	.id = p_id
+OvRendering::HAL::GLTextureHandle::TTextureHandle()
+{
 }
+
+template<>
+OvRendering::HAL::GLTextureHandle::TTextureHandle(uint32_t p_id) : m_context{ .id = p_id }
 {
 }
 
