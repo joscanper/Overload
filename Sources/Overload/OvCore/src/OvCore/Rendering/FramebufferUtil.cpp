@@ -6,6 +6,8 @@
 
 #include <OvCore/Rendering/FramebufferUtil.h>
 #include <OvRendering/HAL/Framebuffer.h>
+#include <OvRendering/HAL/Renderbuffer.h>
+#include <OvRendering/HAL/Texture.h>
 
 namespace OvCore::Rendering::FramebufferUtil
 {
@@ -24,7 +26,7 @@ namespace OvCore::Rendering::FramebufferUtil
 		p_width = static_cast<uint16_t>(std::max(1u, p_width));
 		p_height = static_cast<uint16_t>(std::max(1u, p_height));
 
-		const auto renderTexture = std::make_shared<GLTexture>();
+		const auto renderTexture = std::make_shared<Texture>();
 
 		TextureDesc renderTextureDesc{
 			.width = p_width,
@@ -42,20 +44,20 @@ namespace OvCore::Rendering::FramebufferUtil
 		};
 
 		renderTexture->Allocate(renderTextureDesc);
-		p_framebuffer.Attach<GLTexture>(renderTexture, EFramebufferAttachment::COLOR);
+		p_framebuffer.Attach(renderTexture, EFramebufferAttachment::COLOR);
 
 		if (p_useDepth || p_useStencil)
 		{
-			const auto renderbuffer = std::make_shared<GLRenderbuffer>();
+			const auto renderbuffer = std::make_shared<Renderbuffer>();
 			const auto internalFormat = p_useStencil ? EInternalFormat::DEPTH_STENCIL : EInternalFormat::DEPTH_COMPONENT;
 			renderbuffer->Allocate(p_width, p_height, internalFormat);
 			if (p_useStencil)
 			{
-				p_framebuffer.Attach<GLRenderbuffer>(renderbuffer, EFramebufferAttachment::STENCIL);
+				p_framebuffer.Attach(renderbuffer, EFramebufferAttachment::STENCIL);
 			}
 			if (p_useDepth)
 			{
-				p_framebuffer.Attach<GLRenderbuffer>(renderbuffer, EFramebufferAttachment::DEPTH);
+				p_framebuffer.Attach(renderbuffer, EFramebufferAttachment::DEPTH);
 			}
 		}
 

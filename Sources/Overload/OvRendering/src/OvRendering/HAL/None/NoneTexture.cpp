@@ -56,6 +56,16 @@ void OvRendering::HAL::NoneTexture::Resize(uint32_t p_width, uint32_t p_height)
 {
 	OVASSERT(IsValid(), "Cannot resize a texture before it has been allocated");
 	OVASSERT(IsMutable(), "Cannot resize an immutable texture");
+	
+	auto& desc = m_textureContext.desc;
+
+	if (p_width != desc.width || p_height != desc.width)
+	{
+		desc.width = p_width;
+		desc.height = p_height;
+
+		Allocate(desc);
+	}
 }
 
 template<>

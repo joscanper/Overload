@@ -8,7 +8,9 @@
 #include <OvRendering/HAL/None/NoneBuffer.h>
 
 template<>
-OvRendering::HAL::NoneBuffer::TBuffer(Settings::EBufferType p_type)
+OvRendering::HAL::NoneBuffer::TBuffer(Settings::EBufferType p_type) : m_buffer{
+	.type = p_type
+}
 {
 }
 

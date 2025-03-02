@@ -13,6 +13,8 @@ template<>
 void OvRendering::HAL::NoneFramebuffer::Attach(std::shared_ptr<NoneRenderbuffer> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index)
 {
 	OVASSERT(p_toAttach != nullptr, "Cannot attach a null renderbuffer");
+	const auto index = std::underlying_type_t<Settings::EFramebufferAttachment>(p_attachment);
+	m_context.attachments[index] = p_toAttach;
 }
 
 template<>
@@ -20,6 +22,8 @@ template<>
 void OvRendering::HAL::NoneFramebuffer::Attach(std::shared_ptr<NoneTexture> p_toAttach, Settings::EFramebufferAttachment p_attachment, uint32_t p_index)
 {
 	OVASSERT(p_toAttach != nullptr, "Cannot attach a null texture");
+	const auto index = std::underlying_type_t<Settings::EFramebufferAttachment>(p_attachment);
+	m_context.attachments[index] = p_toAttach;
 }
 
 template<>
@@ -57,22 +61,56 @@ template<>
 template<>
 OvTools::Utils::OptRef<OvRendering::HAL::NoneTexture> OvRendering::HAL::NoneFramebuffer::GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index) const
 {
-	static NoneTexture noneTexture;
-	return noneTexture;
+	const auto index = std::underlying_type_t<Settings::EFramebufferAttachment>(p_attachment);
+
+	if (m_context.attachments.contains(index))
+	{
+		auto attachment = m_context.attachments.at(index);
+
+		if (auto pval = std::get_if<std::shared_ptr<NoneTexture>>(&attachment); pval && *pval)
+		{
+			return **pval;
+		}
+	}
+
+	return std::nullopt;
 }
 
 template<>
 template<>
 OvTools::Utils::OptRef<OvRendering::HAL::NoneRenderbuffer> OvRendering::HAL::NoneFramebuffer::GetAttachment(OvRendering::Settings::EFramebufferAttachment p_attachment, uint32_t p_index) const
 {
-	static NoneRenderbuffer noneRenderbuffer;
-	return noneRenderbuffer;
+	const auto index = std::underlying_type_t<Settings::EFramebufferAttachment>(p_attachment);
+
+	if (m_context.attachments.contains(index))
+	{
+		auto attachment = m_context.attachments.at(index);
+
+		if (auto pval = std::get_if<std::shared_ptr<NoneRenderbuffer>>(&attachment); pval && *pval)
+		{
+			return **pval;
+		}
+	}
+
+	return std::nullopt;
 }
 
 template<>
 void OvRendering::HAL::NoneFramebuffer::Resize(uint16_t p_width, uint16_t p_height)
 {
 	OVASSERT(IsValid(), "Cannot resize an invalid framebuffer");
+
+	for (auto& attachment : m_context.attachments)
+	{
+		if (const auto pval = std::get_if<std::shared_ptr<NoneTexture>>(&attachment.second); pval && *pval)
+		{
+			(*pval)->Resize(p_width, p_height);
+		}
+		else if (const auto* pval = std::get_if<std::shared_ptr<NoneRenderbuffer>>(&attachment.second); pval && *pval)
+		{
+			(*pval)->Resize(p_width, p_height);
+		}
+	}
 }
 
 template<>

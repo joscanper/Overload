@@ -6,6 +6,7 @@
 
 #include <OvDebug/Assertion.h>
 #include <OvRendering/Entities/Light.h>
+#include <OvRendering/HAL/Renderbuffer.h>
 
 namespace
 {
@@ -17,8 +18,7 @@ namespace
 		using namespace OvRendering::HAL;
 		using namespace OvRendering::Settings;
 
-		std::shared_ptr<GLRenderbuffer> renderbuffer;
-		std::shared_ptr<GLTexture> renderTexture = std::make_shared<GLTexture>();
+		const auto renderTexture = std::make_shared<Texture>();
 
 		TextureDesc renderTextureDesc{
 			.width = p_resolution,
@@ -37,7 +37,7 @@ namespace
 
 		renderTexture->Allocate(renderTextureDesc);
 		renderTexture->SetBorderColor(OvMaths::FVector4::One);
-		p_framebuffer.Attach<GLTexture>(renderTexture, EFramebufferAttachment::DEPTH);
+		p_framebuffer.Attach<Texture>(renderTexture, EFramebufferAttachment::DEPTH);
 		p_framebuffer.Validate();
 		p_framebuffer.SetTargetDrawBuffer(std::nullopt);
 		p_framebuffer.SetTargetReadBuffer(std::nullopt);
