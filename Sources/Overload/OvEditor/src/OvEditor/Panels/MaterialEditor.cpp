@@ -373,9 +373,9 @@ void OvEditor::Panels::MaterialEditor::GenerateMaterialSettingsContent()
 	m_materialSettingsColumns->RemoveAllWidgets(); // Ensure that the m_shaderSettingsColumns is empty
 
 	GUIDrawer::CreateTitle(*m_materialSettingsColumns, "Domain");
-	auto& materialDomain = m_materialSettingsColumns->CreateWidget<OvUI::Widgets::Selection::ComboBox>();
-	materialDomain.choices.emplace(0, "Surface");
-	materialDomain.choices.emplace(1, "User Interface");
+	auto& materialDomain = m_materialSettingsColumns->CreateWidget<OvUI::Widgets::Selection::ComboBox>(static_cast<int>(m_target->GetDomain()));
+	materialDomain.choices.emplace(static_cast<int>(OvRendering::Settings::EMaterialDomain::SURFACE), "Surface");
+	materialDomain.choices.emplace(static_cast<int>(OvRendering::Settings::EMaterialDomain::USER_INTERFACE), "User Interface");
 	materialDomain.ValueChangedEvent += [this](int p_choice)
 	{
 		m_target->SetDomain(static_cast<OvRendering::Settings::EMaterialDomain>(p_choice));
