@@ -5,6 +5,7 @@
 */
 
 #include "OvCore/Resources/Material.h"
+#include "OvRendering/Settings/EMaterialDomain.h"
 
 void OvCore::Resources::Material::OnSerialize(tinyxml2::XMLDocument & p_doc, tinyxml2::XMLNode * p_node)
 {
@@ -17,7 +18,7 @@ void OvCore::Resources::Material::OnSerialize(tinyxml2::XMLDocument & p_doc, tin
 	tinyxml2::XMLNode* settingsNode = p_doc.NewElement("settings");
 	p_node->InsertEndChild(settingsNode);
 
-	Serializer::SerializeBoolean(p_doc, settingsNode, "blendable", m_blendable);
+	Serializer::SerializeInt(p_doc, settingsNode, "domain", static_cast<int>(m_domain));
 	Serializer::SerializeBoolean(p_doc, settingsNode, "backface_culling", m_backfaceCulling);
 	Serializer::SerializeBoolean(p_doc, settingsNode, "frontface_culling", m_frontfaceCulling);
 	Serializer::SerializeBoolean(p_doc, settingsNode, "depth_test", m_depthTest);
@@ -86,6 +87,10 @@ void OvCore::Resources::Material::OnDeserialize(tinyxml2::XMLDocument & p_doc, t
 	
 	if (settingsNode)
 	{
+		int domainInt;
+		Serializer::DeserializeInt(p_doc, settingsNode, "domain", domainInt);
+		m_domain = static_cast<OvRendering::Settings::EMaterialDomain>(domainInt);
+
 		Serializer::DeserializeBoolean(p_doc, settingsNode, "blendable", m_blendable);
 		Serializer::DeserializeBoolean(p_doc, settingsNode, "backface_culling", m_backfaceCulling);
 		Serializer::DeserializeBoolean(p_doc, settingsNode, "frontface_culling", m_frontfaceCulling);

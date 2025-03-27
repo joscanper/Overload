@@ -192,6 +192,7 @@ void OvRendering::Core::ABaseRenderer::DrawEntity(
 		p_pso.depthWriting = p_drawable.stateMask.depthWriting;
 		p_pso.colorWriting.mask = p_drawable.stateMask.colorWriting ? 0xFF : 0x00;
 		p_pso.blending = p_drawable.stateMask.blendable;
+		p_pso.domain = static_cast<OvRendering::Settings::EMaterialDomain>(p_drawable.stateMask.domain);
 		p_pso.culling = p_drawable.stateMask.frontfaceCulling || p_drawable.stateMask.backfaceCulling;
 		p_pso.depthTest = p_drawable.stateMask.depthTest;
 

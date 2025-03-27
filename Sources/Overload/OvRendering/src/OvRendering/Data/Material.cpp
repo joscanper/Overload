@@ -124,6 +124,11 @@ bool OvRendering::Data::Material::IsValid() const
 	return HasShader();
 }
 
+void OvRendering::Data::Material::SetDomain(OvRendering::Settings::EMaterialDomain p_domain)
+{
+	m_domain = p_domain;
+}
+
 void OvRendering::Data::Material::SetBlendable(bool p_transparent)
 {
 	m_blendable = p_transparent;
@@ -174,6 +179,12 @@ bool OvRendering::Data::Material::IsBlendable() const
 	return m_blendable;
 }
 
+OvRendering::Settings::EMaterialDomain OvRendering::Data::Material::GetDomain() const
+{
+	return m_domain;
+}
+
+
 bool OvRendering::Data::Material::HasBackfaceCulling() const
 {
 	return m_backfaceCulling;
@@ -219,6 +230,7 @@ const OvRendering::Data::StateMask OvRendering::Data::Material::GenerateStateMas
 	StateMask stateMask;
 	stateMask.depthWriting = m_depthWriting;
 	stateMask.colorWriting = m_colorWriting;
+	stateMask.domain = static_cast<uint8_t>(m_domain);
 	stateMask.blendable = m_blendable;
 	stateMask.depthTest = m_depthTest;
 	stateMask.frontfaceCulling = m_frontfaceCulling;

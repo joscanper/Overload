@@ -17,6 +17,7 @@
 #include <OvUI/Widgets/Texts/TextColored.h>
 #include <OvUI/Widgets/Buttons/Button.h>
 #include <OvUI/Widgets/Buttons/ButtonSmall.h>
+#include <OvUI/Widgets/Selection/ComboBox.h>
 #include <OvUI/Widgets/Selection/ColorEdit.h>
 
 using namespace OvUI::Panels;
@@ -370,6 +371,15 @@ void OvEditor::Panels::MaterialEditor::GenerateShaderSettingsContent()
 void OvEditor::Panels::MaterialEditor::GenerateMaterialSettingsContent()
 {
 	m_materialSettingsColumns->RemoveAllWidgets(); // Ensure that the m_shaderSettingsColumns is empty
+
+	GUIDrawer::CreateTitle(*m_materialSettingsColumns, "Domain");
+	auto& materialDomain = m_materialSettingsColumns->CreateWidget<OvUI::Widgets::Selection::ComboBox>();
+	materialDomain.choices.emplace(0, "Surface");
+	materialDomain.choices.emplace(1, "User Interface");
+	materialDomain.ValueChangedEvent += [this](int p_choice)
+	{
+		m_target->SetDomain(static_cast<OvRendering::Settings::EMaterialDomain>(p_choice));
+	};
 
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Blendable", std::bind(&OvCore::Resources::Material::IsBlendable, m_target), std::bind(&OvCore::Resources::Material::SetBlendable, m_target, std::placeholders::_1));
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Back-face Culling", std::bind(&OvCore::Resources::Material::HasBackfaceCulling, m_target), std::bind(&OvCore::Resources::Material::SetBackfaceCulling, m_target, std::placeholders::_1));

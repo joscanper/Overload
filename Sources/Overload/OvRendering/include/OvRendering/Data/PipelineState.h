@@ -18,6 +18,7 @@
 #include "OvRendering/Settings/ECullingOptions.h"
 #include "OvRendering/Settings/EPixelDataFormat.h"
 #include "OvRendering/Settings/EPixelDataType.h"
+#include "OvRendering/Settings/EMaterialDomain.h"
 
 namespace OvRendering::Data
 {
@@ -55,8 +56,9 @@ namespace OvRendering::Data
 				Settings::ERasterizationMode rasterizationMode : 2;
 
 				// B5
-				uint8_t lineWidthPow2 : 3;
-				Settings::EComparaisonAlgorithm depthFunc : 3;
+				uint8_t lineWidthPow2 : 2;
+				Settings::EComparaisonAlgorithm depthFunc : 2;
+				Settings::EMaterialDomain domain : 2;
 				bool depthWriting : 1;
 				bool blending : 1;
 
