@@ -288,7 +288,7 @@ OvCore::Rendering::SceneRenderer::AllDrawables OvCore::Rendering::SceneRenderer:
 									materialRenderer->GetUserMatrix()
 								});
 
-								if (material->GetDomain() == OvRendering::Settings::EMaterialDomain::USER_INTERFACE)
+								if (material->IsUserInterface())
 								{
 									ui.emplace(distanceToActor, drawable);
 								}

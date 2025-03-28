@@ -18,7 +18,6 @@
 #include "OvRendering/Settings/ECullingOptions.h"
 #include "OvRendering/Settings/EPixelDataFormat.h"
 #include "OvRendering/Settings/EPixelDataType.h"
-#include <OvRendering/Settings/EMaterialDomain.h>
 
 namespace OvRendering::Data
 {
@@ -58,9 +57,9 @@ namespace OvRendering::Data
 				// B5
 				uint8_t lineWidthPow2 : 3;
 				Settings::EComparaisonAlgorithm depthFunc : 2;
-				Settings::EMaterialDomain domain : 1;
 				bool depthWriting : 1;
 				bool blending : 1;
+				bool userInterface : 1;
 
 				// B6
 				bool culling : 1;

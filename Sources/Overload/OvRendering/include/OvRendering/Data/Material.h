@@ -13,7 +13,6 @@
 #include "OvRendering/Resources/Shader.h"
 #include "OvRendering/Resources/Texture.h"
 #include "OvRendering/Data/StateMask.h"
-#include <OvRendering/Settings/EMaterialDomain.h>
 
 namespace OvRendering::Data
 {
@@ -100,16 +99,17 @@ namespace OvRendering::Data
 		bool IsValid() const;
 
 		/**
-		* Defines the material domain, which determines the used rendering pass
-		* @param p_domain
-		*/
-		void SetDomain(OvRendering::Settings::EMaterialDomain p_domain);
-
-		/**
 		* Defines if the material is blendable
 		* @param p_blendable
 		*/
 		void SetBlendable(bool p_blendable);
+
+		/**
+		* Defines if the material is used on UI
+		* @param p_blendable
+		*/
+		void SetUserInterface(bool p_userInterface);
+
 
 		/**
 		* Defines if the material has backface culling
@@ -165,9 +165,9 @@ namespace OvRendering::Data
 		bool IsBlendable() const;
 
 		/**
-		* Returns the material rendering domain
+		* Returns true if the material will be used on UI
 		*/
-		OvRendering::Settings::EMaterialDomain GetDomain() const;
+		bool IsUserInterface() const;
 
 		/**
 		* Returns true if the material has backface culling
@@ -223,7 +223,7 @@ namespace OvRendering::Data
 		OvRendering::Resources::Shader* m_shader = nullptr;
 		PropertyMap m_properties;
 
-		OvRendering::Settings::EMaterialDomain m_domain = OvRendering::Settings::EMaterialDomain::SURFACE;
+		bool m_userInterface = false;
 		bool m_blendable = false;
 		bool m_backfaceCulling = true;
 		bool m_frontfaceCulling = false;

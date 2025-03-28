@@ -372,15 +372,6 @@ void OvEditor::Panels::MaterialEditor::GenerateMaterialSettingsContent()
 {
 	m_materialSettingsColumns->RemoveAllWidgets(); // Ensure that the m_shaderSettingsColumns is empty
 
-	GUIDrawer::CreateTitle(*m_materialSettingsColumns, "Domain");
-	auto& materialDomain = m_materialSettingsColumns->CreateWidget<OvUI::Widgets::Selection::ComboBox>(static_cast<int>(m_target->GetDomain()));
-	materialDomain.choices.emplace(static_cast<int>(OvRendering::Settings::EMaterialDomain::SURFACE), "Surface");
-	materialDomain.choices.emplace(static_cast<int>(OvRendering::Settings::EMaterialDomain::USER_INTERFACE), "User Interface");
-	materialDomain.ValueChangedEvent += [this](int p_choice)
-	{
-		m_target->SetDomain(static_cast<OvRendering::Settings::EMaterialDomain>(p_choice));
-	};
-
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Blendable", std::bind(&OvCore::Resources::Material::IsBlendable, m_target), std::bind(&OvCore::Resources::Material::SetBlendable, m_target, std::placeholders::_1));
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Back-face Culling", std::bind(&OvCore::Resources::Material::HasBackfaceCulling, m_target), std::bind(&OvCore::Resources::Material::SetBackfaceCulling, m_target, std::placeholders::_1));
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Front-face Culling", std::bind(&OvCore::Resources::Material::HasFrontfaceCulling, m_target), std::bind(&OvCore::Resources::Material::SetFrontfaceCulling, m_target, std::placeholders::_1));
@@ -389,5 +380,6 @@ void OvEditor::Panels::MaterialEditor::GenerateMaterialSettingsContent()
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Color Writing", std::bind(&OvCore::Resources::Material::HasColorWriting, m_target), std::bind(&OvCore::Resources::Material::SetColorWriting, m_target, std::placeholders::_1));
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Shadow Casting", std::bind(&OvCore::Resources::Material::IsShadowCaster, m_target), std::bind(&OvCore::Resources::Material::SetCastShadows, m_target, std::placeholders::_1));
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Shadow Receiving", std::bind(&OvCore::Resources::Material::IsShadowReceiver, m_target), std::bind(&OvCore::Resources::Material::SetReceiveShadows, m_target, std::placeholders::_1));
+	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "User Interface", std::bind(&OvCore::Resources::Material::IsUserInterface, m_target), std::bind(&OvCore::Resources::Material::SetUserInterface, m_target, std::placeholders::_1));
 	GUIDrawer::DrawScalar<int>(*m_materialSettingsColumns, "GPU Instances", std::bind(&OvCore::Resources::Material::GetGPUInstances, m_target), std::bind(&OvCore::Resources::Material::SetGPUInstances, m_target, std::placeholders::_1), 1.0f, 0, 100000);
 }
