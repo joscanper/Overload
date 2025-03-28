@@ -288,7 +288,6 @@ OvCore::Rendering::SceneRenderer::AllDrawables OvCore::Rendering::SceneRenderer:
 									materialRenderer->GetUserMatrix()
 								});
 
-								
 								if (material->GetDomain() == OvRendering::Settings::EMaterialDomain::USER_INTERFACE)
 								{
 									ui.emplace(distanceToActor, drawable);
@@ -297,17 +296,13 @@ OvCore::Rendering::SceneRenderer::AllDrawables OvCore::Rendering::SceneRenderer:
 								{
 									if (material->IsBlendable())
 									{
-									
 										transparents.emplace(distanceToActor, drawable);
-									
 									}
 									else
 									{
 										opaques.emplace(distanceToActor, drawable);
-									
 									}
 								}
-								
 							}
 						}
 					}

@@ -13,7 +13,7 @@
 #include "OvRendering/Resources/Shader.h"
 #include "OvRendering/Resources/Texture.h"
 #include "OvRendering/Data/StateMask.h"
-#include "OvRendering/Settings/EMaterialDomain.h"
+#include <OvRendering/Settings/EMaterialDomain.h>
 
 namespace OvRendering::Data
 {

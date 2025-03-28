@@ -5,7 +5,7 @@
 */
 
 #include "OvCore/Resources/Material.h"
-#include "OvRendering/Settings/EMaterialDomain.h"
+#include <OvRendering/Settings/EMaterialDomain.h>
 
 void OvCore::Resources::Material::OnSerialize(tinyxml2::XMLDocument & p_doc, tinyxml2::XMLNode * p_node)
 {
@@ -19,6 +19,7 @@ void OvCore::Resources::Material::OnSerialize(tinyxml2::XMLDocument & p_doc, tin
 	p_node->InsertEndChild(settingsNode);
 
 	Serializer::SerializeInt(p_doc, settingsNode, "domain", static_cast<int>(m_domain));
+	Serializer::SerializeBoolean(p_doc, settingsNode, "blendable", m_blendable);
 	Serializer::SerializeBoolean(p_doc, settingsNode, "backface_culling", m_backfaceCulling);
 	Serializer::SerializeBoolean(p_doc, settingsNode, "frontface_culling", m_frontfaceCulling);
 	Serializer::SerializeBoolean(p_doc, settingsNode, "depth_test", m_depthTest);
