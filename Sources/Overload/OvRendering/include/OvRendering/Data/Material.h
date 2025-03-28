@@ -100,7 +100,7 @@ namespace OvRendering::Data
 		bool IsValid() const;
 
 		/**
-		* Defines the renderpass used for this material
+		* Defines the material domain, which determines the used rendering pass
 		* @param p_domain
 		*/
 		void SetDomain(OvRendering::Settings::EMaterialDomain p_domain);
@@ -165,7 +165,7 @@ namespace OvRendering::Data
 		bool IsBlendable() const;
 
 		/**
-		* Returns the material domain
+		* Returns the material rendering domain
 		*/
 		OvRendering::Settings::EMaterialDomain GetDomain() const;
 
