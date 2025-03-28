@@ -129,6 +129,12 @@ void OvRendering::Data::Material::SetBlendable(bool p_transparent)
 	m_blendable = p_transparent;
 }
 
+void OvRendering::Data::Material::SetUserInterface(bool p_userInterface)
+{
+	m_userInterface = p_userInterface;
+}
+
+
 void OvRendering::Data::Material::SetBackfaceCulling(bool p_backfaceCulling)
 {
 	m_backfaceCulling = p_backfaceCulling;
@@ -172,6 +178,11 @@ void OvRendering::Data::Material::SetGPUInstances(int p_instances)
 bool OvRendering::Data::Material::IsBlendable() const
 {
 	return m_blendable;
+}
+
+bool OvRendering::Data::Material::IsUserInterface() const
+{
+	return m_userInterface;
 }
 
 bool OvRendering::Data::Material::HasBackfaceCulling() const
@@ -221,6 +232,7 @@ const OvRendering::Data::StateMask OvRendering::Data::Material::GenerateStateMas
 	stateMask.colorWriting = m_colorWriting;
 	stateMask.blendable = m_blendable;
 	stateMask.depthTest = m_depthTest;
+	stateMask.userInterface = m_userInterface;
 	stateMask.frontfaceCulling = m_frontfaceCulling;
 	stateMask.backfaceCulling = m_backfaceCulling;
 	return stateMask;
