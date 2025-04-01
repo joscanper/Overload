@@ -4,6 +4,8 @@
 * @licence: MIT
 */
 
+#include <format>
+
 #include <OvDebug/Assertion.h>
 #include <OvRendering/Entities/Light.h>
 #include <OvRendering/HAL/Renderbuffer.h>
@@ -18,7 +20,10 @@ namespace
 		using namespace OvRendering::HAL;
 		using namespace OvRendering::Settings;
 
-		const auto renderTexture = std::make_shared<Texture>();
+		const auto renderTexture = std::make_shared<Texture>(std::format(
+			"{}/Depth",
+			p_framebuffer.GetDebugName()
+		));
 
 		TextureDesc renderTextureDesc{
 			.width = p_resolution,
@@ -60,7 +65,7 @@ void OvRendering::Entities::Light::UpdateShadowData(const OvRendering::Entities:
 	{
 		if (!shadowBuffer)
 		{
-			shadowBuffer = std::make_unique<OvRendering::HAL::Framebuffer>();
+			shadowBuffer = std::make_unique<OvRendering::HAL::Framebuffer>("DirectionalShadow");
 			SetupFramebufferForShadowMapping(*shadowBuffer, static_cast<uint32_t>(shadowMapResolution));
 		}
 		else
